@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OVA: Cultura de Paz y Seguridad Humana (Colombia)</title>
     <style>
-        /* ================= VARIABLES Y PALETA (Claros y Culturales) ================= */
+        /* ================= VARIABLES Y PALETA ================= */
         :root {
-            --bg-main: #F4F1EA; /* Pergamino claro */
+            --bg-main: #F4F1EA;
             --bg-card: #FFFFFF;
             --text-dark: #2B2620;
             --text-muted: #5C554B;
-            --primary: #2C4A63; /* Azul colonial */
+            --primary: #2C4A63; 
             --primary-light: #4A7294;
-            --accent: #B0413E; /* Rojo ladrillo */
-            --accent-gold: #C29B47; /* Oro antiguo */
+            --accent: #B0413E; 
+            --accent-gold: #C29B47; 
             --success: #3A7D44;
             --shadow: 0 6px 16px rgba(43, 38, 32, 0.08);
             --radius: 12px;
@@ -32,19 +32,21 @@
 
         h1, h2, h3, h4 { font-family: 'Georgia', serif; }
 
-        /* ================= HEADER Y PROGRESO ================= */
+        /* ================= HEADER Y NAVEGACIÓN LIBRE ================= */
         header {
             background: var(--bg-card); padding: 20px; text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
             border-bottom: 4px solid var(--accent-gold);
         }
         .progress-container { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap;}
+        
         .step-indicator {
-            padding: 8px 16px; border-radius: 20px; background: #eee;
-            font-size: 0.9rem; font-weight: bold; color: #888; transition: 0.3s;
+            padding: 10px 20px; border-radius: 20px; background: #eee;
+            font-size: 0.95rem; font-weight: bold; color: #666; transition: 0.3s;
+            border: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        .step-indicator:hover { background: #ddd; }
         .step-indicator.active { background: var(--primary); color: white; box-shadow: 0 0 10px rgba(44,74,99,0.3); }
-        .step-indicator.completed { background: var(--success); color: white; }
 
         .phase-container { max-width: 1100px; margin: 40px auto; padding: 20px; display: none; animation: fadeIn 0.5s ease-out; }
         .phase-container.active { display: block; }
@@ -52,6 +54,13 @@
         .instruction-box {
             background: rgba(194, 155, 71, 0.1); border-left: 4px solid var(--accent-gold);
             padding: 15px 20px; border-radius: 0 var(--radius) var(--radius) 0; margin-bottom: 30px;
+            font-size: 1.05rem; line-height: 1.5;
+        }
+
+        /* TÍTULOS DE COLUMNAS GENERALES */
+        .column-title {
+            color: var(--primary); margin-bottom: 20px; font-size: 1.6rem; text-align: center;
+            border-bottom: 3px solid var(--accent-gold); padding-bottom: 10px; text-transform: uppercase;
         }
 
         /* ================= FASE 1: SECUENCIA SIMPLE ================= */
@@ -73,41 +82,65 @@
         }
         .time-slot.filled { border-style: solid; border-color: var(--success); background: rgba(58,125,68,0.1); color: var(--success); cursor: default; }
 
-        /* ================= FASE 2: MULTICAUSALIDAD Y TEORÍA ================= */
+        /* ================= FASE 2: MULTICAUSALIDAD (DRAG & DROP) ================= */
         .causality-grid { display: grid; grid-template-columns: 1.2fr 2fr; gap: 30px; }
         
         .cause-btn {
             display: flex; justify-content: space-between; align-items: center; width: 100%;
             padding: 15px; margin-bottom: 12px; background: white; border: 2px solid var(--accent-gold);
-            border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--text-dark);
-            transition: 0.3s; text-align: left;
+            border-radius: 8px; cursor: grab; font-weight: bold; color: var(--text-dark);
+            transition: 0.2s; text-align: left; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .cause-btn.active { background: var(--accent-gold); color: white; transform: scale(1.02); }
-        .cause-btn.solved { background: #eee; border-color: #ccc; color: #888; cursor: default; }
+        .cause-btn:active { cursor: grabbing; transform: scale(0.98); }
+        .cause-btn.solved { background: #eee; border-color: #ccc; color: #888; cursor: default; opacity: 0.6; pointer-events: none;}
         .cause-badge { background: rgba(0,0,0,0.1); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
 
         .war-card {
             background: var(--bg-card); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow);
-            margin-bottom: 15px; border-left: 5px solid var(--accent); cursor: pointer; transition: 0.3s;
+            margin-bottom: 20px; border-left: 5px solid var(--accent); transition: 0.3s; border-right: 2px solid transparent;
         }
-        .war-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .war-card.drag-over { border-right: 4px dashed var(--accent-gold); background: rgba(194, 155, 71, 0.05); transform: scale(1.02); }
         
         .causes-slots { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .cause-slot {
             background: #f0f0f0; border: 1px dashed #ccc; padding: 6px 12px; border-radius: 15px;
             font-size: 0.85rem; color: #888; display: flex; align-items: center; gap: 5px;
         }
-        .cause-slot.filled { background: var(--primary-light); color: white; border-style: solid; border-color: var(--primary); animation: pop 0.3s ease; }
+        .cause-slot.filled { background: var(--primary-light); color: white; border-style: solid; border-color: var(--primary); animation: pop 0.4s ease; }
         
-        .war-card.matched { border-left-color: var(--success); cursor: default; background: rgba(58,125,68,0.02); }
+        .war-card.matched { border-left-color: var(--success); background: rgba(58,125,68,0.02); }
         
-        /* Estilos exactos para el contenido teórico provisto */
+        /* Contenido Teórico */
         .theory-snippet { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.95rem; line-height: 1.6; color: var(--text-dark);}
-        .war-card.matched .theory-snippet { display: block; animation: slideDown 0.4s; }
+        .war-card.matched .theory-snippet { display: block; animation: slideDown 0.6s; }
         .theory-snippet h4 { color: var(--primary); margin-top: 15px; margin-bottom: 5px; }
         .theory-snippet ul { margin-left: 20px; margin-bottom: 10px; }
         .theory-snippet li { margin-bottom: 4px; }
         .theory-snippet .highlight { background: rgba(194, 155, 71, 0.15); border-left: 3px solid var(--accent-gold); padding: 10px; margin: 10px 0; font-style: italic;}
+
+        /* ENFASIS EN IMPACTOS (MICROINTERACCIÓN MEJORADA Y DESTACADA POR DEFAULT) */
+        .impact-highlight {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background-color: rgba(194, 155, 71, 0.15); /* Dorado suave por defecto */
+            border-left: 5px solid var(--accent-gold); /* Borde notorio por defecto */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+        }
+        .impact-highlight::before {
+            content: "🎯 Impacto Principal (Pasa el mouse para enfocar)";
+            display: block; font-size: 0.75rem; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;
+        }
+        .impact-highlight:hover {
+            background-color: rgba(176, 65, 62, 0.12); /* Pasa a un tono rojizo sutil */
+            border-left-color: var(--accent); /* Borde cambia a rojo/acento */
+            transform: scale(1.03) translateX(10px);
+            box-shadow: 0 10px 25px rgba(176, 65, 62, 0.2); /* Sombra más pronunciada */
+            color: #000;
+        }
 
         /* ================= FASE 3: SIMULACIÓN DE TRADE-OFFS ================= */
         .simulation-box {
@@ -144,24 +177,19 @@
         .map-arrow { text-align: center; color: var(--accent-gold); font-size: 1.5rem; margin-bottom: 15px; }
         .final-node { background: rgba(176, 65, 62, 0.1); border-left-color: var(--accent); color: var(--accent); font-size: 1.1rem; }
 
-        /* Botones Globales */
-        .btn-next {
-            display: none; margin: 30px auto 0; padding: 15px 40px; font-size: 1.1rem; font-weight:bold;
-            background: var(--success); color: white; border: none; border-radius: 30px; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(58,125,68,0.4); animation: pulse 2s infinite;
-        }
-
         /* Animaciones */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pop { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(58,125,68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(58,125,68, 0); } 100% { box-shadow: 0 0 0 0 rgba(58,125,68, 0); } }
         .error-shake { animation: shake 0.4s; border-color: var(--accent) !important; background: rgba(176,65,62,0.1) !important; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .timeline-grid, .causality-grid, .sim-grid, .tradeoff-grid { grid-template-columns: 1fr; }
-            .events-pool, .causes-list { position: sticky; top: 90px; z-index: 10; max-height: 250px; overflow-y: auto; }
+            .events-pool, .causes-list { position: relative; max-height: 350px; overflow-y: auto; z-index: 10; margin-bottom: 20px; }
+            .instruction-box { font-size: 0.95rem; }
+            .column-title { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -170,67 +198,74 @@
     <header>
         <h1>Cultura de Paz y Seguridad Humana (Colombia)</h1>
         <p>¿Cómo las tensiones del siglo XIX construyeron el conflicto del presente?</p>
+        <!-- NAVEGACIÓN LIBRE -->
         <div class="progress-container">
-            <div class="step-indicator active" id="step1">1. Secuencia Temporal</div>
-            <div class="step-indicator" id="step2">2. Causalidad Estructural</div>
-            <div class="step-indicator" id="step3">3. Simulador Histórico</div>
+            <button class="step-indicator active" onclick="goToPhase(1)">1. Secuencia Temporal</button>
+            <button class="step-indicator" onclick="goToPhase(2)">2. Causalidad Estructural</button>
+            <button class="step-indicator" onclick="goToPhase(3)">3. Simulador Histórico</button>
         </div>
     </header>
 
-    <!-- ================= FASE 1: SECUENCIA (LÍNEA DE TIEMPO SIMPLE Y EXACTA) ================= -->
+    <!-- ================= FASE 1: SECUENCIA ================= -->
     <section class="phase-container active" id="phase1">
         <div class="instruction-box">
             <h3>Paso 1: Reconstruir la Línea de Tiempo</h3>
-            <p>Para analizar la historia, primero debemos ubicarla. <strong>Toca un evento del panel izquierdo</strong> y luego <strong>toca el año correcto en el panel derecho</strong> para ordenarlos.</p>
+            <p>Para analizar la historia, primero debemos ubicarla. <strong>Toca un evento histórico</strong> y luego <strong>toca la fecha correspondiente</strong> para ordenarlos en el tiempo.</p>
         </div>
         
         <div class="timeline-grid">
             <div class="events-pool" id="eventsPool">
-                <!-- Se inyecta por JS (Desordenado) -->
+                <h2 class="column-title" style="font-size: 1.4rem;">Eventos Históricos</h2>
+                <!-- Se inyecta por JS -->
             </div>
             <div class="timeline-slots" id="timeSlots">
-                <!-- Se inyecta por JS (Ordenado por Fechas) -->
+                <h2 class="column-title" style="font-size: 1.4rem;">Fechas Históricas</h2>
+                <!-- Se inyecta por JS -->
             </div>
         </div>
-        <button class="btn-next" id="btnNext1" onclick="goToPhase(2)">Avanzar al Análisis de Causas ➔</button>
     </section>
 
-    <!-- ================= FASE 2: MULTICAUSALIDAD (TEORÍA 100% FIELES AL CLIENTE) ================= -->
+    <!-- ================= FASE 2: MULTICAUSALIDAD (ARRASTRAR) ================= -->
     <section class="phase-container" id="phase2">
         <div class="instruction-box">
-            <h3>Paso 2: La Red de Causas</h3>
-            <p>La historia no es lineal. <strong>Selecciona una causa estructural a la izquierda</strong> y asígnala al conflicto(s) correspondiente(s) a la derecha. Al completar las causas de un conflicto, revelarás la teoría oficial del curso.</p>
+            <h3>Paso 2: La Red de Causas y sus Impactos</h3>
+            <p><strong>Selecciona las CAUSAS.</strong> Arrastra las causas estructurales que desencadenaron los siguientes hechos históricos, según corresponda. Una vez revelada la información, <strong>analiza los impactos que estos generaron</strong>, llevando el mouse o tocando sobre cada recuadro de impacto para resaltarlos.</p>
         </div>
 
         <div class="causality-grid">
-            <!-- BANCO DE CAUSAS -->
-            <div class="causes-list" id="causesList">
-                <button class="cause-btn" data-cause="exclusion" data-total="2">
-                    👑 Exclusión Política <span class="cause-badge">0/2</span>
-                </button>
-                <button class="cause-btn" data-cause="centralismo" data-total="2">
-                    🏛️ Centralismo vs Federalismo <span class="cause-badge">0/2</span>
-                </button>
-                <button class="cause-btn" data-cause="economia" data-total="1">
-                    💰 Crisis Económica <span class="cause-badge">0/1</span>
-                </button>
-                <button class="cause-btn" data-cause="religion" data-total="2">
-                    ⛪ Conflicto Laicismo vs Confesionalismo <span class="cause-badge">0/2</span>
-                </button>
-                <button class="cause-btn" data-cause="esclavitud" data-total="1">
-                    ⚖️ Abolición de Esclavitud <span class="cause-badge">0/1</span>
-                </button>
+            <!-- COLUMNA 1: CAUSAS -->
+            <div class="causes-list">
+                <h2 class="column-title">Causas Estructurales</h2>
+                <div id="causesList">
+                    <div class="cause-btn" data-cause="exclusion">
+                        👑 Exclusión Política <span class="cause-badge">0/2</span>
+                    </div>
+                    <div class="cause-btn" data-cause="centralismo">
+                        🏛️ Centralismo vs Federalismo <span class="cause-badge">0/2</span>
+                    </div>
+                    <div class="cause-btn" data-cause="economia">
+                        💰 Crisis Económica <span class="cause-badge">0/1</span>
+                    </div>
+                    <div class="cause-btn" data-cause="religion">
+                        ⛪ Conflicto Laicismo vs Confesionalismo <span class="cause-badge">0/2</span>
+                    </div>
+                    <div class="cause-btn" data-cause="esclavitud">
+                        ⚖️ Abolición de Esclavitud <span class="cause-badge">0/1</span>
+                    </div>
+                </div>
             </div>
             
-            <!-- LISTA DE CONFLICTOS -->
-            <div class="wars-list" id="warsList">
-                <!-- Inyectado por JS -->
+            <!-- COLUMNA 2: HECHOS HISTÓRICOS -->
+            <div class="wars-list">
+                <h2 class="column-title">Hechos Históricos</h2>
+                <div id="warsList">
+                    <!-- Inyectado por JS -->
+                </div>
             </div>
         </div>
-        <button class="btn-next" id="btnNext2" onclick="goToPhase(3)">Avanzar al Simulador de Estado ➔</button>
     </section>
     
-    <!-- ================= FASE 3: SIMULACIÓN DE TRADE-OFFS Y SÍNTESIS ================= -->
+    <!-- ================= FASE 3: SIMULACIÓN ================= -->
     <section class="phase-container" id="phase3">
         <div class="simulation-box">
             <h2 style="color: var(--primary); margin-bottom: 10px;">Simulador Estructural: La Encrucijada de 1886</h2>
@@ -253,8 +288,6 @@
         </div>
 
         <div class="tradeoff-result" id="tradeoffResult"></div>
-
-        <button class="btn-next" id="btnNextFinal" onclick="showConceptMap()">Ver Síntesis Histórica ➔</button>
 
         <!-- SÍNTESIS FINAL -->
         <div class="concept-map" id="conceptMap">
@@ -282,9 +315,18 @@
     </section>
 
     <script>
-        /* ================= DATOS EXACTOS SUMINISTRADOS POR EL CLIENTE ================= */
-        
-        // FASE 1: Los 11 hitos cronológicos solicitados
+        /* ================= NAVEGACIÓN LIBRE ================= */
+        function goToPhase(phaseNum) {
+            document.querySelectorAll('.phase-container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.step-indicator').forEach(el => el.classList.remove('active'));
+            
+            // Activa el botón de navegación y el contenedor correspondiente
+            document.querySelectorAll('.step-indicator')[phaseNum-1].classList.add('active');
+            document.getElementById(`phase${phaseNum}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ================= FASE 1: SECUENCIA ================= */
         const timelineData =[
             { id: "e1", year: "1810–1819", title: "Independencia (Conflictos entre élites y regiones)" },
             { id: "e2", year: "1830–1831", title: "Disolución de la Gran Colombia" },
@@ -299,96 +341,17 @@
             { id: "e11", year: "1899–1902", title: "Guerra de los Mil Días" }
         ];
 
-        // FASE 2: Teoría oficial transcrita literalmente
-        const warsData =[
-            {
-                id: "w1", title: "1. Independencia (1810–1819)",
-                requiredCauses: ["exclusion"],
-                theory: `
-                    <h4>Marco histórico</h4>
-                    <p>El proceso de independencia neogranadino (1810–1819) inicia con las juntas autonomistas y culmina con la Campaña Libertadora y la Batalla de Boyacá (7 de agosto de 1819). Supone la ruptura con la monarquía española, pero no la consolidación inmediata del Estado-nación.</p>
-                    <h4>Causas estructurales</h4>
-                    <ul>
-                        <li>Exclusión política de criollos.</li>
-                        <li>Restricciones comerciales.</li>
-                        <li>Influencia de la Ilustración y revoluciones atlánticas.</li>
-                        <li>Crisis de legitimidad monárquica tras la invasión napoleónica.</li>
-                    </ul>
-                    <h4>Actores</h4>
-                    <ul><li>Criollos ilustrados.</li><li>Sectores populares movilizados.</li><li>Ejército libertador liderado por Simón Bolívar.</li></ul>
-                    <h4>Impactos</h4>
-                    <ul>
-                        <li><strong>Impacto político:</strong> Inicio del constitucionalismo (Constitución de Cúcuta, 1821). Ciudadanía restringida: hombres libres, propietarios o alfabetizados.</li>
-                        <li><strong>Impacto social:</strong> Persistencia de jerarquías coloniales. Mantenimiento de la esclavitud hasta 1851.</li>
-                    </ul>
-                    <div class="highlight"><strong>Conexión con el conflicto:</strong> La exclusión estructural y el centralismo temprano sembraron tensiones regionales que reaparecerían en guerras civiles posteriores.</div>
-                `
-            },
-            {
-                id: "w2", title: "2. Disolución de la Gran Colombia (1830–1831)",
-                requiredCauses: ["centralismo", "economia"],
-                theory: `
-                    <h4>Marco histórico</h4>
-                    <p>Fragmentación del proyecto bolivariano en tres repúblicas: Nueva Granada, Venezuela y Ecuador.</p>
-                    <div class="highlight"><strong>Nota 1830-1850:</strong> Tener en cuenta que los derechos civiles estaban vinculados al concepto de ciudadano (bastante excluyente en la primera mitad del siglo XIX). Ver constituciones de 1821, 1832.</div>
-                    <h4>Causas</h4>
-                    <ul><li>Centralismo vs federalismo.</li><li>Conflictos entre bolivarianos y santanderistas.</li><li>Crisis económica y militar.</li></ul>
-                    <h4>Impacto</h4>
-                    <ul><li>Inestabilidad institucional.</li><li>Consolidación de regionalismos armados.</li></ul>
-                    <div class="highlight"><strong>Conexión:</strong> La debilidad del Estado favoreció la proliferación de conflictos civiles en el siglo XIX.</div>
-                `
-            },
-            {
-                id: "w3", title: "3. Surgimiento Partidos Políticos (1848–1849) y Guerras tempranas",
-                requiredCauses: ["religion", "esclavitud"],
-                theory: `
-                    <p>Trascendental en la configuración de las guerras civiles acaecidas en esta temporalidad; también será supremamente importante para contextualizar y responder a las causas del conflicto armado del siglo XX.</p>
-                    <ul><li>Partido Liberal (1848).</li><li>Partido Conservador (1849).</li></ul>
-                    <h4>Marco conceptual</h4>
-                    <p>Partidos programáticos basados en modelos de Estado (federalismo vs centralismo; laicismo vs confesionalismo).</p>
-                    <h4>Impacto</h4>
-                    <p>Polarización estructural que configuró guerras civiles como:</p>
-                    <ul>
-                        <li>Guerra de los Supremos (1839–1842).</li>
-                        <li>Guerra civil de 1851 (abolición de la esclavitud).</li>
-                        <li>Guerra de los Mil Días (1899–1902).</li>
-                    </ul>
-                `
-            },
-            {
-                id: "w4", title: "5. Hegemonía Conservadora (1886-1930) y Guerras Finales",
-                requiredCauses: ["centralismo", "exclusion", "religion"],
-                theory: `
-                    <h4>Hegemonía Conservadora (1886–1930)</h4>
-                    <ul>
-                        <li>Constitución centralista de 1886.</li>
-                        <li>Fortalecimiento Iglesia-Estado.</li>
-                    </ul>
-                    <h4>Impacto y Conexión</h4>
-                    <ul>
-                        <li><strong>Exclusión política liberal.</strong></li>
-                        <li><strong>Consolidación de modelo agrario concentrado.</strong></li>
-                    </ul>
-                    <div class="highlight">Este modelo provocó el estallido de la <strong>Guerra de los Mil Días (1899-1902)</strong> y la exclusión sembró las bases estructurales de la violencia del siglo XX.</div>
-                `
-            }
-        ];
-
-        /* ================= LÓGICA FASE 1: SECUENCIA ================= */
         let selectedEventId = null;
-        let correctPlacementsPhase1 = 0;
 
         function initPhase1() {
             const pool = document.getElementById('eventsPool');
             const slots = document.getElementById('timeSlots');
             
-            // Renderizar desordenado a la izquierda
             const shuffled = [...timelineData].sort(() => Math.random() - 0.5);
             shuffled.forEach(item => {
                 pool.innerHTML += `<div class="event-item" id="pool-${item.id}" onclick="selectEvent('${item.id}')">${item.title}</div>`;
             });
 
-            // Renderizar ordenado a la derecha (Slots vacíos)
             timelineData.forEach(item => {
                 slots.innerHTML += `
                     <div class="time-slot" id="slot-${item.id}" onclick="placeEvent('${item.id}')">
@@ -406,12 +369,10 @@
 
         function placeEvent(slotId) {
             if (!selectedEventId) return;
-
             const slot = document.getElementById(`slot-${slotId}`);
             if (slot.classList.contains('filled')) return;
 
             if (selectedEventId === slotId) {
-                // Acierto
                 const eventEl = document.getElementById(`pool-${selectedEventId}`);
                 slot.innerHTML = `
                     <span style="color:var(--success); font-family:Georgia, serif; font-size:1.1rem;">${timelineData.find(t=>t.id===slotId).year}</span> 
@@ -419,21 +380,89 @@
                 slot.classList.add('filled');
                 eventEl.style.display = 'none';
                 selectedEventId = null;
-                correctPlacementsPhase1++;
-
-                if (correctPlacementsPhase1 === timelineData.length) {
-                    document.getElementById('btnNext1').style.display = 'block';
-                }
             } else {
-                // Error visual
                 slot.classList.add('error-shake');
                 setTimeout(() => slot.classList.remove('error-shake'), 400);
             }
         }
 
-        /* ================= LÓGICA FASE 2: MULTICAUSALIDAD ================= */
-        let activeCauseId = null;
-        let resolvedConflicts = 0;
+        /* ================= FASE 2: MULTICAUSALIDAD Y DRAG & DROP ================= */
+        const warsData =[
+            {
+                id: "w1", title: "1. Independencia (1810–1819)",
+                requiredCauses: ["exclusion"],
+                theory: `
+                    <h4>Marco histórico</h4>
+                    <p>El proceso de independencia neogranadino (1810–1819) inicia con las juntas autonomistas y culmina con la Campaña Libertadora y la Batalla de Boyacá. Supone la ruptura con la monarquía española, pero no la consolidación inmediata del Estado-nación.</p>
+                    <h4>Causas estructurales y Actores</h4>
+                    <ul>
+                        <li>Exclusión política de criollos y restricciones comerciales.</li>
+                        <li>Influencia de la Ilustración y crisis monárquica.</li>
+                        <li>Criollos, sectores populares y Ejército Libertador.</li>
+                    </ul>
+                    
+                    <!-- IMPACTOS INTERACTIVOS -->
+                    <div class="impact-highlight">
+                        <strong>Impacto político:</strong> Inicio del constitucionalismo (Constitución de Cúcuta, 1821). Ciudadanía restringida: hombres libres, propietarios o alfabetizados.
+                    </div>
+                    <div class="impact-highlight">
+                        <strong>Impacto social:</strong> Persistencia de jerarquías coloniales. Mantenimiento de la esclavitud hasta 1851.
+                    </div>
+                    <div class="highlight"><strong>Conexión con el conflicto:</strong> La exclusión estructural sembró tensiones regionales para las guerras civiles posteriores.</div>
+                `
+            },
+            {
+                id: "w2", title: "2. Disolución de la Gran Colombia (1830–1831)",
+                requiredCauses: ["centralismo", "economia"],
+                theory: `
+                    <h4>Marco histórico</h4>
+                    <p>Fragmentación del proyecto bolivariano en tres repúblicas: Nueva Granada, Venezuela y Ecuador.</p>
+                    <div class="highlight"><strong>Nota 1830-1850:</strong> Tener en cuenta que los derechos civiles estaban vinculados al concepto de ciudadano (bastante excluyente en la primera mitad del siglo XIX).</div>
+                    <h4>Causas</h4>
+                    <ul><li>Centralismo vs federalismo. Conflictos entre bolivarianos y santanderistas.</li></ul>
+                    
+                    <!-- IMPACTOS INTERACTIVOS -->
+                    <div class="impact-highlight">
+                        <strong>Impactos generados:</strong> Inestabilidad institucional profunda y consolidación de regionalismos armados a lo largo del país.
+                    </div>
+                    <div class="highlight"><strong>Conexión:</strong> La debilidad del Estado favoreció la proliferación de conflictos civiles en el siglo XIX.</div>
+                `
+            },
+            {
+                id: "w3", title: "3. Surgimiento Partidos Políticos y Guerras",
+                requiredCauses:["religion", "esclavitud"],
+                theory: `
+                    <p>Trascendental en la configuración de las guerras civiles acaecidas en esta temporalidad.</p>
+                    <ul><li>Partido Liberal (1848). Partido Conservador (1849).</li></ul>
+                    <h4>Marco conceptual</h4>
+                    <p>Partidos programáticos basados en modelos de Estado (federalismo vs centralismo; laicismo vs confesionalismo).</p>
+                    
+                    <!-- IMPACTOS INTERACTIVOS -->
+                    <div class="impact-highlight">
+                        <strong>Impactos en la nación:</strong> Polarización estructural extrema que configuró guerras civiles como la Guerra de los Supremos (1839–1842), la Guerra civil de 1851 (abolición de la esclavitud) y la Guerra de los Mil Días.
+                    </div>
+                `
+            },
+            {
+                id: "w4", title: "5. Hegemonía Conservadora (1886-1930)",
+                requiredCauses:["centralismo", "exclusion", "religion"],
+                theory: `
+                    <h4>Hegemonía Conservadora (1886–1930)</h4>
+                    <ul>
+                        <li>Constitución centralista de 1886. Fortalecimiento Iglesia-Estado.</li>
+                    </ul>
+                    
+                    <!-- IMPACTOS INTERACTIVOS -->
+                    <div class="impact-highlight">
+                        <strong>Impactos políticos:</strong> Exclusión política liberal absoluta, negando la participación en el gobierno a los opositores.
+                    </div>
+                    <div class="impact-highlight">
+                        <strong>Impactos económicos:</strong> Consolidación de un modelo agrario altamente concentrado.
+                    </div>
+                    <div class="highlight">Este modelo provocó el estallido de la <strong>Guerra de los Mil Días (1899-1902)</strong> y la exclusión sembró las bases de la violencia del siglo XX.</div>
+                `
+            }
+        ];
 
         const causesProgress = {
             exclusion: { placed: 0, total: 2 },
@@ -447,10 +476,11 @@
             const list = document.getElementById('warsList');
             
             warsData.forEach(conf => {
-                let slotsHTML = conf.requiredCauses.map(c => `<div class="cause-slot" data-slot="${c}">[ ? ] Falta causa</div>`).join('');
+                let slotsHTML = conf.requiredCauses.map(c => `<div class="cause-slot" data-slot="${c}">[ ? ] Arrastra aquí</div>`).join('');
                 
                 list.innerHTML += `
-                    <div class="war-card" id="war-${conf.id}" onclick="tryPlaceCause('${conf.id}')" data-required="${conf.requiredCauses.join(',')}">
+                    <div class="war-card" id="war-${conf.id}" data-required="${conf.requiredCauses.join(',')}" 
+                         ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDropEvent(event)">
                         <h3>${conf.title}</h3>
                         <div class="causes-slots" id="slots-${conf.id}">${slotsHTML}</div>
                         <div class="theory-snippet">${conf.theory}</div>
@@ -458,49 +488,122 @@
                 `;
             });
 
+            // Configurar botones arrastrables y sistema táctil (Polyfill)
             document.querySelectorAll('.cause-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.setAttribute('draggable', 'true');
+                
+                // --- Eventos para PC (Mouse) ---
+                btn.addEventListener('dragstart', function(e) {
                     if (this.classList.contains('solved')) return;
-                    document.querySelectorAll('.cause-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    activeCauseId = this.getAttribute('data-cause');
+                    e.dataTransfer.setData("text/plain", this.getAttribute('data-cause'));
+                    this.style.opacity = '0.5';
                 });
+                btn.addEventListener('dragend', function() { this.style.opacity = '1'; });
+
+                // --- Eventos para Celulares (Touch Drag Polyfill) ---
+                btn.addEventListener('touchstart', handleTouchStart, {passive: false});
+                btn.addEventListener('touchmove', handleTouchMove, {passive: false});
+                btn.addEventListener('touchend', handleTouchEnd);
             });
         }
 
-        function tryPlaceCause(conflictId) {
-            if (!activeCauseId) { alert("Primero selecciona una causa de la columna izquierda."); return; }
+        /* --- Lógica de Drop (Soltar) --- */
+        function allowDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+        function dragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        function handleDropEvent(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            let causeId = e.dataTransfer.getData("text/plain");
+            let conflictId = e.currentTarget.id.split('-')[1];
+            processMatch(conflictId, causeId);
+        }
 
+        /* --- Sistema Drag and Drop Táctil (Móviles) --- */
+        let touchClone = null;
+        let activeTouchCause = null;
+
+        function handleTouchStart(e) {
+            if(this.classList.contains('solved')) return;
+            activeTouchCause = this.getAttribute('data-cause');
+            
+            // Crear el clon visual que seguirá al dedo
+            touchClone = this.cloneNode(true);
+            touchClone.style.position = 'fixed';
+            touchClone.style.zIndex = '9999';
+            touchClone.style.opacity = '0.8';
+            touchClone.style.pointerEvents = 'none'; // Para que elementFromPoint detecte lo que hay debajo
+            touchClone.style.width = this.offsetWidth + 'px';
+            document.body.appendChild(touchClone);
+            
+            moveClone(e.touches[0].clientX, e.touches[0].clientY);
+            // Prevenir scroll mientras se arrastra una ficha
+            e.preventDefault(); 
+        }
+
+        function handleTouchMove(e) {
+            if(!touchClone) return;
+            moveClone(e.touches[0].clientX, e.touches[0].clientY);
+            e.preventDefault();
+        }
+
+        function moveClone(x, y) {
+            touchClone.style.left = (x - touchClone.offsetWidth / 2) + 'px';
+            touchClone.style.top = (y - touchClone.offsetHeight / 2) + 'px';
+        }
+
+        function handleTouchEnd(e) {
+            if(!touchClone) return;
+            let changedTouch = e.changedTouches[0];
+            // Detectar sobre qué elemento se levantó el dedo
+            let target = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+            touchClone.remove();
+            touchClone = null;
+            
+            if(target) {
+                let warCard = target.closest('.war-card');
+                if(warCard) {
+                    let conflictId = warCard.id.split('-')[1];
+                    processMatch(conflictId, activeTouchCause);
+                }
+            }
+            activeTouchCause = null;
+        }
+
+        /* --- Motor de Evaluación --- */
+        function processMatch(conflictId, causeId) {
+            if (!causeId) return;
             const warCard = document.getElementById(`war-${conflictId}`);
             if (warCard.classList.contains('matched')) return; 
 
             const requiredCauses = warCard.getAttribute('data-required').split(',');
             
-            if (requiredCauses.includes(activeCauseId)) {
+            if (requiredCauses.includes(causeId)) {
                 const slotsContainer = document.getElementById(`slots-${conflictId}`);
-                const specificSlot = slotsContainer.querySelector(`.cause-slot[data-slot="${activeCauseId}"]`);
+                const specificSlot = slotsContainer.querySelector(`.cause-slot[data-slot="${causeId}"]`);
                 
-                if (specificSlot.classList.contains('filled')) return;
+                if (specificSlot.classList.contains('filled')) return; // Ya estaba puesta
 
-                const causeName = document.querySelector(`.cause-btn[data-cause="${activeCauseId}"]`).innerText.split(' 0/')[0];
+                const causeBtn = document.querySelector(`.cause-btn[data-cause="${causeId}"]`);
+                const causeName = causeBtn.innerText.split(' 0/')[0];
                 specificSlot.innerHTML = `✅ ${causeName}`;
                 specificSlot.classList.add('filled');
 
-                causesProgress[activeCauseId].placed++;
-                const btn = document.querySelector(`.cause-btn[data-cause="${activeCauseId}"]`);
-                btn.querySelector('.cause-badge').innerText = `${causesProgress[activeCauseId].placed}/${causesProgress[activeCauseId].total}`;
+                causesProgress[causeId].placed++;
+                causeBtn.querySelector('.cause-badge').innerText = `${causesProgress[causeId].placed}/${causesProgress[causeId].total}`;
                 
-                if (causesProgress[activeCauseId].placed === causesProgress[activeCauseId].total) {
-                    btn.classList.remove('active'); btn.classList.add('solved'); activeCauseId = null;
+                if (causesProgress[causeId].placed === causesProgress[causeId].total) {
+                    causeBtn.classList.add('solved');
+                    causeBtn.setAttribute('draggable', 'false');
                 }
 
                 const filledSlotsCount = slotsContainer.querySelectorAll('.cause-slot.filled').length;
                 if (filledSlotsCount === requiredCauses.length) {
                     warCard.classList.add('matched');
-                    resolvedConflicts++;
-                    if (resolvedConflicts === warsData.length) {
-                        document.getElementById('btnNext2').style.display = 'block';
-                    }
                 }
             } else {
                 warCard.classList.add('error-shake');
@@ -508,7 +611,7 @@
             }
         }
 
-        /* ================= LÓGICA FASE 3: SIMULACIÓN ================= */
+        /* ================= FASE 3: SIMULACIÓN ================= */
         function showTradeoffs(choice) {
             const container = document.getElementById('tradeoffResult');
             let content = '';
@@ -518,43 +621,28 @@
                     <h3 style="color:var(--primary); margin-bottom:15px;">Análisis Histórico: Modelo Federalista</h3>
                     <div class="tradeoff-grid">
                         <div class="pro-box"><strong>Características:</strong> Autonomía de las regiones y laicismo.</div>
-                        <div class="con-box"><strong>Costos Históricos (Guerras):</strong> Fragmentación total y ejércitos regionales constantes.</div>
+                        <div class="con-box"><strong>Costos Históricos:</strong> Fragmentación del país e inestabilidad por ejércitos regionales.</div>
                     </div>
                 `;
             } else {
                 content = `
                     <h3 style="color:var(--accent); margin-bottom:15px;">Análisis Histórico: Modelo Centralista (Constitución 1886)</h3>
                     <div class="tradeoff-grid">
-                        <div class="pro-box"><strong>Características:</strong> Fortalecimiento de la alianza Iglesia-Estado. Estabilidad institucional central.</div>
-                        <div class="con-box"><strong>Costos Históricos (Violencia):</strong> Exclusión política absoluta del Partido Liberal y mantenimiento de un modelo agrario concentrado. Detonante de la Guerra de los Mil Días.</div>
+                        <div class="pro-box"><strong>Características:</strong> Alianza Iglesia-Estado y un gobierno central fuerte.</div>
+                        <div class="con-box"><strong>Costos Históricos (Violencia):</strong> Exclusión política absoluta del adversario, detonante de las guerras.</div>
                     </div>
                 `;
             }
 
             container.innerHTML = content;
             container.style.display = 'block';
-            document.getElementById('btnNextFinal').style.display = 'block';
-            document.getElementById('step2').classList.add('completed');
-        }
-
-        function showConceptMap() {
             document.getElementById('conceptMap').style.display = 'block';
-            document.getElementById('conceptMap').scrollIntoView({ behavior: 'smooth' });
-            document.getElementById('step3').classList.add('completed');
-            document.getElementById('btnNextFinal').style.display = 'none';
+            
+            // Auto-scroll al resultado
+            setTimeout(() => { container.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
         }
 
-        /* ================= CONTROL DE FLUJO ================= */
-        function goToPhase(phaseNum) {
-            document.querySelectorAll('.phase-container').forEach(el => el.classList.remove('active'));
-            document.getElementById(`step${phaseNum-1}`).classList.remove('active');
-            document.getElementById(`step${phaseNum-1}`).classList.add('completed');
-            document.getElementById(`step${phaseNum}`).classList.add('active');
-            document.getElementById(`phase${phaseNum}`).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Iniciar
+        // Iniciar OVA
         initPhase1();
         initPhase2();
 
