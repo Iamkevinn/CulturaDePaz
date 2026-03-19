@@ -37,32 +37,37 @@
         .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .reveal-on-scroll.visible { opacity: 1; transform: translateY(0); }
 
-        /* ================= SECCIÓN 1: MARCO NORMATIVO (SCROLLYTELLING) ================= */
-        .timeline-container { max-width: 800px; margin: 0 auto; position: relative; }
-        .timeline-container::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; background-color: #ddd; }
-        .timeline-block { padding: 20px 0 40px 40px; position: relative; }
-        .timeline-block::before { content: ''; position: absolute; left: -8.5px; top: 15px; width: 20px; height: 20px; background-color: var(--bg-main); border: 3px solid #ccc; border-radius: 50%; }
-        .timeline-block.visible::before { border-color: var(--accent); }
-        .timeline-block h3 { color: var(--accent); margin-bottom: 10px; }
-        .timeline-block ul { margin-left: 20px; line-height: 1.7; }
-        .timeline-block li { margin-bottom: 8px; }
+        /* ================= SECCIÓN 1: MARCO NORMATIVO (NUEVO DISEÑO DINÁMICO) ================= */
+        .normativo-container { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; max-width: 900px; margin: 0 auto; }
+        .normativo-index { display: flex; flex-direction: column; gap: 15px; }
+        .index-item {
+            background: var(--bg-card); padding: 20px; border-radius: var(--radius);
+            font-family: 'Merriweather', serif; font-weight: bold; color: var(--primary);
+            border-left: 5px solid #ddd; cursor: pointer; transition: all 0.3s ease;
+        }
+        .index-item:hover { border-left-color: var(--accent); transform: translateX(5px); }
+        .index-item.active {
+            border-left-color: var(--accent); background-color: var(--primary);
+            color: white; box-shadow: var(--shadow); transform: translateX(10px);
+        }
+        .content-display { background: var(--bg-card); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .content-display div { animation: fadeInContent 0.5s ease-out; }
+        .content-display h3 { color: var(--accent); margin-bottom: 15px; }
+        .content-display ul { margin-left: 20px; line-height: 1.7; }
+        .content-display li { margin-bottom: 8px; }
+        @keyframes fadeInContent { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= SECCIÓN 2: COMPOSICIÓN (CORREGIDO Y RESPONSIVE) ================= */
+        /* ================= SECCIÓN 2: COMPOSICIÓN ================= */
         #composition .content-wrapper { max-width: 900px; margin: 0 auto; text-align: center; }
-        .mesa-espacio { background: #EAE5D9; border-radius: var(--radius); padding: 40px; min-height: 500px; display: flex; justify-content: center; align-items: center; position: relative; /* <-- BUG FIX: AÑADIDO */ }
+        .mesa-espacio { background: #EAE5D9; border-radius: var(--radius); padding: 40px; min-height: 500px; display: flex; justify-content: center; align-items: center; position: relative; }
         .mesa-placeholder { color: var(--text-muted); font-size: 1.5rem; font-family: 'Georgia'; }
         
         .actor-card {
-            background: var(--bg-card); padding: 15px; border-radius: 8px; box-shadow: var(--shadow);
-            position: absolute; width: 140px; text-align: center; font-weight: 500; font-size: 0.9rem;
-            opacity: 0; 
-            /* Estado inicial para animación: centrado y pequeño */
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
+            background: var(--bg-card); padding: 15px; border-radius: 8px; box-shadow: var(--shadow); position: absolute; width: 140px; text-align: center; font-weight: 500; font-size: 0.9rem; opacity: 0; 
+            top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
             transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .enfoque-card { border-bottom: 4px solid var(--accent-green); font-size: 1rem; }
-        
         #btn-convocar { padding: 15px 30px; font-size: 1.2rem; background: var(--accent); color: white; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; }
         #btn-convocar:hover { background: #ff9d00; transform: scale(1.05); }
 
@@ -83,33 +88,30 @@
 
         /* ================= SECCIÓN 4: ARTICULACIÓN ================= */
         .articulation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
-        .system-card { background: var(--bg-card); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; }
+        .system-card { background: var(--bg-card); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; cursor: pointer; }
         .system-card h4 { color: var(--primary); margin-bottom: 15px; }
         .system-card p { display: none; margin-top: 15px; color: var(--text-muted); }
         .system-card.expanded { border-top: 5px solid var(--primary-light); }
         .system-card.expanded p { display: block; }
         
-        /* ================= INDICADOR DE SCROLL ================= */
+        /* ================= INDICADOR DE SCROLL (SIEMPRE VISIBLE) ================= */
         .scroll-arrow {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 999;
-            opacity: 1;
-            transition: opacity 0.4s ease-out;
         }
-        .scroll-arrow.hidden { opacity: 0; pointer-events: none; }
         .scroll-arrow svg { width: 40px; height: 40px; animation: bounce 2s infinite; }
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
 
         /* ================= RESPONSIVE ================= */
-        @media (max-width: 768px) {
+        @media (max-width: 800px) {
             .section-container { padding: 60px 20px; }
-            .functions-container { grid-template-columns: 1fr; }
-            #connector-svg { display: none; } /* Line drawing no aplica en mobile */
-            .mesa-espacio { padding: 20px; flex-direction: column; gap: 15px; } /* Adaptación para móvil */
-            .actor-card { position: relative; top: auto; left: auto; transform: translateY(20px); width: 80%; /* Estado inicial para cascada */ }
+            .normativo-container, .functions-container { grid-template-columns: 1fr; }
+            #connector-svg { display: none; }
+            .mesa-espacio { padding: 20px; flex-direction: column; gap: 15px; }
+            .actor-card { position: relative; top: auto; left: auto; transform: translateY(20px); width: 80%; }
         }
     </style>
 </head>
@@ -126,11 +128,14 @@
     </header>
 
     <main>
-        <!-- SECCIÓN 1: MARCO NORMATIVO Y EVOLUCIÓN INSTITUCIONAL -->
+        <!-- SECCIÓN 1: MARCO NORMATIVO Y EVOLUCIÓN INSTITUCIONAL (REDiseñada) -->
         <section id="normativo" class="section-container">
             <h2 class="section-title reveal-on-scroll">Marco Normativo y Evolución</h2>
-            <p class="section-subtitle reveal-on-scroll">Un recorrido dinámico por los fundamentos legales e históricos de los Consejos Territoriales de Paz, Reconciliación y Convivencia (CTPRC).</p>
-            <div class="timeline-container"></div>
+            <p class="section-subtitle reveal-on-scroll">Explora de forma interactiva los fundamentos legales e históricos de los Consejos Territoriales de Paz, Reconciliación y Convivencia (CTPRC).</p>
+            <div class="normativo-container reveal-on-scroll">
+                <div class="normativo-index"></div>
+                <div class="content-display"></div>
+            </div>
         </section>
 
         <!-- SECCIÓN 2: COMPOSICIÓN Y ENFOQUE DIFERENCIAL -->
@@ -148,8 +153,7 @@
         <!-- SECCIÓN 3: OBJETIVOS Y FUNCIONES -->
         <section id="functions" class="section-container">
             <h2 class="section-title reveal-on-scroll">Objetivos y Funciones</h2>
-            <p class="section-subtitle reveal-on-scroll">Un CTPRC tiene metas claras y herramientas para lograrlas. Conecta visualmente cada objetivo con su función correspondiente para entender su propósito.</p>
-                        <p class="section-subtitle reveal-on-scroll">Da click en el objetivo, y luego click en su función correspondiente.</p>
+            <p class="section-subtitle reveal-on-scroll">Un CTPRC tiene metas claras y herramientas para lograrlas. Haz clic en un objetivo y luego en su función para conectarlos visualmente.</p>
             <div class="functions-container reveal-on-scroll">
                 <div class="column" id="objectives-col"><h3 style="text-align: center;">Objetivos Principales</h3></div>
                 <div class="column" id="functions-col"><h3 style="text-align: center;">Funciones Específicas</h3></div>
@@ -165,7 +169,7 @@
         </section>
     </main>
 
-    <!-- INDICADOR DE SCROLL AÑADIDO -->
+    <!-- INDICADOR DE SCROLL -->
     <div class="scroll-arrow" id="scrollArrow">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" color="var(--primary)">
             <path d="M12 15.379l-6.293-6.294-1.414 1.414L12 18.207l7.707-7.707-1.414-1.414z"></path>
@@ -177,9 +181,9 @@
 /* ================= DATOS 100% FIELES AL CONTENIDO PROVISTO ================= */
 const DATA = {
     normativo: [
-        { title: "1. Antecedentes", content: "<p>Los CTPRC tienen como antecedente el Consejo Nacional de Paz, creado mediante la Ley 434 de 1998, posteriormente modificado por la Ley 885 de 2004.</p><p>Tras la firma del Acuerdo Final en 2016, se expide el Decreto Ley 885 de 2017 que fortalece y actualiza el sistema, denominándolo: Consejos de Paz, Reconciliación y Convivencia.</p><p>Este rediseño se alinea con el enfoque de paz territorial y participación ciudadana.</p>" },
-        { title: "2. Naturaleza Jurídica", content: "<h4>Los CTPRC son:</h4><ul><li>Instancias asesoras y consultivas.</li><li>Espacios de diálogo entre autoridades y sociedad civil.</li><li>Mecanismos de participación con enfoque territorial.</li></ul><h4>No son órganos decisorios, pero sí influyen en:</h4><ul><li>Planes de Desarrollo.</li><li>Programas de convivencia.</li><li>Políticas de reconciliación.</li></ul>" },
-        { title: "3. Relación con el Acuerdo Final (2016)", content: "<p>El Acuerdo Final entre el Estado colombiano y las Fuerzas Armadas Revolucionarias de Colombia establece la centralidad de la participación ciudadana en la construcción de paz.</p><h4>Los CTPRC:</h4><ul><li>Promueven diálogo social.</li><li>Facilitan seguimiento a implementación territorial.</li><li>Fortalecen garantías de no repetición.</li><li>Articulan agendas de víctimas, mujeres, jóvenes, pueblos étnicos y líderes sociales.</li></ul>" }
+        { id: "antecedentes", title: "1. Antecedentes", content: "<h3>1. Antecedentes</h3><p>Los CTPRC tienen como antecedente el Consejo Nacional de Paz, creado mediante la Ley 434 de 1998, posteriormente modificado por la Ley 885 de 2004.</p><p>Tras la firma del Acuerdo Final en 2016, se expide el Decreto Ley 885 de 2017 que fortalece y actualiza el sistema, denominándolo: Consejos de Paz, Reconciliación y Convivencia.</p><p>Este rediseño se alinea con el enfoque de paz territorial y participación ciudadana.</p>" },
+        { id: "naturaleza", title: "2. Naturaleza Jurídica", content: "<h3>2. Naturaleza Jurídica</h3><h4>Los CTPRC son:</h4><ul><li>Instancias asesoras y consultivas.</li><li>Espacios de diálogo entre autoridades y sociedad civil.</li><li>Mecanismos de participación con enfoque territorial.</li></ul><h4>No son órganos decisorios, pero sí influyen en:</h4><ul><li>Planes de Desarrollo.</li><li>Programas de convivencia.</li><li>Políticas de reconciliación.</li></ul>" },
+        { id: "acuerdo", title: "3. Relación con el Acuerdo Final", content: "<h3>3. Relación con el Acuerdo Final (2016)</h3><p>El Acuerdo Final entre el Estado colombiano y las Fuerzas Armadas Revolucionarias de Colombia establece la centralidad de la participación ciudadana en la construcción de paz.</p><h4>Los CTPRC:</h4><ul><li>Promueven diálogo social.</li><li>Facilitan seguimiento a implementación territorial.</li><li>Fortalecen garantías de no repetición.</li><li>Articulan agendas de víctimas, mujeres, jóvenes, pueblos étnicos y líderes sociales.</li></ul>" }
     ],
     composition: {
         actors: ["Representantes de víctimas", "Organizaciones sociales", "Sector empresarial", "Iglesias", "Comunidad educativa", "Autoridades locales"],
@@ -192,7 +196,6 @@ const DATA = {
         { objective: 'Asesorar a autoridades territoriales', function: 'Proponer recomendaciones a alcaldes y gobernadores' }
     ],
     articulation: {
-        intro: "Los CTPRC no reemplazan el Sistema Integral de Verdad, Justicia, Reparación y No Repetición, pero pueden articular procesos con:",
         systems: [
             { title: "Jurisdicción Especial para la Paz (JEP)" },
             { title: "Unidad de Búsqueda de Personas dadas por Desaparecidas" },
@@ -202,11 +205,10 @@ const DATA = {
     }
 };
 
-/* ================= LÓGICA DE SCROLL DINÁMICO, NAVEGACIÓN Y FLECHA ================= */
+/* ================= LÓGICA DE SCROLL DINÁMICO Y NAVEGACIÓN ================= */
 const sections = document.querySelectorAll('.section-container');
 const navButtons = document.querySelectorAll('.nav-button');
 const revealElements = document.querySelectorAll('.reveal-on-scroll');
-const scrollArrow = document.getElementById('scrollArrow');
 
 const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -228,28 +230,34 @@ const revealObserver = new IntersectionObserver((entries, observer) => {
 }, { threshold: 0.1 });
 revealElements.forEach(el => revealObserver.observe(el));
 
-// Lógica de la flecha de scroll
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        scrollArrow.classList.add('hidden');
-    } else {
-        scrollArrow.classList.remove('hidden');
+
+/* ================= LÓGICA FASE 1: MARCO NORMATIVO (DINÁMICO) ================= */
+const normativoIndex = document.querySelector('.normativo-index');
+const contentDisplay = document.querySelector('.content-display');
+DATA.normativo.forEach((item, index) => {
+    const el = document.createElement('div');
+    el.className = 'index-item';
+    el.dataset.id = item.id;
+    el.innerText = item.title;
+    el.onclick = () => showNormativoContent(item.id);
+    normativoIndex.appendChild(el);
+    // Mostrar el primer elemento por defecto
+    if(index === 0) {
+        showNormativoContent(item.id);
     }
 });
 
-
-/* ================= LÓGICA FASE 1: MARCO NORMATIVO ================= */
-const timelineContainer = document.querySelector('.timeline-container');
-DATA.normativo.forEach(item => {
-    const block = document.createElement('div');
-    block.className = 'timeline-block reveal-on-scroll';
-    block.innerHTML = `<h3>${item.title}</h3><div>${item.content}</div>`;
-    timelineContainer.appendChild(block);
-});
-document.querySelectorAll('.timeline-block').forEach(el => revealObserver.observe(el));
+function showNormativoContent(id) {
+    const item = DATA.normativo.find(i => i.id === id);
+    contentDisplay.innerHTML = `<div>${item.content}</div>`;
+    
+    document.querySelectorAll('.index-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.id === id);
+    });
+}
 
 
-/* ================= LÓGICA FASE 2: COMPOSICIÓN (CORREGIDA Y RESPONSIVE) ================= */
+/* ================= LÓGICA FASE 2: COMPOSICIÓN ================= */
 function convocarMesa() {
     const btn = document.getElementById('btn-convocar');
     btn.style.display = 'none';
@@ -258,58 +266,38 @@ function convocarMesa() {
     const espacio = document.getElementById('mesaEspacio');
     const allCardsData = [...DATA.composition.actors.map(name => ({ type: 'actor', text: name })), ...DATA.composition.enfoques.map(name => ({ type: 'enfoque', text: `<strong>Enfoque:</strong><br>${name}` }))];
 
-    // Lógica para pantallas grandes (círculo)
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > 800) {
         const center = { x: espacio.offsetWidth / 2, y: espacio.offsetHeight / 2 };
-        
-        // Círculo exterior para actores
         const actorsRadius = Math.min(center.x, center.y) * 0.75;
         DATA.composition.actors.forEach((name, i) => {
             const angle = (i / DATA.composition.actors.length) * 2 * Math.PI - (Math.PI / 2);
             const el = document.createElement('div');
-            el.className = 'actor-card';
-            el.innerText = name;
-            espacio.appendChild(el);
-            
+            el.className = 'actor-card'; el.innerText = name; espacio.appendChild(el);
             setTimeout(() => {
                 const x = center.x + actorsRadius * Math.cos(angle);
                 const y = center.y + actorsRadius * Math.sin(angle);
-                el.style.opacity = '1';
-                el.style.left = `${x}px`;
-                el.style.top = `${y}px`;
-                el.style.transform = `translate(-50%, -50%) scale(1)`;
+                el.style.opacity = '1'; el.style.left = `${x}px`; el.style.top = `${y}px`; el.style.transform = `translate(-50%, -50%) scale(1)`;
             }, 100 * i);
         });
         
-        // Círculo interior para enfoques
         const enfoquesRadius = Math.min(center.x, center.y) * 0.4;
         DATA.composition.enfoques.forEach((name, i) => {
             const angle = (i / DATA.composition.enfoques.length) * 2 * Math.PI + (Math.PI / 4);
             const el = document.createElement('div');
-            el.className = 'actor-card enfoque-card';
-            el.innerHTML = `<strong>Enfoque:</strong><br>${name}`;
-            espacio.appendChild(el);
-
+            el.className = 'actor-card enfoque-card'; el.innerHTML = `<strong>Enfoque:</strong><br>${name}`; espacio.appendChild(el);
             setTimeout(() => {
                 const x = center.x + enfoquesRadius * Math.cos(angle);
                 const y = center.y + enfoquesRadius * Math.sin(angle);
-                el.style.opacity = '1';
-                el.style.left = `${x}px`;
-                el.style.top = `${y}px`;
-                el.style.transform = `translate(-50%, -50%) scale(1)`;
+                el.style.opacity = '1'; el.style.left = `${x}px`; el.style.top = `${y}px`; el.style.transform = `translate(-50%, -50%) scale(1)`;
             }, 600 + (100 * i));
         });
     } else {
-        // Lógica para pantallas pequeñas (cascada vertical)
         allCardsData.forEach((item, i) => {
             const el = document.createElement('div');
             el.className = item.type === 'actor' ? 'actor-card' : 'actor-card enfoque-card';
-            el.innerHTML = item.text;
-            espacio.appendChild(el);
-            
+            el.innerHTML = item.text; espacio.appendChild(el);
             setTimeout(() => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
+                el.style.opacity = '1'; el.style.transform = 'translateY(0)';
             }, 100 * i);
         });
     }
@@ -324,15 +312,13 @@ let selectedObjective = null;
 
 DATA.functions.forEach((item, index) => {
     const objCard = document.createElement('div');
-    objCard.className = 'item-card objective';
-    objCard.dataset.id = index;
+    objCard.className = 'item-card objective'; objCard.dataset.id = index;
     objCard.innerHTML = `<h4>${item.objective}</h4>`;
     objCard.onclick = () => selectObjective(objCard);
     objectivesCol.appendChild(objCard);
 
     const funcCard = document.createElement('div');
-    funcCard.className = 'item-card function';
-    funcCard.dataset.id = index;
+    funcCard.className = 'item-card function'; funcCard.dataset.id = index;
     funcCard.innerHTML = `<p>${item.function}</p>`;
     funcCard.onclick = () => selectFunction(funcCard);
     functionsCol.appendChild(funcCard);
@@ -347,12 +333,10 @@ function selectObjective(card) {
 
 function selectFunction(card) {
     if (card.classList.contains('connected') || !selectedObjective) return;
-    
     if (selectedObjective.dataset.id === card.dataset.id) {
-        selectedObjective.classList.add('connected');
-        card.classList.add('connected');
+        selectedObjective.classList.add('connected'); card.classList.add('connected');
         selectedObjective.classList.remove('selected');
-        if(window.innerWidth > 768) drawLine(selectedObjective, card);
+        if(window.innerWidth > 800) drawLine(selectedObjective, card);
         selectedObjective = null;
     } else {
         card.classList.add('error-shake');
@@ -362,8 +346,7 @@ function selectFunction(card) {
 
 function drawLine(el1, el2) {
     const containerRect = functionsCol.parentElement.getBoundingClientRect();
-    const rect1 = el1.getBoundingClientRect();
-    const rect2 = el2.getBoundingClientRect();
+    const rect1 = el1.getBoundingClientRect(); const rect2 = el2.getBoundingClientRect();
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', rect1.right - containerRect.left);
     line.setAttribute('y1', rect1.top - containerRect.top + rect1.height / 2);
