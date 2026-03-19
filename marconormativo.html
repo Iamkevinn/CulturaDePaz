@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVA: Explorador de Paz Territorial - CTPRC</title>
+    <style>
+        /* ================= PALETA DE COLORES Y VARIABLES ================= */
+        :root {
+            --bg-main: #F5F3EF; /* Papel amate claro */
+            --bg-card: #FFFFFF;
+            --text-dark: #312A22;
+            --text-muted: #645546;
+            --primary: #005A8D; /* Azul institucional pero cálido */
+            --primary-light: #007BC0;
+            --accent: #E58A00; /* Naranja/Mostaza - Color tierra, esperanza */
+            --accent-green: #2E8540; /* Verde naturaleza/esperanza */
+            --shadow: 0 8px 24px rgba(49, 42, 34, 0.08);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; scroll-behavior: smooth; }
+
+        body { background-color: var(--bg-main); color: var(--text-dark); overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', 'Georgia', serif; }
+        
+        /* ================= HEADER Y NAVEGACIÓN ================= */
+        header { background: var(--bg-card); padding: 15px 30px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 4px solid var(--accent); }
+        .nav-container { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+        .nav-button { padding: 8px 16px; border-radius: 20px; background: #eee; font-size: 0.9rem; font-weight: bold; color: #888; transition: 0.3s; text-decoration: none; border: 2px solid transparent; }
+        .nav-button.active { background: var(--primary); color: white; border-color: var(--primary-light); }
+
+        /* ================= CONTENEDOR DE SECCIÓN Y ESTILOS GENERALES ================= */
+        .section-container { min-height: 100vh; padding: 80px 40px; border-bottom: 1px solid #ddd; }
+        .section-title { text-align: center; color: var(--primary); font-size: 2.5rem; margin-bottom: 15px; }
+        .section-subtitle { text-align: center; color: var(--text-muted); font-size: 1.2rem; max-width: 800px; margin: 0 auto 60px auto; }
+        .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .reveal-on-scroll.visible { opacity: 1; transform: translateY(0); }
+
+        /* ================= SECCIÓN 1: MARCO NORMATIVO (SCROLLYTELLING) ================= */
+        .timeline-container { max-width: 800px; margin: 0 auto; position: relative; }
+        .timeline-container::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; background-color: #ddd; }
+        .timeline-block { padding: 20px 0 40px 40px; position: relative; }
+        .timeline-block::before { content: ''; position: absolute; left: -8.5px; top: 15px; width: 20px; height: 20px; background-color: var(--bg-main); border: 3px solid #ccc; border-radius: 50%; }
+        .timeline-block.visible::before { border-color: var(--accent); }
+        .timeline-block h3 { color: var(--accent); margin-bottom: 10px; }
+        .timeline-block ul { margin-left: 20px; line-height: 1.7; }
+        .timeline-block li { margin-bottom: 8px; }
+
+        /* ================= SECCIÓN 2: COMPOSICIÓN (ANIMACIÓN DE CONVOCATORIA) ================= */
+        #composition .content-wrapper { max-width: 900px; margin: 0 auto; text-align: center; }
+        .mesa-espacio { background: #EAE5D9; border-radius: var(--radius); padding: 40px; position: relative; min-height: 500px; display: flex; justify-content: center; align-items: center; }
+        .mesa-placeholder { color: var(--text-muted); font-size: 1.5rem; font-family: 'Georgia'; }
+        
+        .actor-card {
+            background: var(--bg-card); padding: 15px; border-radius: 8px; box-shadow: var(--shadow);
+            position: absolute; width: 140px; text-align: center; font-weight: 500; font-size: 0.9rem;
+            opacity: 0; transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .enfoque-card { border-bottom: 4px solid var(--accent-green); font-size: 1rem; }
+        
+        #btn-convocar { padding: 15px 30px; font-size: 1.2rem; background: var(--accent); color: white; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+        #btn-convocar:hover { background: #ff9d00; transform: scale(1.05); }
+
+        /* ================= SECCIÓN 3: OBJETIVOS Y FUNCIONES (CONEXIÓN VISUAL) ================= */
+        .functions-container { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; max-width: 1000px; margin: 0 auto; position: relative; }
+        .column { display: flex; flex-direction: column; gap: 20px; }
+        .item-card { background: var(--bg-card); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); cursor: pointer; border: 3px solid transparent; transition: 0.3s; }
+        .item-card.objective { border-left: 6px solid var(--primary); }
+        .item-card.function { border-left: 6px solid var(--accent); }
+        .item-card:hover { transform: scale(1.02); border-color: var(--primary-light); }
+        .item-card.selected { border-color: var(--primary-light); background: #f0f8ff; }
+        .item-card.connected { border-color: var(--accent-green); cursor: default; }
+        
+        #connector-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        #connector-svg line { stroke: var(--primary); stroke-width: 3; stroke-dasharray: 5, 5; animation: dash 1s linear infinite; }
+        #connector-svg .line-final { stroke: var(--accent-green); stroke-dasharray: none; animation: none; transition: stroke 0.5s; }
+        @keyframes dash { to { stroke-dashoffset: -10; } }
+
+        /* ================= SECCIÓN 4: ARTICULACIÓN ================= */
+        .articulation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+        .system-card { background: var(--bg-card); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; }
+        .system-card h4 { color: var(--primary); margin-bottom: 15px; }
+        .system-card p { display: none; margin-top: 15px; color: var(--text-muted); }
+        .system-card.expanded { border-top: 5px solid var(--primary-light); }
+        .system-card.expanded p { display: block; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .section-container { padding: 60px 20px; }
+            .functions-container { grid-template-columns: 1fr; }
+            #connector-svg { display: none; } /* Line drawing is too complex for mobile stacking */
+            .mesa-espacio { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Explorador de Paz Territorial</h1>
+        <nav class="nav-container" id="navContainer">
+            <a href="#normativo" class="nav-button active" data-section="normativo">1. Marco Normativo</a>
+            <a href="#composition" class="nav-button" data-section="composition">2. Composición</a>
+            <a href="#functions" class="nav-button" data-section="functions">3. Objetivos y Funciones</a>
+            <a href="#articulation" class="nav-button" data-section="articulation">4. Articulación</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- SECCIÓN 1: MARCO NORMATIVO Y EVOLUCIÓN INSTITUCIONAL -->
+        <section id="normativo" class="section-container">
+            <h2 class="section-title reveal-on-scroll">Marco Normativo y Evolución</h2>
+            <p class="section-subtitle reveal-on-scroll">Un recorrido dinámico por los fundamentos legales e históricos de los Consejos Territoriales de Paz, Reconciliación y Convivencia (CTPRC).</p>
+            <div class="timeline-container">
+                <!-- El contenido exacto se inyecta aquí desde JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: COMPOSICIÓN Y ENFOQUE DIFERENCIAL -->
+        <section id="composition" class="section-container">
+            <h2 class="section-title reveal-on-scroll">Composición y Enfoque Diferencial</h2>
+            <p class="section-subtitle reveal-on-scroll">La paz se construye con todas las voces. Observa cómo se convoca y conforma la diversa mesa de un CTPRC.</p>
+            <div class="content-wrapper reveal-on-scroll">
+                <button id="btn-convocar" onclick="convocarMesa()">CONVOCAR A LA MESA</button>
+                <div class="mesa-espacio" id="mesaEspacio">
+                    <h3 class="mesa-placeholder" id="mesaPlaceholder">El espacio de diálogo está listo...</h3>
+                    <!-- Actores y Enfoques se inyectan aquí -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: OBJETIVOS Y FUNCIONES -->
+        <section id="functions" class="section-container">
+            <h2 class="section-title reveal-on-scroll">Objetivos y Funciones</h2>
+            <p class="section-subtitle reveal-on-scroll">Un CTPRC tiene metas claras y herramientas para lograrlas. Conecta visualmente cada objetivo con su función correspondiente para entender su propósito.</p>
+            <div class="functions-container reveal-on-scroll">
+                <div class="column" id="objectives-col">
+                    <h3 style="text-align: center;">Objetivos Principales</h3>
+                </div>
+                <div class="column" id="functions-col">
+                    <h3 style="text-align: center;">Funciones Específicas</h3>
+                </div>
+                <svg id="connector-svg"></svg>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: ARTICULACIÓN CON EL SISTEMA INTEGRAL -->
+        <section id="articulation" class="section-container">
+            <h2 class="section-title reveal-on-scroll">Articulación con el Sistema Integral</h2>
+            <p class="section-subtitle reveal-on-scroll">Los CTPRC no operan solos. Expande cada tarjeta para descubrir su rol fundamental al conectar el territorio con las grandes entidades de la paz.</p>
+            <div class="articulation-grid reveal-on-scroll">
+                <!-- Contenido inyectado por JS -->
+            </div>
+        </section>
+    </main>
+
+<script>
+/* ================= DATOS 100% FIELES AL CONTENIDO PROVISTO ================= */
+const DATA = {
+    normativo: [
+        { title: "1. Antecedentes", content: "<p>Los CTPRC tienen como antecedente el Consejo Nacional de Paz, creado mediante la Ley 434 de 1998, posteriormente modificado por la Ley 885 de 2004.</p><p>Tras la firma del Acuerdo Final en 2016, se expide el Decreto Ley 885 de 2017 que fortalece y actualiza el sistema, denominándolo: Consejos de Paz, Reconciliación y Convivencia.</p><p>Este rediseño se alinea con el enfoque de paz territorial y participación ciudadana.</p>" },
+        { title: "2. Naturaleza Jurídica", content: "<h4>Los CTPRC son:</h4><ul><li>Instancias asesoras y consultivas.</li><li>Espacios de diálogo entre autoridades y sociedad civil.</li><li>Mecanismos de participación con enfoque territorial.</li></ul><h4>No son órganos decisorios, pero sí influyen en:</h4><ul><li>Planes de Desarrollo.</li><li>Programas de convivencia.</li><li>Políticas de reconciliación.</li></ul>" },
+        { title: "3. Relación con el Acuerdo Final (2016)", content: "<p>El Acuerdo Final entre el Estado colombiano y las Fuerzas Armadas Revolucionarias de Colombia establece la centralidad de la participación ciudadana en la construcción de paz.</p><h4>Los CTPRC:</h4><ul><li>Promueven diálogo social.</li><li>Facilitan seguimiento a implementación territorial.</li><li>Fortalecen garantías de no repetición.</li><li>Articulan agendas de víctimas, mujeres, jóvenes, pueblos étnicos y líderes sociales.</li></ul>" }
+    ],
+    composition: {
+        actors: ["Representantes de víctimas", "Organizaciones sociales", "Sector empresarial", "Iglesias", "Comunidad educativa", "Autoridades locales"],
+        enfoques: ["Étnico", "De género", "Territorial", "Generacional"]
+    },
+    functions: [
+        { objective: 'Promover cultura de paz', function: 'Promover pedagogía del Acuerdo de Paz' },
+        { objective: 'Fomentar reconciliación', function: 'Generar espacios de diálogo multiactor' },
+        { objective: 'Prevenir conflictividades sociales', function: 'Impulsar estrategias de convivencia' },
+        { objective: 'Asesorar a autoridades territoriales', function: 'Proponer recomendaciones a alcaldes y gobernadores' }
+    ],
+    articulation: {
+        intro: "Los CTPRC no reemplazan el Sistema Integral de Verdad, Justicia, Reparación y No Repetición, pero pueden articular procesos con:",
+        systems: [
+            { title: "Jurisdicción Especial para la Paz (JEP)" },
+            { title: "Unidad de Búsqueda de Personas dadas por Desaparecidas" },
+            { title: "Comisión para el Esclarecimiento de la Verdad" }
+        ],
+        conclusion: "Su papel es territorializar la implementación."
+    }
+};
+
+/* ================= LÓGICA DE SCROLL DINÁMICO Y NAVEGACIÓN ================= */
+const sections = document.querySelectorAll('.section-container');
+const navButtons = document.querySelectorAll('.nav-button');
+const revealElements = document.querySelectorAll('.reveal-on-scroll');
+
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            navButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.section === id);
+            });
+        }
+    });
+}, { rootMargin: "-50% 0px -50% 0px" });
+
+sections.forEach(section => sectionObserver.observe(section));
+
+const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1 });
+
+revealElements.forEach(el => revealObserver.observe(el));
+
+
+/* ================= LÓGICA FASE 1: MARCO NORMATIVO ================= */
+const timelineContainer = document.querySelector('.timeline-container');
+DATA.normativo.forEach(item => {
+    const block = document.createElement('div');
+    block.className = 'timeline-block reveal-on-scroll';
+    block.innerHTML = `<h3>${item.title}</h3><div>${item.content}</div>`;
+    timelineContainer.appendChild(block);
+});
+// Re-observar los elementos recién creados
+document.querySelectorAll('.timeline-block').forEach(el => revealObserver.observe(el));
+
+
+/* ================= LÓGICA FASE 2: COMPOSICIÓN ================= */
+function convocarMesa() {
+    const btn = document.getElementById('btn-convocar');
+    btn.style.display = 'none';
+    document.getElementById('mesaPlaceholder').style.display = 'none';
+
+    const espacio = document.getElementById('mesaEspacio');
+    const center = { x: espacio.offsetWidth / 2, y: espacio.offsetHeight / 2 };
+    const radius = Math.min(center.x, center.y) * 0.7;
+
+    // Crear y animar actores
+    const totalActors = DATA.composition.actors.length;
+    DATA.composition.actors.forEach((name, i) => {
+        const angle = (i / totalActors) * 2 * Math.PI - (Math.PI / 2);
+        const el = document.createElement('div');
+        el.className = 'actor-card';
+        el.innerText = name;
+        espacio.appendChild(el);
+        
+        const x = center.x + radius * Math.cos(angle) - (el.offsetWidth / 2);
+        const y = center.y + radius * Math.sin(angle) - (el.offsetHeight / 2);
+        
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = `translate(${x}px, ${y}px)`;
+        }, 100 * i);
+    });
+    
+    // Crear y animar enfoques
+    const totalEnfoques = DATA.composition.enfoques.length;
+    DATA.composition.enfoques.forEach((name, i) => {
+        const angle = (i / totalEnfoques) * 2 * Math.PI + (Math.PI / totalEnfoques); // Offset angle
+        const el = document.createElement('div');
+        el.className = 'actor-card enfoque-card';
+        el.innerHTML = `<strong>Enfoque:</strong><br>${name}`;
+        espacio.appendChild(el);
+
+        const x = center.x + radius * 0.5 * Math.cos(angle) - (el.offsetWidth / 2);
+        const y = center.y + radius * 0.5 * Math.sin(angle) - (el.offsetHeight / 2);
+
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = `translate(${x}px, ${y}px)`;
+        }, 600 + (100 * i));
+    });
+}
+
+
+/* ================= LÓGICA FASE 3: OBJETIVOS Y FUNCIONES ================= */
+const objectivesCol = document.getElementById('objectives-col');
+const functionsCol = document.getElementById('functions-col');
+const svg = document.getElementById('connector-svg');
+let selectedObjective = null;
+
+DATA.functions.forEach((item, index) => {
+    const objCard = document.createElement('div');
+    objCard.className = 'item-card objective';
+    objCard.dataset.id = index;
+    objCard.innerHTML = `<h4>${item.objective}</h4>`;
+    objCard.onclick = () => selectObjective(objCard);
+    objectivesCol.appendChild(objCard);
+
+    const funcCard = document.createElement('div');
+    funcCard.className = 'item-card function';
+    funcCard.dataset.id = index;
+    funcCard.innerHTML = `<p>${item.function}</p>`;
+    funcCard.onclick = () => selectFunction(funcCard);
+    functionsCol.appendChild(funcCard);
+});
+
+function selectObjective(card) {
+    if (card.classList.contains('connected')) return;
+    document.querySelectorAll('.item-card.objective').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedObjective = card;
+}
+
+function selectFunction(card) {
+    if (card.classList.contains('connected') || !selectedObjective) return;
+    
+    if (selectedObjective.dataset.id === card.dataset.id) {
+        // Conexión correcta
+        selectedObjective.classList.add('connected');
+        card.classList.add('connected');
+        selectedObjective.classList.remove('selected');
+        
+        // Dibujar línea (si no es mobile)
+        if(window.innerWidth > 768) drawLine(selectedObjective, card);
+
+        selectedObjective = null;
+    } else {
+        // Conexión incorrecta (feedback visual)
+        card.classList.add('error-shake');
+        setTimeout(() => card.classList.remove('error-shake'), 400);
+    }
+}
+
+function drawLine(el1, el2) {
+    const containerRect = functionsCol.parentElement.getBoundingClientRect();
+    const rect1 = el1.getBoundingClientRect();
+    const rect2 = el2.getBoundingClientRect();
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', rect1.right - containerRect.left);
+    line.setAttribute('y1', rect1.top - containerRect.top + rect1.height / 2);
+    line.setAttribute('x2', rect2.left - containerRect.left);
+    line.setAttribute('y2', rect2.top - containerRect.top + rect2.height / 2);
+    
+    svg.appendChild(line);
+    setTimeout(() => line.classList.add('line-final'), 10);
+}
+
+
+/* ================= LÓGICA FASE 4: ARTICULACIÓN ================= */
+const articulationGrid = document.querySelector('.articulation-grid');
+DATA.articulation.systems.forEach(system => {
+    const card = document.createElement('div');
+    card.className = 'system-card';
+    card.innerHTML = `<h4>${system.title}</h4><p>${DATA.articulation.conclusion}</p>`;
+    card.onclick = () => card.classList.toggle('expanded');
+    articulationGrid.appendChild(card);
+});
+
+</script>
+</body>
+</html>
