@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVA: Explorador de Paz Territorial - CTPRC</title>
+    <style>
+        /* ================= PALETA DE COLORES Y VARIABLES ================= */
+        :root {
+            --bg-main: #F5F3EF;
+            --bg-card: #FFFFFF;
+            --text-dark: #312A22;
+            --text-muted: #645546;
+            --primary: #005A8D;
+            --primary-light: #007BC0;
+            --accent: #E58A00;
+            --accent-green: #2E8540;
+            --shadow: 0 8px 24px rgba(49, 42, 34, 0.08);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: var(--bg-main); color: var(--text-dark); overflow-x: hidden; font-family: 'Segoe UI', system-ui, sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', 'Georgia', serif; }
+        
+        /* ================= HEADER Y NAVEGACIÓN ================= */
+        header { background: var(--bg-card); padding: 15px 30px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 4px solid var(--accent); }
+        .nav-container { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .nav-button { padding: 8px 16px; border-radius: 20px; background: #eee; font-size: 0.85rem; font-weight: bold; color: #888; transition: 0.3s; text-decoration: none; border: 2px solid transparent; }
+        .nav-button.active { background: var(--primary); color: white; border-color: var(--primary-light); }
+
+        /* ================= ESTILOS GENERALES DE SECCIÓN ================= */
+        .section-container { min-height: 100vh; padding: 80px 40px; border-bottom: 1px solid #ddd; }
+        .section-title { text-align: center; color: var(--primary); font-size: 2.5rem; margin-bottom: 15px; }
+        .section-subtitle { text-align: center; color: var(--text-muted); font-size: 1.2rem; max-width: 800px; margin: 0 auto 60px auto; }
+        .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .reveal-on-scroll.visible { opacity: 1; transform: translateY(0); }
+
+        /* ================= SECCIÓN 5: ENFOQUE DE SEGURIDAD HUMANA (NUEVO) ================= */
+        .lenses-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        .lens-card { background: var(--bg-card); padding: 25px; border-radius: var(--radius); border: 2px solid #eee; cursor: pointer; transition: all 0.3s ease; }
+        .lens-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary-light); }
+        .lens-card.active { border-color: var(--primary); box-shadow: var(--shadow); }
+        .lens-card h4 { color: var(--primary); margin-bottom: 10px; }
+        .lens-card .explanation { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.5s ease; }
+        .lens-card.active .explanation { max-height: 100px; opacity: 1; margin-top: 15px; font-size: 1.05rem; color: var(--text-dark); }
+        .lens-card.active .explanation strong { color: var(--accent); }
+        
+        .context-box { max-width: 1000px; margin: 60px auto 0; background: var(--bg-card); padding: 30px; border-radius: var(--radius); border-left: 6px solid var(--accent); }
+        .context-box h3 { color: var(--accent); }
+        .context-box ul { margin: 15px 0 0 20px; }
+        .context-box li { margin-bottom: 10px; line-height: 1.6; }
+
+        /* ================= SECCIÓN 6: SIMULADOR (NUEVO) ================= */
+        .simulator-container { max-width: 900px; margin: 0 auto; background: var(--bg-card); padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .scenario { background: #f9f9f9; border: 1px solid #eee; padding: 20px; border-radius: 8px; }
+        .step { margin-top: 30px; }
+        .step h4 { color: var(--primary); padding-bottom: 10px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option-label { display: block; background: white; border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .option-label:hover { border-color: var(--primary-light); }
+        .option-label input { margin-right: 10px; }
+        
+        #btn-generate-plan { display: block; width: 100%; padding: 15px; font-size: 1.2rem; background: var(--accent-green); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 40px; }
+        
+        #plan-result { display: none; margin-top: 40px; border-top: 3px solid var(--accent-green); padding-top: 30px; }
+        #plan-result h3 { color: var(--accent-green); }
+        #plan-result ul { margin: 15px 0 0 20px; }
+
+        /* ================= INDICADOR DE SCROLL ================= */
+        .scroll-arrow { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; }
+        .scroll-arrow svg { width: 40px; height: 40px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .section-container { padding: 60px 20px; }
+            .lenses-container, .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Explorador de Paz Territorial</h1>
+        <nav class="nav-container" id="navContainer">
+            <!-- Los botones se generan desde JS -->
+        </nav>
+    </header>
+
+    <main>
+        <!-- SECCIONES PREVIAS (Para mantener la estructura de navegación) -->
+        <section id="normativo" class="section-container" style="display:none;"></section>
+        <section id="composition" class="section-container" style="display:none;"></section>
+        <section id="functions" class="section-container" style="display:none;"></section>
+        <section id="articulation" class="section-container" style="display:none;"></section>
+
+        <!-- SECCIÓN 5: ENFOQUE DE SEGURIDAD HUMANA -->
+        <section id="security" class="section-container">
+            <h2 class="section-title reveal-on-scroll">Enfoque de Seguridad Humana</h2>
+            <p class="section-subtitle reveal-on-scroll">Basado en el enfoque del PNUD (1994), la seguridad se entiende más allá de lo militar. Haz clic en cada dimensión para ver su aplicación directa en el trabajo de los CTPRC.</p>
+            
+            <div class="lenses-container reveal-on-scroll">
+                <!-- Se inyecta desde JS -->
+            </div>
+
+            <div class="context-box reveal-on-scroll">
+                <h3>Para contextos como la UNP, este módulo permite:</h3>
+                <ul>
+                    <li>Integrar análisis de riesgo estructural.</li>
+                    <li>Comprender amenazas como expresión de conflictividades no resueltas.</li>
+                    <li>Aplicar prevención centrada en la persona y el territorio.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="scroll-arrow" id="scrollArrow">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" color="var(--primary)">
+            <path d="M12 15.379l-6.293-6.294-1.414 1.414L12 18.207l7.707-7.707-1.414-1.414z"></path>
+            <path d="M12 8.379l-6.293-6.294-1.414 1.414L12 11.207l7.707-7.707-1.414-1.414z"></path>
+        </svg>
+    </div>
+
+<script>
+/* ================= DATOS 100% FIELES AL CONTENIDO PROVISTO ================= */
+const DATA = {
+    nav: [
+        { id: 'security', text: '1. Enfoque S. Humana' },
+    ],
+    security: {
+        dimensions: [
+            { title: "Seguridad Personal", explanation: "→ protección de líderes." },
+            { title: "Seguridad Política", explanation: "→ participación sin represalias." },
+            { title: "Seguridad Comunitaria", explanation: "→ fortalecimiento del tejido social." },
+            { title: "Seguridad Económica", explanation: "→ incidencia en planes de desarrollo." }
+        ]
+    },
+    simulator: {
+        risks: ["Seguridad personal", "Seguridad política", "Seguridad comunitaria", "Seguridad económica"],
+        actions: [
+            "Generar rutas de prevención para la lideresa (con Personería y Defensoría).",
+            "Proponer recomendaciones al alcalde para incluir proyectos juveniles en el Plan de Desarrollo.",
+            "Crear un círculo de diálogo comunitario entre jóvenes y autoridades locales.",
+            "Articular con la JEP para fortalecer las garantías de no repetición en la zona."
+        ]
+    }
+};
+
+/* ================= LÓGICA DE INICIALIZACIÓN Y NAVEGACIÓN ================= */
+const navContainer = document.getElementById('navContainer');
+DATA.nav.forEach(item => {
+    navContainer.innerHTML += `<a href="#${item.id}" class="nav-button" data-section="${item.id}">${item.text}</a>`;
+});
+// Marcar el primer botón como activo
+document.querySelector('.nav-button').classList.add('active');
+
+const sections = document.querySelectorAll('.section-container');
+const navButtons = document.querySelectorAll('.nav-button');
+const revealElements = document.querySelectorAll('.reveal-on-scroll');
+
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.section === id));
+        }
+    });
+}, { rootMargin: "-50% 0px -50% 0px" });
+sections.forEach(section => sectionObserver.observe(section));
+
+const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1 });
+revealElements.forEach(el => revealObserver.observe(el));
+
+
+/* ================= LÓGICA FASE 5: ENFOQUE SEGURIDAD HUMANA ================= */
+const lensesContainer = document.querySelector('.lenses-container');
+DATA.security.dimensions.forEach(dim => {
+    const card = document.createElement('div');
+    card.className = 'lens-card';
+    card.onclick = () => activateLens(card);
+    card.innerHTML = `
+        <h4>${dim.title}</h4>
+        <div class="explanation"><strong>Aplicación:</strong> ${dim.explanation}</div>
+    `;
+    lensesContainer.appendChild(card);
+});
+
+function activateLens(clickedCard) {
+    const isActive = clickedCard.classList.contains('active');
+    document.querySelectorAll('.lens-card').forEach(c => c.classList.remove('active'));
+    if (!isActive) {
+        clickedCard.classList.add('active');
+    }
+}
+
+
+/* ================= LÓGICA FASE 6: SIMULADOR ================= */
+const riskOptionsContainer = document.getElementById('risk-options');
+DATA.simulator.risks.forEach(risk => {
+    riskOptionsContainer.innerHTML += `
+        <label class="option-label">
+            <input type="checkbox" name="risk" value="${risk}"> ${risk}
+        </label>
+    `;
+});
+
+const actionOptionsContainer = document.getElementById('action-options');
+DATA.simulator.actions.forEach(action => {
+    actionOptionsContainer.innerHTML += `
+        <label class="option-label">
+            <input type="checkbox" name="action" value="${action}"> ${action}
+        </label>
+    `;
+});
+
+function generatePlan() {
+    const selectedRisks = Array.from(document.querySelectorAll('input[name="risk"]:checked')).map(el => el.value);
+    const selectedActions = Array.from(document.querySelectorAll('input[name="action"]:checked')).map(el => el.value);
+    
+    const planContent = document.getElementById('plan-content');
+    let html = '<h4>Diagnóstico de Riesgos Identificados:</h4><ul>';
+    selectedRisks.forEach(risk => {
+        html += `<li>${risk}</li>`;
+    });
+    if (selectedRisks.length === 0) html += `<li>Ningún riesgo diagnosticado.</li>`;
+    html += '</ul>';
+
+    html += '<h4 style="margin-top:20px;">Líneas de Acción Propuestas:</h4><ul>';
+    selectedActions.forEach(action => {
+        html += `<li>${action}</li>`;
+    });
+    if (selectedActions.length === 0) html += `<li>Ninguna acción propuesta.</li>`;
+    html += '</ul>';
+
+    planContent.innerHTML = html;
+    
+    const planResult = document.getElementById('plan-result');
+    planResult.style.display = 'block';
+    
+    // Scroll suave hacia el resultado
+    planResult.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+</script>
+</body>
+</html>
