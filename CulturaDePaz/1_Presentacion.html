@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huellas de la Violencia en Colombia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+        :root {
+            --paper-bg: #f4e8d1;
+            --paper-dark: #e6d2b5;
+            --ink-color: #2c1e16;
+            --highlight-red: #8b2626;
+            --gold-accent: #b8860b;
+            --stamp-green: #2e592e;
+            --error-red: #a52a2a;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: #2c1e16;
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            color: var(--ink-color);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .document-container {
+            background-color: var(--paper-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            max-width: 900px;
+            width: 100%;
+            padding: 50px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 50px rgba(139, 69, 19, 0.2), 0 15px 35px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .document-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 2px solid rgba(139, 69, 19, 0.3);
+            margin: 10px;
+            pointer-events: none;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            color: var(--highlight-red);
+        }
+
+        h1 { font-size: 2.5rem; border-bottom: 2px solid var(--highlight-red); padding-bottom: 10px; margin-bottom: 30px;}
+        h2 { font-size: 1.8rem; color: var(--ink-color); margin-top: 40px;}
+
+        .intro-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: justify;
+            font-style: italic;
+            background: rgba(255,255,255,0.4);
+            padding: 25px;
+            border-left: 4px solid var(--gold-accent);
+            margin-bottom: 30px;
+        }
+
+        .era-btn {
+            width: 100%;
+            background: var(--paper-dark);
+            border: 1px solid var(--gold-accent);
+            padding: 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--ink-color);
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            text-align: left;
+            font-weight: bold;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .era-btn:hover { background: #dcbfa0; }
+
+        .era-content {
+            display: none;
+            padding: 20px;
+            border-left: 2px dashed var(--gold-accent);
+            margin-left: 20px;
+            margin-bottom: 30px;
+        }
+
+        .event-card {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid #c9b195;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .event-title {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: var(--highlight-red);
+            margin-bottom: 15px;
+        }
+
+        .event-text { margin-bottom: 20px; line-height: 1.6; text-align: justify;}
+
+        /* Estilos del Reto Activo */
+        .challenge-box {
+            background: rgba(245, 235, 220, 0.8);
+            border: 1px solid var(--gold-accent);
+            padding: 20px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+
+        .challenge-box h4 {
+            margin: 0 0 15px 0;
+            color: var(--highlight-red);
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        select.historical-select {
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid var(--highlight-red);
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--ink-color);
+            font-weight: bold;
+            padding: 2px 5px;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            text-align: center;
+        }
+        
+        select.historical-select:focus {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-verify {
+            display: block;
+            background-color: var(--highlight-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-verify:hover {
+            background-color: #6a1a1a;
+        }
+
+        /* Retroalimentación Profesional */
+        .feedback-msg {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            font-style: italic;
+            border-left: 4px solid;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-error {
+            background-color: #fce8e8;
+            color: var(--error-red);
+            border-color: var(--error-red);
+        }
+
+        .stamp-success {
+            display: none;
+            color: var(--stamp-green);
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: 3px solid var(--stamp-green);
+            padding: 15px;
+            text-align: center;
+            transform: rotate(-3deg);
+            margin-top: 20px;
+            opacity: 0.9;
+            background: rgba(255,255,255,0.7);
+        }
+
+        .extra-info {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f0e8;
+            border-left: 4px solid var(--stamp-green);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        <h1>Huellas de la violencia en Colombia</h1>
+        
+        <div class="intro-text">
+            "Comprender la historia del conflicto armado en Colombia permite reconocer que la violencia no ha sido un hecho aislado, sino el resultado de procesos sociales, políticos, territoriales y culturales que han afectado de manera diferenciada a personas y comunidades. Esta mirada histórica es fundamental para promover una cultura de paz basada en la memoria, la dignidad de las víctimas y la sociedad, el diálogo y la protección de la vida."
+        </div>
+
+        <h2>Expedientes del Archivo</h2>
+        <p style="text-align: center; font-size: 1rem; color: #553a25; margin-bottom: 40px;">
+            <em>Misión del Investigador: Los documentos históricos han sufrido daños. Lea los antecedentes y reconstruya las conclusiones seleccionando los conceptos correctos para certificar cada archivo.</em>
+        </p>
+
+        <div id="timeline"></div>
+    </div>
+
+    <script>
+        // Base de datos de contenido con el nuevo sistema "Cloze" (Rellenar espacios)
+        const historicalData = [
+            {
+                era: "I. De las guerras civiles a la construcción del Estado (Siglo XIX)",
+                context: "<strong>Disputas por el Estado, el territorio y el poder político</strong> ➔ Durante el siglo XIX, Colombia vivió múltiples guerras civiles y disputas entre proyectos políticos, regionales y religiosos. La formación de los partidos Liberal y Conservador, las tensiones entre centralismo y federalismo, y los conflictos por el modelo de Estado marcaron una cultura política atravesada por la confrontación.",
+                events: [
+                    {
+                        title: "1. Guerra de Independencia (1810-1819)",
+                        text: "Desde 1810, distintas provincias de la Nueva Granada formaronjuntas de gobierno que cuestionaron la autoridad de la Corona española. ",
+                        challenge: "Este proceso abrió profundas disputas sobre la {soberania}, el {territorio} y el tipo de {republica} que debía construirse.",
+                        options: {
+                            soberania: ["monarquía", "soberanía", "economía local"],
+                            territorio: ["comercio", "territorio", "clero"],
+                            republica: ["república", "colonia", "dictadura"]
+                        },
+                        correct: { soberania: "soberanía", territorio: "territorio", republica: "república" },
+                        extra: "En 1819, la Campaña Libertadora consolidó la ruptura con el dominio español y dio paso al proyecto republicano."
+                    },
+                    {
+                        title: "2. Formación de los partidos Tradicionales (1848-1849)",
+                        text: "A mediados del siglo XIX comenzaron a estructurarse los partidos tradicionales. El Partido Liberal formuló su programa en 1848, asociado a José Ezequiel Rojas; en 1849, Mariano Ospina Rodríguez y José Eusebio Caro redactaron el programa del Partido Conservador. Estas agrupaciones recogieron debates sobre religión, educación, economía, libertades, orden político y organización del Estado.",
+                        challenge: "El liberalismo defendió reformas políticas, económicas y sociales inspiradas en ideas de {libertades}, ciudadania y secularaización. Mientras que el conservatismo defendió el {orden}, la tradición, la autoridad, el papel de la {iglesia} y una organización políticca más centralizada.",
+                        options: {
+                            libertades: ["censura", "libertades", "monopolios"],
+                            orden: ["desorden", "orden", "caos"],
+                            iglesia: ["iglesia", "corona", "industria"]
+                        },
+                        correct: { libertades: "libertades", orden: "orden", iglesia: "iglesia" },
+                        extra: "<strong>Hallazgo Desbloqueado:</strong> Las diferencias partidistas se convirtieron en una forma dominante de identidad política."
+                    },
+                    {
+                        title: "3. Abolición de la esclavitud y Guerra Civil (1851)",
+                        text: "Durante el gobierno liberal de José Hilario López se impulsó la abolición legal de la esclavitud. La ley estableció que desde el 1 de enero de 1852 serían libres todas las personas esclavizadas en el territorio de la República.",
+                        challenge: "Esta medida provocó la fuerte oposición de sectores {esclavistas} y terratenientes, especialmente vinculados al Partido Conservador, lo que desencadenó inmediatamente la {guerra} Civil de 1851.",
+                        options: {
+                            esclavistas: ["campesinos", "esclavistas", "artesanos"],
+                            guerra: ["huelga", "guerra", "paz"]
+                        },
+                        correct: { esclavistas: "esclavistas", guerra: "guerra" },
+                        extra: ""
+                    },
+                    {
+                        title: "4. Periodo federal y guerras civiles (1858-1886)",
+        
+                        text: "En la segunda mitad del siglo XIX, Colombia experimentó formas federales de organización política. La Constitución de Rionegro de 1863 dio origen a los Estados Unidos de Colombia y fortaleció la autonomía de los estados soberanos.",
+                        challenge: "Sin embargo, este periodo también estuvo atravesado por guerras civiles (1859-1862, 1875-1876, 1885) disputas entre liberales y conservadores, conflictos entre {regiones} y tensiones entre proyectos de {Estado}.",                        
+                        options: {
+                            Estado: ["Estado", "monopolio", "comercio"],
+                            regiones: ["países vecinos", "regiones", "imperios"]
+                        },
+                        correct: { Estado: "Estado", regiones: "regiones" },
+                        extra: ""
+                    },
+                    {
+                        title: "5. Constitución de 1886 y consolidación del centralismo // La regeneración",                       
+                        text: "Se consolidó el proyecto político de la Regeneración.",
+                        challenge: "La Constitución de 1886 reemplazó el modelo {federal} por una República {centralista}. En este nuevo orden, los antiguos estados soberanos pasaron a ser departamentos, se restringieron {libertades} dadas en el periodo federal, se fortaleció el poder central y se redefinió la relación entre Estado, Iglesia, ciudadanía y autoridad política hasta 1930.",
+                        options: {
+                            federal: ["federal", "colonial", "monárquico"],
+                            centralista: ["descentralizada", "centralista", "autónoma"],
+                            libertades: ["libertades", "tierras", "deudas"]
+                        },
+                        correct: { federal: "federal", centralista: "centralista", libertades: "libertades" },
+                        extra: ""
+                    },
+                    {
+                        title: "6. Guerra de los Mil Días (1899-1902)",
+                        text: "<strong>La última gran guerra civil del siglo XIX.</strong> La Guerra de los Mil Días fue un conflicto civil entre liberales y conservadores que expresó las tensiones acumuladas por la exclusión política, el centralismo, las disputas partidistas y la crisis económica de finales del siglo XIX.",
+                        challenge: "Esta guerra demostró que las disputas políticas no resueltas podían escalar hacia violencias {masivas} y prolongadas, dejando una profunda huella de {desconfianza} y debilidad institucional.",
+                        options: {
+                            masivas: ["aisladas", "masivas", "extranjeras"],
+                            desconfianza: ["progreso", "desconfianza", "riqueza"]
+                        },
+                        correct: { masivas: "masivas", desconfianza: "desconfianza" },
+                        extra: "<strong>Nota Histórica:</strong> Aunque inició en 1899, sus consecuencias marcaron la entrada de Colombia al siglo XX."
+                    }
+                ]
+            },
+            {
+                era: "II. De la Regeneración a los conflictos sociales (1886-1946)",
+                context: "<strong>Centralismo, cuestión social y conflictividad agraria</strong> ➔ Después de las guerras civiles del siglo XIX, Colombia entró en una etapa marcada por el centralismo político, la hegemonía conservadora, la modernización económica, los conflictos laborales y la persistencia del problema agrario. Estos procesos muestran cómo las tensiones sociales y territoriales siguieron acumulándose durante la primera mitad del siglo XX.",
+                events: [
+                    {
+                        title: "1. Hegemonía Conservadora (1886-1930)",
+                        text: "Durante esta etapa se fortaleció el Estado centralista, la autoridad presidencial y la relación entre Estado e Iglesia.",
+                        challenge: "Sin embargo, también persistieron {tensiones} con sectores liberales, {regiones}, trabajadores y movimientos sociales.",
+                        options: {
+                            tensiones: ["tensiones", "igualdades", "guerras"],
+                            regiones: ["regiones", "paises", "estados"]
+                        },
+                        correct: { tensiones: "tensiones", regiones: "regiones" },
+                        extra: ""
+                    },
+                    {
+                        title: "2. Cuestión social y movimientos laborales",
+                        text: "Durante las primeras décadas del siglo XX crecieron las demandas de trabajadores, campesinos y sectores populares frente a las condiciones laborales, la concentración de la tierra y la desigualdad social.",
+                        challenge: "El país empezó a experimentar cambios económicos, crecimiento urbano y organización sindical, pero las respuestas institucionales fueron {limitadas} y, en muchos casos {represivas}.",
+                        options: {
+                            limitadas: ["generosas", "limitadas", "inmediatas"],
+                            represivas: ["represivas", "conciliadoras", "democráticas"]
+                        },
+                        correct: { limitadas: "limitadas", represivas: "represivas" },
+                        extra: ""
+                    },
+                    {
+                        title: "3. Masacre de las Bananeras (1928) Conflicto laboral, protesta social y represión.",
+                        text: "En 1928, trabajadores de la zona bananera del Magdalena realizaron una huelgapara exigir mejores condiciones laborales frente a la United Fruit Company.",
+                        challenge: "Este hecho evidenció trágicamente las tensiones entre los intereses {economicos}, las legítimas demandas {laborales} y respuesta estatal frente  a la protesta.",
+                        options: {
+                            economicos: ["culturales", "economicos", "religiosos"],
+                            laborales: ["laborales", "gubernamentales", "personales"]
+                        },
+                        correct: { economicos: "economicos", laborales: "laborales" },
+                        extra: "La protesta fue reprimida por la fuerza pública, dejando una profunda huella en la memoria del país."
+                    },
+                    {
+                        title: "4. República Liberal (1930-1946), Reformas, modernización estatal y nuevas tensiones políticas.",
+                        text: "La República Liberal inició en 1930 con el fin del predominio conservador. Durante este periodo se impulsaron reformas educativas, laborales, sociales y agrarias, especialmente en el gobierno de Alfonso López Pumarejo.",
+                        challenge: "Aunque estas reformas buscaron modernizar el Estado y ampliar derechos, también generaron {resistencias} de sectores conservadores, propietarios rurales y élites {tradicionales}.",
+                        options: {
+                            resistencias: ["alianzas", "resistencias", "celebraciones"],
+                            tradicionales: ["tradicionales", "extranjeras", "obreras"]
+                        },
+                        correct: { resistencias: "resistencias", tradicionales: "tradicionales" },
+                        extra: ""
+                    }
+                ]
+            },
+            {
+                era: "III. La Violencia y el cierre del sistema político (1946-1958)",
+                context: "<strong>La Violencia, el Bogotazo, Gobierno de Gustavo Rojas Pinilla</strong> ➔ A mediados del siglo XX, Colombia vivió una fuerte agudización de la violencia bipartidista. El asesinato de Jorge Eliécer Gaitán y el Bogotazo profundizaron la confrontación política y social.",
+                events: [
+                    {
+                        title: "El Bogotazo y las causas estructurales",
+                        text: "El asesinato de Jorge Eliécer Gaitán profundizó la confrontación. Posteriormente, el gobierno militar de Gustavo Rojas Pinilla (pactado entre las élites) buscó pacificar el país, pero las medidas fueron superficiales.",
+                        challenge: "Luego, el gobierno de Gustavo Rojas Pinilla (pactado entre las elites) buscó contener la violencia mediante medidas de pacificación, pero las causas {estructurales} persistieron. Este periodo dejó desplazamientos, persecuciones, rupturas comunitarias y desconfianza política, elementos clave para comprender el surgimiento posterior de nuevas expresiones {armadas} y sociales.",
+                        options: {
+                            estructurales: ["temporales", "estructurales", "menores"],
+                            armadas: ["pacíficas", "armadas", "artísticas"]
+                        },
+                        correct: { estructurales: "estructurales", armadas: "armadas" },
+                        extra: "<strong>Conclusión Final:</strong> La historia demuestra que si las causas profundas (sociales, políticas, agrarias) no se resuelven mediante el diálogo y el Estado de Derecho, la violencia se transforma y perdura."
+                    }
+                ]
+            }
+        ];
+
+        const timelineDiv = document.getElementById('timeline');
+
+        historicalData.forEach((eraData, eraIndex) => {
+            // Botón Acordeón
+            const eraBtn = document.createElement('button');
+            eraBtn.className = 'era-btn';
+            eraBtn.innerHTML = `▼ ${eraData.era}`;
+            
+            const eraContent = document.createElement('div');
+            eraContent.className = 'era-content';
+            
+            const contextText = document.createElement('p');
+            contextText.innerHTML = `<em>${eraData.context}</em>`;
+            contextText.style.marginBottom = "25px";
+            contextText.style.color = "#553a25";
+            contextText.style.borderBottom = "1px solid #dcbfa0";
+            contextText.style.paddingBottom = "15px";
+            eraContent.appendChild(contextText);
+
+            // Generar los eventos
+            eraData.events.forEach((ev, evIndex) => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+
+                const title = document.createElement('div');
+                title.className = 'event-title';
+                title.innerText = ev.title;
+
+                const text = document.createElement('div');
+                text.className = 'event-text';
+                text.innerHTML = ev.text;
+
+                // Contenedor del reto activo
+                const challengeBox = document.createElement('div');
+                challengeBox.className = 'challenge-box';
+                challengeBox.id = `challenge-${eraIndex}-${evIndex}`;
+                
+                const challengeTitle = document.createElement('h4');
+                challengeTitle.innerText = "Restauración de Documento";
+                challengeBox.appendChild(challengeTitle);
+
+                // Procesar el texto con huecos (Cloze test)
+                let challengeHtml = ev.challenge;
+                const selectIds = [];
+
+                for (const [key, optionsArray] of Object.entries(ev.options)) {
+                    let selectHtml = `<select id="sel-${eraIndex}-${evIndex}-${key}" class="historical-select">`;
+                    selectHtml += `<option value="" disabled selected>[Seleccionar...]</option>`;
+                    
+                    // Desordenar opciones para que no siempre sea igual
+                    let shuffledOptions = optionsArray.sort(() => 0.5 - Math.random());
+                    shuffledOptions.forEach(opt => {
+                        selectHtml += `<option value="${opt}">${opt}</option>`;
+                    });
+                    selectHtml += `</select>`;
+                    
+                    challengeHtml = challengeHtml.replace(`{${key}}`, selectHtml);
+                    selectIds.push({ id: `sel-${eraIndex}-${evIndex}-${key}`, correctVal: ev.correct[key] });
+                }
+
+                const challengeTextContainer = document.createElement('div');
+                challengeTextContainer.innerHTML = challengeHtml;
+                challengeBox.appendChild(challengeTextContainer);
+
+                // Mensaje de feedback profesional (integrado, sin alerts)
+                const feedbackMsg = document.createElement('div');
+                feedbackMsg.className = 'feedback-msg feedback-error';
+                feedbackMsg.id = `feedback-${eraIndex}-${evIndex}`;
+                feedbackMsg.innerText = "La reconstrucción no es precisa. Revise los hechos documentados y vuelva a intentarlo.";
+
+                // Botón de verificación
+                const verifyBtn = document.createElement('button');
+                verifyBtn.className = 'btn-verify';
+                verifyBtn.innerText = "Certificar Documento";
+                
+                verifyBtn.onclick = function() {
+                    let allCorrect = true;
+                    let allAnswered = true;
+
+                    selectIds.forEach(selData => {
+                        const selectEl = document.getElementById(selData.id);
+                        if (selectEl.value === "") allAnswered = false;
+                        if (selectEl.value !== selData.correctVal) allCorrect = false;
+                    });
+
+                    if (!allAnswered) {
+                        feedbackMsg.innerText = "Debe completar todos los espacios del documento antes de certificarlo.";
+                        feedbackMsg.style.display = 'block';
+                        return;
+                    }
+
+                    if (allCorrect) {
+                        // Ocultar reto y mostrar sello
+                        challengeBox.style.display = 'none';
+                        document.getElementById(`stamp-${eraIndex}-${evIndex}`).style.display = 'block';
+                        
+                        if (ev.extra !== "") {
+                            document.getElementById(`extra-${eraIndex}-${evIndex}`).style.display = 'block';
+                        }
+                    } else {
+                        // Mostrar error elegante
+                        feedbackMsg.innerText = "El análisis histórico es incorrecto. Revise el texto del expediente e intente de nuevo.";
+                        feedbackMsg.style.display = 'block';
+                        
+                        // Ocultar el mensaje después de 4 segundos
+                        setTimeout(() => {
+                            feedbackMsg.style.display = 'none';
+                        }, 4000);
+                    }
+                };
+
+                challengeBox.appendChild(feedbackMsg);
+                challengeBox.appendChild(verifyBtn);
+
+                // Elementos de éxito (ocultos por defecto)
+                const stamp = document.createElement('div');
+                stamp.className = 'stamp-success';
+                stamp.id = `stamp-${eraIndex}-${evIndex}`;
+                stamp.innerText = "EXPEDIENTE RESTAURADO Y CERTIFICADO";
+
+                const extraInfo = document.createElement('div');
+                extraInfo.className = 'extra-info';
+                extraInfo.id = `extra-${eraIndex}-${evIndex}`;
+                extraInfo.innerHTML = ev.extra;
+
+                eventCard.appendChild(title);
+                eventCard.appendChild(text);
+                eventCard.appendChild(challengeBox);
+                eventCard.appendChild(stamp);
+                eventCard.appendChild(extraInfo);
+                
+                eraContent.appendChild(eventCard);
+            });
+
+            // Lógica del acordeón
+            eraBtn.onclick = function() {
+                if(eraContent.style.display === "block") {
+                    eraContent.style.display = "none";
+                    eraBtn.innerHTML = `▼ ${eraData.era}`;
+                } else {
+                    eraContent.style.display = "block";
+                    eraBtn.innerHTML = `▲ ${eraData.era}`;
+                }
+            };
+
+            timelineDiv.appendChild(eraBtn);
+            timelineDiv.appendChild(eraContent);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archivo Histórico - Causas y Etapas del Conflicto</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+        :root {
+            --bg-dark: #1e140e;
+            --sidebar-bg: #2c1e16;
+            --content-bg: #fdfbf7;
+            --paper-dark: #e6d2b5;
+            --highlight-red: #8b2626;
+            --gold-accent: #b8860b;
+            --success-green: #27ae60;
+            --text-dark: #2c1e16;
+            --text-light: #f4e8d1;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--bg-dark);
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .dashboard {
+            width: 100%;
+            max-width: 1350px;
+            height: 90vh;
+            background: var(--content-bg);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            display: flex;
+            overflow: hidden;
+            border: 2px solid var(--gold-accent);
+        }
+
+        /* --- MENÚ LATERAL (ÍNDICE) --- */
+        .sidebar {
+            width: 350px;
+            background: var(--sidebar-bg);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid var(--gold-accent);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .sidebar-header h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-accent);
+            font-size: 1.4rem;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin: 0;
+            font-style: italic;
+        }
+
+        .mobile-instruction {
+            display: none;
+            background: var(--highlight-red);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            animation: pulseBg 2s infinite;
+        }
+
+        @keyframes pulseBg {
+            0% { background: #8b2626; }
+            50% { background: #b03030; }
+            100% { background: #8b2626; }
+        }
+
+        .nav-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .nav-list::-webkit-scrollbar { width: 6px; }
+        .nav-list::-webkit-scrollbar-thumb { background: var(--gold-accent); border-radius: 3px; }
+
+        .nav-category {
+            font-family: 'Cinzel', serif;
+            color: #999;
+            font-size: 0.9rem;
+            padding: 15px 20px 5px 20px;
+            letter-spacing: 1px;
+            border-bottom: 1px dashed #444;
+            margin-bottom: 5px;
+        }
+
+        .nav-item {
+            padding: 15px 20px 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-item:hover { background: rgba(255,255,255,0.05); border-left-color: var(--paper-dark); }
+        .nav-item.active { background: rgba(139, 38, 38, 0.2); border-left-color: var(--highlight-red); color: #fff; font-weight: bold; }
+
+        .status-dot {
+            width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--gold-accent); background: transparent; flex-shrink: 0;
+        }
+        .nav-item.completed .status-dot { background: var(--success-green); border-color: var(--success-green); }
+
+        /* --- VISOR CENTRAL (CONTENIDO) --- */
+        .content-area {
+            flex: 1;
+            position: relative;
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .content-area::-webkit-scrollbar { width: 8px; }
+        .content-area::-webkit-scrollbar-thumb { background: var(--paper-dark); border-radius: 4px; }
+
+        /* Estado Inicial (Vacío) */
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #666; font-style: italic; text-align: center; padding: 40px;
+        }
+        .empty-state h2 { font-family: 'Cinzel', serif; color: var(--highlight-red); font-size: 1.8rem; margin-top: 20px;}
+
+        /* Contenido Activo */
+        .active-content {
+            display: none; 
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* HERO IMAGE (Protagonismo Visual) */
+        .hero-section {
+            width: 100%;
+            height: 350px;
+            position: relative;
+            background: #000;
+            border-bottom: 4px solid var(--gold-accent);
+        }
+
+        .hero-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.3) contrast(1.1) brightness(0.8);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 40px 40px 20px 40px;
+        }
+
+        .content-title {
+            font-family: 'Cinzel', serif;
+            color: #fff;
+            font-size: 2.2rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* Cuerpo del Texto y Audio */
+        .body-section {
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .audio-wrapper {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .btn-audio {
+            background: #fff; color: var(--highlight-red); border: 2px solid var(--highlight-red);
+            padding: 12px 25px; font-family: 'Lora', serif; font-size: 1rem; font-weight: bold;
+            cursor: pointer; border-radius: 30px; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(139, 38, 38, 0.1);
+        }
+        .btn-audio:hover { background: var(--highlight-red); color: white; transform: translateY(-2px); }
+        .btn-audio.playing { background: var(--success-green); border-color: var(--success-green); color: white; }
+
+        .content-intro {
+            font-size: 1.2rem; color: var(--text-dark); line-height: 1.8; font-style: italic;
+            background: rgba(230, 210, 181, 0.4); padding: 25px; border-left: 5px solid var(--gold-accent); border-radius: 0 8px 8px 0;
+            margin-bottom: 40px;
+        }
+
+        /* Acordeones (Gamificación Activa) */
+        .instruction-tag { font-family: 'Cinzel', serif; color: var(--highlight-red); font-weight: bold; margin-bottom: 20px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px;}
+        .instruction-tag::before { content: '►'; color: var(--gold-accent); }
+
+        .accordion-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px;}
+
+        .accordion-item { border: 2px solid var(--paper-dark); border-radius: 8px; background: #fff; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+        .accordion-item:hover { border-color: var(--gold-accent); transform: translateX(5px); }
+
+        .accordion-header { padding: 20px 25px; cursor: pointer; background: #fdfbf7; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.15rem; color: var(--highlight-red); transition: 0.3s; }
+        .accordion-header:hover { background: #f4e8d1; }
+        .accordion-header.opened { background: var(--paper-dark); color: var(--text-dark); border-bottom: 2px solid var(--gold-accent); }
+
+        .icon-toggle { font-size: 1.8rem; color: var(--gold-accent); transition: transform 0.3s; }
+        .accordion-header.opened .icon-toggle { transform: rotate(45deg); }
+
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fff; }
+        .accordion-content { padding: 30px; font-size: 1.1rem; line-height: 1.8; color: var(--text-dark); text-align: justify; }
+
+        /* Barra Inferior */
+        .action-footer {
+            background: var(--paper-dark); border-top: 3px solid var(--gold-accent); padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px;
+        }
+
+        .progress-text { font-family: 'Cinzel', serif; color: var(--text-dark); font-weight: bold; font-size: 1.1rem;}
+
+        .btn-certify {
+            background: var(--node-pending); color: white; border: none; padding: 15px 35px; font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: bold; border-radius: 30px; cursor: not-allowed; opacity: 0.6; transition: 0.3s;
+        }
+        .btn-certify.ready { background: var(--highlight-red); cursor: pointer; opacity: 1; box-shadow: 0 5px 15px rgba(139, 38, 38, 0.4); }
+        .btn-certify.ready:hover { background: #6b1d1d; transform: scale(1.05); }
+        .btn-certify.certified { background: var(--success-green); cursor: default; box-shadow: none; opacity: 1;}
+
+        .btn-back-menu {
+            display: none;
+            background: var(--text-dark); color: white; border: none; padding: 10px 20px; font-family: 'Lora', serif; border-radius: 30px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold;
+        }
+
+        /* --- RESPONSIVIDAD (MÓVILES Y PANTALLAS MEDIANAS) --- */
+        @media (max-width: 950px) {
+            body { padding: 0; align-items: stretch; }
+            .dashboard { flex-direction: column; height: 100vh; max-width: 100%; border-radius: 0; border: none; }
+            
+            /* El menú lateral se convierte en un índice superior que se adapta al contenido */
+            .sidebar { width: 100%; height: auto; max-height: 45vh; border-right: none; border-bottom: 4px solid var(--gold-accent); }
+            
+            .sidebar-header { padding: 20px; }
+            .sidebar-header h1 { font-size: 1.2rem; }
+            
+            /* Instrucción explícita para móviles */
+            .mobile-instruction { display: block; }
+            
+            .nav-list { padding: 0; }
+            .nav-item { padding: 12px 20px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05); border-left: none;}
+            
+            .content-area { flex: 1; }
+            .hero-section { height: 220px; }
+            .content-title { font-size: 1.5rem; }
+            .hero-overlay { padding: 20px; }
+            
+            .body-section { padding: 20px; }
+            .content-intro { font-size: 1.05rem; padding: 15px; }
+            .accordion-header { padding: 15px; font-size: 1rem; }
+            .accordion-content { padding: 20px; font-size: 1rem; }
+            
+            .action-footer { flex-direction: column; gap: 15px; text-align: center; padding: 20px; }
+            .btn-back-menu { display: block; } /* Botón para regresar al menú en móviles */
+            .empty-state { padding: 20px; }
+            .empty-state h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        
+        <!-- COLUMNA IZQUIERDA: MENÚ DE NAVEGACIÓN -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>Huellas de la Violencia</h1>
+                <p>Causas y Etapas del Conflicto</p>
+            </div>
+            
+            <!-- Aviso exclusivo para móviles -->
+            <div class="mobile-instruction">
+                👇 Desliza y selecciona un tema 👇
+            </div>
+
+            <div class="nav-list" id="nav-list">
+                <!-- Se inyecta vía JS -->
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: VISOR CENTRAL -->
+        <div class="content-area" id="content-area">
+            
+            <!-- Estado Inicial (Vacío) -->
+            <div class="empty-state" id="empty-state">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="1.5" style="margin-bottom: 20px;">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                <h2>Explora el Archivo Histórico</h2>
+                <p>Selecciona un expediente en el menú de navegación para descubrir su contenido, analizar sus fotografías y reconstruir la memoria.</p>
+            </div>
+
+            <!-- Contenido Activo -->
+            <div class="active-content" id="active-content">
+                
+                <!-- HERO IMAGE -->
+                <div class="hero-section">
+                    <img id="content-image" src="" alt="Imagen Histórica">
+                    <div class="hero-overlay">
+                        <h2 class="content-title" id="content-title">Título del Expediente</h2>
+                    </div>
+                </div>
+
+                <!-- CUERPO DEL DOCUMENTO -->
+                <div class="body-section">
+                    
+                    <div class="audio-wrapper">
+                        <button id="btn-audio" class="btn-audio" onclick="toggleAudio()">
+                            <span id="audio-icon">🔊</span> <span id="audio-text">Escuchar Relato Histórico</span>
+                        </button>
+                    </div>
+
+                    <div class="content-intro" id="content-intro">Introducción...</div>
+
+                    <div class="instruction-tag">Análisis del Expediente (Toca para revelar)</div>
+                    
+                    <div class="accordion-container" id="accordion-container">
+                        <!-- Acordeones inyectados por JS -->
+                    </div>
+
+                    <div class="action-footer" id="action-footer">
+                        <div class="progress-text" id="progress-text">Puntos revelados: 0 / 0</div>
+                        <button class="btn-certify" id="btn-certify" onclick="certifyCurrent()">Bloqueado (Analiza el texto)</button>
+                        
+                        <!-- Botón exclusivo para UX Móvil -->
+                        <button class="btn-back-menu" onclick="scrollToMenu()">↑ Volver al Índice de Temas</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ==========================================================
+        //  BASE DE DATOS EXACTA (Textos inalterados + Imágenes)
+        // ==========================================================
+        const fileData = [
+            {
+                category: "Causas del Conflicto Armado",
+                items: [
+                    {
+                        id: 'c1',
+                        title: "1. El problema agrario: Tierra y territorio",
+                        image: "../Sources/Causa1.jpeg",
+                        intro: "Las causas del conflicto armado en Colombia responden a un entramado complejo de factores históricos, económicos, sociales y políticos que se han entrelazado durante décadas.",
+                        bullets: [
+                            { sub: "Distribución y tenencia", text: "La histórica concentración de la tierra, el despojo violento y la falta de una reforma agraria efectiva han alimentado el conflicto desde sus orígenes." },
+                            { sub: "Conflictos de uso", text: "El enfrentamiento entre diferentes concepciones de la tierra como fuente de rentabilidad versus sustento espiritual, ha generado disputas entre campesinos, comunidades étnicas y grandes terratenientes o inversionistas." },
+                            { sub: "Abandono del campo", text: "El Estado ha priorizado la colonización hacia territorios marginales en lugar de redistribuir la tierra productiva, dejando estas zonas bajo el control de grupos armados." }
+                        ]
+                    },
+                    {
+                        id: 'c2',
+                        title: "2. Precariedad de la democracia y exclusión política",
+                        image: "../Sources/Causa2.jpg",
+                        intro: "La estructura política del país ha generado barreras y exclusiones que históricamente han alimentado la violencia y justificado las insurgencias.",
+                        bullets: [
+                            { sub: "Participación política limitada", text: "Los pactos entre los partidos tradicionales (como el Frente Nacional) restringieron la participación de fuerzas disidentes o alternativas, lo que fue utilizado como justificación para la opción armada." },
+                            { sub: "Sectarismo y cultura política", text: "Se ha mantenido una cultura en la que el disenso es visto como una amenaza, recurriendo a la eliminación física del adversario político." },
+                            { sub: "El uso de las armas y las urnas", text: "La <strong>Comisión de Esclarecimiento de la Verdad</strong> señala la tendencia histórica de combinar la política legal con el uso de la violencia para acceder o mantenerse en el poder." }
+                        ]
+                    },
+                    {
+                        id: 'c3',
+                        title: "3. Debilidad institucional y ausencia del Estado",
+                        image: "../Sources/Causa3.jpg",
+                        intro: "La presencia del Estado colombiano ha sido asimétrica, generando enormes vacíos de poder en la ruralidad.",
+                        bullets: [
+                            { sub: "Fragmentación territorial", text: "Mientras el Estado hace presencia en los centros urbanos, las zonas rurales han sufrido un abandono institucional, lo que facilitó la instauración de órdenes sociales regulados por grupos armados." },
+                            { sub: "Modelo de seguridad", text: "Las instituciones de seguridad actuaron bajo marcos ideológicos de la Guerra Fría, priorizando la doctrina del 'enemigo interno' y la destrucción del adversario." }
+                        ]
+                    },
+                    {
+                        id: 'c4',
+                        title: "4. Dinamizadores del conflicto",
+                        image: "../Sources/Causa4.jpg",
+                        intro: "Existen fenómenos transversales que actuaron como potentes aceleradores y financiadores de la violencia a nivel nacional.",
+                        bullets: [
+                            { sub: "Narcotráfico", text: "Irrigó el conflicto con recursos abundantes, permitió el surgimiento de grupos paramilitares y penetró profundamente las estructuras del Estado y la sociedad." },
+                            { sub: "Impunidad", text: "La ineficacia de la justicia para investigar y sancionar crímenes de lesa humanidad ha generado incentivos para la reproducción de la violencia y la desconfianza ciudadana en las instituciones." }
+                        ]
+                    },
+                    {
+                        id: 'c5',
+                        title: "5. Contexto Internacional",
+                        image: "../Sources/Causa5.jpg",
+                        intro: "El conflicto colombiano se enmarcó dentro de grandes tensiones y dinámicas geopolíticas mundiales.",
+                        bullets: [
+                            { sub: "Guerra Fría", text: "Las tensiones globales, particularmente la Guerra Fría, influyeron en los referentes ideológicos y en las políticas contrainsurgentes adoptadas por el Estado colombiano, internacionalizando la confrontación interna." }
+                        ]
+                    }
+                ]
+            },
+            
+        ];
+
+        // --- SISTEMA DE ESTADO ---
+        let currentItem = null;
+        let openedAccordions = new Set();
+        let certifiedItems = new Set();
+
+        // --- RENDERIZAR MENÚ LATERAL ---
+        const navList = document.getElementById('nav-list');
+        
+        fileData.forEach((category) => {
+            const catHeader = document.createElement('div');
+            catHeader.className = 'nav-category';
+            catHeader.innerText = category.category;
+            navList.appendChild(catHeader);
+
+            category.items.forEach(item => {
+                const navItem = document.createElement('div');
+                navItem.className = 'nav-item';
+                navItem.id = `nav-${item.id}`;
+                navItem.innerHTML = `
+                    <span>${item.title}</span>
+                    <div class="status-dot"></div>
+                `;
+                navItem.onclick = () => loadContent(item, navItem);
+                navList.appendChild(navItem);
+            });
+        });
+
+        // --- CARGAR CONTENIDO ---
+        function loadContent(item, navElement) {
+            if ('speechSynthesis' in window && speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                resetAudioBtn();
+            }
+
+            currentItem = item;
+            openedAccordions.clear();
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            navElement.classList.add('active');
+
+            document.getElementById('empty-state').style.display = 'none';
+            const activePanel = document.getElementById('active-content');
+            activePanel.style.display = 'flex';
+
+            document.getElementById('content-title').innerText = item.title;
+            document.getElementById('content-intro').innerText = item.intro;
+            document.getElementById('content-image').src = item.image;
+
+            const accordionContainer = document.getElementById('accordion-container');
+            accordionContainer.innerHTML = ''; 
+
+            item.bullets.forEach((bullet, index) => {
+                const accItem = document.createElement('div');
+                accItem.className = 'accordion-item';
+
+                const header = document.createElement('div');
+                header.className = 'accordion-header';
+                header.innerHTML = `<span>${bullet.sub}</span> <span class="icon-toggle">+</span>`;
+                
+                const body = document.createElement('div');
+                body.className = 'accordion-body';
+                
+                const content = document.createElement('div');
+                content.className = 'accordion-content';
+                content.innerHTML = bullet.text;
+
+                body.appendChild(content);
+                accItem.appendChild(header);
+                accItem.appendChild(body);
+                accordionContainer.appendChild(accItem);
+
+                header.onclick = function() {
+                    // Solo cierra si el usuario quiere, sino que abra múltiples (mejor para leer)
+                    if (body.style.maxHeight) {
+                        body.style.maxHeight = null;
+                        header.classList.remove('opened');
+                        header.querySelector('.icon-toggle').innerText = '+';
+                    } else {
+                        body.style.maxHeight = body.scrollHeight + 50 + "px"; // +50 por seguridad en padding
+                        header.classList.add('opened');
+                        header.querySelector('.icon-toggle').innerText = '×';
+                        
+                        openedAccordions.add(index);
+                        updateProgress();
+                    }
+                };
+            });
+
+            // Auto-scroll Suave y UX para Móviles
+            const contentArea = document.getElementById('content-area');
+            
+            // Si la pantalla es pequeña (Móvil), haz scroll hacia abajo para ver el contenido
+            if (window.innerWidth <= 950) {
+                setTimeout(() => {
+                    contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                // En PC, simplemente reinicia el scroll del contenedor a 0
+                contentArea.scrollTop = 0;
+            }
+
+            updateProgress();
+        }
+
+        // --- LÓGICA DE PROGRESO ---
+        function updateProgress() {
+            if(!currentItem) return;
+            const total = currentItem.bullets.length;
+            const current = openedAccordions.size;
+            
+            document.getElementById('progress-text').innerText = `Progreso: ${current} de ${total} revelados`;
+            
+            const btn = document.getElementById('btn-certify');
+            
+            if (certifiedItems.has(currentItem.id)) {
+                btn.className = 'btn-certify certified';
+                btn.innerText = "✓ Archivo Certificado";
+            } else if (current === total) {
+                btn.className = 'btn-certify ready';
+                btn.innerText = "Certificar Documento";
+            } else {
+                btn.className = 'btn-certify';
+                btn.innerText = "Bloqueado (Lee todo)";
+            }
+        }
+
+        function certifyCurrent() {
+            if(!currentItem) return;
+            const total = currentItem.bullets.length;
+            
+            if (openedAccordions.size === total && !certifiedItems.has(currentItem.id)) {
+                certifiedItems.add(currentItem.id);
+                
+                const btn = document.getElementById('btn-certify');
+                btn.className = 'btn-certify certified';
+                btn.innerText = "✓ Archivo Certificado";
+
+                document.getElementById(`nav-${currentItem.id}`).classList.add('completed');
+            }
+        }
+
+        // UX: Volver al menú en celulares
+        function scrollToMenu() {
+            document.getElementById('sidebar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // --- LÓGICA DE AUDIO ---
+        function resetAudioBtn() {
+            const btn = document.getElementById('btn-audio');
+            const icon = document.getElementById('audio-icon');
+            const textSpan = document.getElementById('audio-text');
+            btn.classList.remove('playing');
+            icon.innerText = '🔊';
+            textSpan.innerText = 'Escuchar Relato Histórico';
+        }
+
+        function toggleAudio() {
+            if (!('speechSynthesis' in window)) {
+                alert("Tu navegador no soporta la lectura de texto por voz.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-audio');
+            const icon = document.getElementById('audio-icon');
+            const textSpan = document.getElementById('audio-text');
+
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                resetAudioBtn();
+            } else {
+                let fullTextToRead = currentItem.title + ". " + currentItem.intro + ". ";
+                currentItem.bullets.forEach(b => {
+                    fullTextToRead += b.sub + ". " + b.text + " ";
+                });
+
+                const utterance = new SpeechSynthesisUtterance(fullTextToRead);
+                utterance.lang = 'es-CO'; 
+                utterance.rate = 0.95; 
+                
+                utterance.onend = function() { resetAudioBtn(); };
+
+                speechSynthesis.speak(utterance);
+                
+                btn.classList.add('playing');
+                icon.innerText = '🔇';
+                textSpan.innerText = 'Pausar Relato';
+            }
+        }
+    </script>
+</body>
+</html>

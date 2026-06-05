@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantilla - Línea de Tiempo Interactiva</title>
+    <style>
+        /* === IMPORTACIÓN DE FUENTES === */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+        /* === PALETA DE COLORES (Puedes cambiarlos según el cliente) === */
+        :root {
+            --bg-color: #2c1e16;           /* Fondo exterior (Madera) */
+            --paper-bg: #f4e8d1;           /* Fondo del documento (Papiro claro) */
+            --paper-dark: #e6d2b5;         /* Papiro oscuro (para tarjetas) */
+            --ink-color: #2c1e16;          /* Color del texto principal */
+            --highlight-red: #8b2626;      /* Color de acento (Títulos, botones) */
+            --gold-accent: #b8860b;        /* Color dorado (Bordes, líneas) */
+            --success-green: #2e592e;      /* Color de éxito (Sellos) */
+            --node-pending: #e6a817;       /* Color del círculo no completado */
+            --node-done: #2e592e;          /* Color del círculo completado */
+        }
+
+        /* === ESTILOS GENERALES === */
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--bg-color);
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            color: var(--ink-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            background-color: var(--paper-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            width: 100%;
+            max-width: 1400px;
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        /* --- ENCABEZADO --- */
+        .header-section {
+            padding: 40px 60px 10px 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--highlight-red);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--highlight-red);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .intro-container {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--gold-accent);
+            border-left: 6px solid var(--highlight-red);
+            padding: 25px 40px;
+            margin: 20px auto;
+            max-width: 950px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .intro-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            text-align: justify;
+            font-style: italic;
+            color: #4a3320;
+            margin: 0;
+        }
+
+        .instructions {
+            font-size: 1.1rem;
+            color: #553a25d8;
+            max-width: 800px;
+            margin: 15px auto 0 auto;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            background: var(--paper-dark);
+            padding: 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* --- LÍNEA DE TIEMPO (CONTENEDOR Y PISTA) --- */
+        .timeline-scroll-area {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            cursor: grab;
+            padding: 30px 0 60px 0; 
+            scroll-behavior: smooth;
+        }
+        
+        .timeline-scroll-area:active { cursor: grabbing; }
+        .timeline-scroll-area::-webkit-scrollbar { display: none; }
+        .timeline-scroll-area { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .timeline-track {
+            display: inline-flex;
+            position: relative;
+            min-width: 100%;
+            padding: 0 100px;
+            align-items: center;
+            height: 750px;
+        }
+
+        .timeline-line-center {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #333;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .timeline-line-center::after {
+            content: '';
+            position: absolute;
+            right: 20px;
+            top: -6px;
+            border: 8px solid transparent;
+            border-left-color: #333;
+        }
+
+        /* --- PANELES DE ÉPOCA --- */
+        .timeline-era-col {
+            position: relative;
+            width: 480px; 
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            margin: 0 40px;
+            z-index: 4;
+        }
+
+        .era-panel {
+            background: linear-gradient(135deg, var(--paper-bg) 0%, var(--paper-dark) 100%);
+            border: 4px double var(--highlight-red);
+            border-radius: 4px;
+            padding: 30px;
+            text-align: justify;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .era-panel h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: var(--highlight-red);
+            text-align: center;
+            margin-top: 0;
+            border-bottom: 2px dashed var(--gold-accent);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .era-panel p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--ink-color);
+            margin: 0;
+        }
+
+        /* --- NODOS ALTERNADOS (Tarjetas) --- */
+        .timeline-col {
+            position: relative;
+            width: 340px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .node-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background-color: var(--node-pending);
+            border: 3px solid #333;
+            border-radius: 50%;
+            z-index: 3;
+            transition: all 0.4s ease;
+        }
+
+        .dashed-line {
+            position: absolute;
+            left: 50%;
+            width: 0;
+            border-left: 3px dashed #666;
+            z-index: 2;
+        }
+        .col-top .dashed-line { bottom: 50%; height: 70px; }
+        .col-bottom .dashed-line { top: 50%; height: 70px; }
+
+        .node-date {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2rem;
+            white-space: nowrap;
+            background: var(--paper-bg);
+            padding: 2px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--gold-accent);
+        }
+        .col-top .node-date { bottom: calc(50% - 35px); }
+        .col-bottom .node-date { top: calc(50% - 35px); }
+
+        .card-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px; 
+            background: #fff;
+            border: 1px solid var(--gold-accent);
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .card-container:hover { 
+            transform: translateX(-50%) translateY(-5px); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            border-color: var(--highlight-red);
+        }
+        .col-top .card-container { bottom: calc(50% + 70px); }
+        .col-bottom .card-container { top: calc(50% + 70px); }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 180px; 
+            overflow: hidden;
+            border-bottom: 3px solid var(--paper-dark);
+            position: relative;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.5) contrast(1.1);
+            transition: transform 0.6s ease, filter 0.6s ease;
+        }
+
+        .card-container:hover .card-img {
+            transform: scale(1.08);
+            filter: sepia(0.1) contrast(1.1);
+        }
+
+        .card-content {
+            padding: 15px;
+            text-align: center;
+            background: #fdfbf7;
+        }
+
+        .card-title { 
+            font-size: 1.1rem; 
+            color: var(--highlight-red); 
+            font-weight: bold; 
+            line-height: 1.3; 
+            margin-bottom: 15px; 
+        }
+        
+        .btn-open {
+            background: var(--paper-dark);
+            color: var(--ink-color);
+            border: 1px solid var(--gold-accent);
+            padding: 8px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .card-container:hover .btn-open { 
+            background: var(--highlight-red); 
+            color: white; 
+            border-color: var(--highlight-red);
+        }
+
+        .stamp-mini {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            background: var(--success-green);
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 10;
+        }
+
+        /* --- CONTROLES FLOTANTES --- */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(44, 30, 22, 0.85);
+            color: white;
+            border: 2px solid var(--gold-accent);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .nav-arrow:hover { background: var(--highlight-red); scale: 1.1; }
+        .arrow-left { left: 25px; }
+        .arrow-right { right: 25px; }
+
+        /* --- MODAL SPLIT-SCREEN --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-content {
+            background-color: var(--paper-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            width: 95%;
+            max-width: 1000px;
+            height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative;
+            border: 3px solid var(--gold-accent);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+        }
+
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        .btn-close {
+            position: absolute;
+            top: 15px; right: 20px;
+            background: rgba(255,255,255,0.8);
+            border: 1px solid var(--highlight-red);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem; color: var(--highlight-red);
+            cursor: pointer;
+            z-index: 10;
+            display: flex; justify-content: center; align-items: center;
+            transition: 0.3s;
+        }
+        .btn-close:hover { background: var(--highlight-red); color: white; }
+
+        .modal-left { flex: 1; background: #000; position: relative; }
+        .modal-header-img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.3) contrast(1.1); }
+
+        .modal-right {
+            flex: 1.2;
+            padding: 40px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.4);
+        }
+
+        .modal-right::-webkit-scrollbar { width: 8px; }
+        .modal-right::-webkit-scrollbar-track { background: transparent; }
+        .modal-right::-webkit-scrollbar-thumb { background: var(--paper-dark); border-radius: 4px; }
+
+        /* Estilos del Botón de Audio */
+        .btn-audio {
+            background: var(--paper-bg);
+            color: var(--ink-color);
+            border: 1px solid var(--gold-accent);
+            padding: 6px 15px;
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px; 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .btn-audio:hover { background: var(--paper-dark); border-color: var(--highlight-red); }
+        .btn-audio.playing { background: var(--highlight-red); color: white; border-color: var(--highlight-red); }
+
+        .modal-text-content { 
+            font-size: 1.15rem; 
+            line-height: 1.8; 
+            text-align: justify; 
+            margin-bottom: 25px;
+            color: #332211;
+        }
+        .modal-text-content strong { color: var(--highlight-red); font-weight: 800;}
+
+        .challenge-box {
+            background: rgba(255,255,255,0.7);
+            border: 2px dashed var(--gold-accent);
+            padding: 25px; 
+            border-radius: 6px;
+        }
+
+        select.historical-select {
+            background: #fff; border: 1px solid var(--paper-dark); border-bottom: 3px solid var(--highlight-red);
+            font-family: 'Lora', serif; font-size: 1.05rem; color: var(--highlight-red); font-weight: bold;
+            padding: 2px 5px; cursor: pointer; outline: none; text-align: center; border-radius: 3px;
+        }
+
+        .feedback-msg {
+            display: none; margin-top: 15px; padding: 12px; font-style: italic; border-left: 4px solid var(--error-red); background: #fce8e8; color: var(--error-red); font-weight: bold;
+        }
+
+        .stamp-success {
+            display: none; color: var(--success-green); font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: bold;
+            border: 4px solid var(--success-green); padding: 20px; text-align: center; transform: rotate(-5deg); margin-top: 20px; background: rgba(255,255,255,0.9);
+        }
+
+        /* Responsivo Modal */
+        @media (max-width: 900px) {
+            .modal-content { flex-direction: column; height: 90vh; }
+            .modal-left { flex: none; height: 250px; }
+            .modal-right { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        
+        <!-- INICIO DEL ENCABEZADO -->
+        <div class="header-section">
+            <h1>TÍTULO DE TU LÍNEA DE TIEMPO</h1>
+            
+            <div class="intro-container">
+                <p class="intro-text">
+                    "Escribe aquí la introducción general al tema de tu nueva línea de tiempo. Es el lugar perfecto para poner el contexto global antes de que el estudiante comience a navegar."
+                </p>
+            </div>
+            
+            <div class="instructions">
+                Misión: Explora el archivo. Analiza las fotografías y reconstruye los expedientes.
+            </div>
+        </div>
+
+        <!-- Botones Flotantes de Navegación -->
+        <button class="nav-arrow arrow-left" onclick="scrollLine(-400)">&#10094;</button>
+        <button class="nav-arrow arrow-right" onclick="scrollLine(400)">&#10095;</button>
+
+        <!-- Área de Línea de Tiempo (Se inyecta por JS) -->
+        <div class="timeline-scroll-area" id="scroll-area">
+            <div class="timeline-track" id="timeline-track">
+                <div class="timeline-line-center"></div>
+                <!-- Los Paneles y Eventos se inyectan automáticamente aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL (No necesitas editar nada del HTML aquí, todo funciona con el JS) -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+            <div class="modal-left">
+                <img src="" id="modal-img" class="modal-header-img">
+            </div>
+            <div class="modal-right">
+                <h2 id="modal-title" style="margin-top:0; margin-bottom:10px; font-family:'Cinzel', serif; color:var(--highlight-red);">Título</h2>
+                
+                <button id="btn-audio" class="btn-audio" onclick="toggleAudio()">
+                    <span id="audio-icon">🔊</span> <span id="audio-text">Escuchar Relato</span>
+                </button>
+
+                <div id="modal-desc" class="modal-text-content" style="border-top: 1px solid var(--paper-dark); padding-top: 15px;"></div>
+                
+                <div class="challenge-box" id="modal-challenge-area">
+                    <h4 style="margin:0 0 15px 0; color:var(--highlight-red); font-family:'Cinzel', serif; font-size: 1.2rem;">Análisis y Certificación</h4>
+                    <div id="modal-challenge-text" style="line-height: 2.2; font-size: 1.1rem; color: #222;"></div>
+                    
+                    <div id="modal-feedback" class="feedback-msg"></div>
+                    
+                    <button class="btn-open" id="modal-verify-btn" style="margin-top: 20px; font-size: 1.1rem; padding: 15px; background: var(--highlight-red); color: white;">Certificar Expediente</button>
+                    
+                    <div id="modal-stamp" class="stamp-success">EXPEDIENTE APROBADO</div>
+                    <div id="modal-extra" style="display:none; margin-top:20px; padding:20px; background:#e8f0e8; border-left:5px solid var(--success-green); font-size: 1.05rem; line-height:1.6; color: #1a331a;"></div>
+                    
+                    <button class="btn-open" id="modal-continue-btn" style="display:none; margin-top: 20px; font-size: 1.1rem; padding: 15px; background: var(--success-green); color: white;" onclick="closeModal()">Volver a la línea de tiempo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==========================================================
+        //  👇👇 CONFIGURACIÓN DE DATOS (BASE DE DATOS) 👇👇
+        // ==========================================================
+        // REGLAS PARA CREAR EVENTOS:
+        // 1. El "id" de cada evento debe ser ÚNICO (1, 2, 3, 4...).
+        // 2. En "challenge", usa las llaves {palabra} para los espacios a rellenar.
+        // 3. En "options", el nombre de la llave debe coincidir EXACTAMENTE con la palabra entre corchetes.
+        // 4. En "correct", asigna la respuesta correcta que configuraste en "options".
+
+        const erasData = [
+            {
+                // === PRIMERA ÉPOCA ===
+                eraTitle: "I. Nombre de la Primera Época",
+                eraIntro: "Escribe aquí la introducción de la primera época. Recuerda que puedes usar la etiqueta <strong>para poner textos en negrita</strong> y dar mejor contexto.",
+                events: [
+                    {
+                        id: 1, 
+                        date: "Año 1",
+                        title: "Título del Evento 1",
+                        image: "https://images.unsplash.com/photo-1533036662483-36655c65aeb3?q=80&w=640", // Pon el enlace de tu imagen
+                        text: "Texto histórico del evento. Este texto es el que leerá la voz inteligente, así que asegúrate de que esté bien redactado.",
+                        challenge: "Aquí va la afirmación donde el alumno debe completar el {espacio1} y el {espacio2}.",
+                        options: { 
+                            espacio1: ["Incorrecta 1", "Respuesta Correcta 1", "Incorrecta 2"], 
+                            espacio2: ["Respuesta Correcta 2", "Falsa 1", "Falsa 2"] 
+                        },
+                        correct: { 
+                            espacio1: "Respuesta Correcta 1", 
+                            espacio2: "Respuesta Correcta 2" 
+                        },
+                        extra: "<strong>Información Adicional:</strong> Este texto aparecerá como premio cuando respondan bien."
+                    },
+                    {
+                        id: 2, 
+                        date: "Año 2",
+                        title: "Título del Evento 2",
+                        image: "https://images.unsplash.com/photo-1562664377-709f2c337eb2?q=80&w=640",
+                        text: "Descripción del segundo evento. Puedes seguir agregando más eventos en esta misma época.",
+                        challenge: "Solo un espacio para rellenar sobre el {tema}.",
+                        options: { 
+                            tema: ["Tema Falso", "Tema Correcto", "Otro Tema"] 
+                        },
+                        correct: { 
+                            tema: "Tema Correcto" 
+                        },
+                        extra: "Aparece al terminar."
+                    }
+                ]
+            },
+            {
+                // === SEGUNDA ÉPOCA ===
+                eraTitle: "II. Nombre de la Segunda Época",
+                eraIntro: "Aquí empieza el panel grande que divide la línea de tiempo. Es excelente para cambiar de tema.",
+                events: [
+                    {
+                        id: 3, 
+                        date: "Año 3",
+                        title: "Título del Evento 3",
+                        image: "https://images.unsplash.com/photo-1605330836561-1e96644fcfc5?q=80&w=640",
+                        text: "Recuerda que los IDs deben seguir sumando (1, 2, 3...) para que la lógica interna de los modales y los colores de éxito no se rompa.",
+                        challenge: "Asegúrate de llenar la {llave} adecuadamente.",
+                        options: { 
+                            llave: ["Opción 1", "Llave Correcta", "Opción 2"] 
+                        },
+                        correct: { 
+                            llave: "Llave Correcta" 
+                        },
+                        extra: "" // Puedes dejarlo en blanco ("") si no quieres mostrar nada extra.
+                    }
+                ]
+            }
+            // Puedes copiar y pegar otra época (eraTitle, eraIntro, events) aquí abajo...
+        ];
+
+        // ==========================================================
+        //  👆👆 FIN DE CONFIGURACIÓN DE DATOS 👆👆
+        // ==========================================================
+
+
+        // --- LÓGICA DEL NÚCLEO (NO TOCAR A MENOS QUE SEPAS LO QUE HACES) ---
+        const trackDiv = document.getElementById('timeline-track');
+        let currentActiveEventId = null;
+        let globalCounter = 0; 
+
+        // RENDERIZAR LA LÍNEA DE TIEMPO
+        erasData.forEach((eraInfo) => {
+            
+            const eraHTML = `
+                <div class="timeline-era-col">
+                    <div class="era-panel">
+                        <h2>${eraInfo.eraTitle}</h2>
+                        <p>${eraInfo.eraIntro}</p>
+                    </div>
+                </div>
+            `;
+            trackDiv.insertAdjacentHTML('beforeend', eraHTML);
+
+            eraInfo.events.forEach((ev) => {
+                const isTop = globalCounter % 2 === 0;
+                const colClass = isTop ? 'col-top' : 'col-bottom';
+                
+                const colHTML = `
+                    <div class="timeline-col ${colClass}" id="col-${ev.id}">
+                        <div class="node-circle" id="circle-${ev.id}"></div>
+                        <div class="dashed-line"></div>
+                        <div class="node-date">${ev.date}</div>
+                        
+                        <div class="card-container" onclick="openModal(${ev.id})">
+                            <div class="card-img-wrapper">
+                                <img src="${ev.image}" class="card-img">
+                                <div class="stamp-mini" id="stamp-mini-${ev.id}">✓ APROBADO</div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">${ev.title}</div>
+                                <button class="btn-open">Analizar Expediente</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                trackDiv.insertAdjacentHTML('beforeend', colHTML);
+                globalCounter++;
+            });
+        });
+
+        // FUNCIONES DEL MODAL
+        function getEventById(id) {
+            for(let era of erasData) {
+                let found = era.events.find(e => e.id === id);
+                if(found) return found;
+            }
+            return null;
+        }
+
+        function openModal(id) {
+            const ev = getEventById(id);
+            currentActiveEventId = id;
+
+            document.getElementById('modal-img').src = ev.image;
+            document.getElementById('modal-title').innerText = ev.title;
+            document.getElementById('modal-desc').innerHTML = ev.text;
+
+            // Restablecer Botón de Audio
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                document.getElementById('btn-audio').classList.remove('playing');
+                document.getElementById('audio-icon').innerText = '🔊';
+                document.getElementById('audio-text').innerText = 'Escuchar Relato';
+            }
+
+            let challengeHtml = ev.challenge;
+            window.currentSelects = []; 
+
+            for (const [key, optionsArray] of Object.entries(ev.options)) {
+                let selectHtml = `<select id="sel-${key}" class="historical-select"><option value="" disabled selected>[Vacío]</option>`;
+                let shuffled = optionsArray.sort(() => 0.5 - Math.random());
+                shuffled.forEach(opt => selectHtml += `<option value="${opt}">${opt}</option>`);
+                selectHtml += `</select>`;
+                
+                challengeHtml = challengeHtml.replace(`{${key}}`, selectHtml);
+                window.currentSelects.push({ id: `sel-${key}`, correctVal: ev.correct[key] });
+            }
+
+            document.getElementById('modal-challenge-text').innerHTML = challengeHtml;
+            
+            // Reset de UI Modal
+            document.getElementById('modal-feedback').style.display = 'none';
+            document.getElementById('modal-stamp').style.display = 'none';
+            document.getElementById('modal-extra').style.display = 'none';
+            document.getElementById('modal-continue-btn').style.display = 'none';
+            document.getElementById('modal-verify-btn').style.display = 'block';
+
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() {
+            // DETENER EL AUDIO AUTOMÁTICAMENTE AL CERRAR
+            if ('speechSynthesis' in window && speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+
+        // LÓGICA DE AUDIO (TEXT-TO-SPEECH NATIVO)
+        function toggleAudio() {
+            if (!('speechSynthesis' in window)) {
+                alert("Tu navegador no soporta la lectura de texto por voz.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-audio');
+            const icon = document.getElementById('audio-icon');
+            const textSpan = document.getElementById('audio-text');
+
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                btn.classList.remove('playing');
+                icon.innerText = '🔊';
+                textSpan.innerText = 'Escuchar Relato';
+            } else {
+                const ev = getEventById(currentActiveEventId);
+                
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = ev.text;
+                const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+
+                const textToRead = ev.title + ". " + cleanText;
+                
+                const utterance = new SpeechSynthesisUtterance(textToRead);
+                utterance.lang = 'es-CO'; // Idioma base
+                utterance.rate = 0.95; 
+                
+                utterance.onend = function() {
+                    btn.classList.remove('playing');
+                    icon.innerText = '🔊';
+                    textSpan.innerText = 'Escuchar Relato';
+                };
+
+                speechSynthesis.speak(utterance);
+                
+                btn.classList.add('playing');
+                icon.innerText = '🔇';
+                textSpan.innerText = 'Detener Audio';
+            }
+        }
+
+        // VALIDACIÓN DEL RETO
+        document.getElementById('modal-verify-btn').onclick = function() {
+            let allCorrect = true;
+            let allAnswered = true;
+            const feedback = document.getElementById('modal-feedback');
+
+            window.currentSelects.forEach(sel => {
+                const el = document.getElementById(sel.id);
+                if (el.value === "") allAnswered = false;
+                if (el.value !== sel.correctVal) allCorrect = false;
+            });
+
+            if (!allAnswered) {
+                feedback.innerText = "Faltan datos en el expediente. Complete todos los campos.";
+                feedback.style.display = 'block';
+                return;
+            }
+
+            if (allCorrect) {
+                feedback.style.display = 'none';
+                this.style.display = 'none'; 
+                document.getElementById('modal-stamp').style.display = 'block';
+                
+                const ev = getEventById(currentActiveEventId);
+                if(ev.extra !== "") {
+                    const extraBox = document.getElementById('modal-extra');
+                    extraBox.innerHTML = ev.extra;
+                    extraBox.style.display = 'block';
+                }
+
+                document.getElementById('modal-continue-btn').style.display = 'block';
+
+                document.getElementById(`circle-${currentActiveEventId}`).style.backgroundColor = 'var(--node-done)';
+                document.getElementById(`circle-${currentActiveEventId}`).style.borderColor = 'var(--gold-accent)';
+                document.getElementById(`stamp-mini-${currentActiveEventId}`).style.display = 'block';
+
+            } else {
+                feedback.innerText = "Análisis incorrecto. Revisa el texto y elige nuevamente.";
+                feedback.style.display = 'block';
+                setTimeout(() => feedback.style.display = 'none', 3000);
+            }
+        };
+
+        // DRAG AND SCROLL
+        const scrollArea = document.getElementById('scroll-area');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scrollArea.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - scrollArea.offsetLeft;
+            scrollLeft = scrollArea.scrollLeft;
+        });
+        scrollArea.addEventListener('mouseleave', () => isDown = false);
+        scrollArea.addEventListener('mouseup', () => isDown = false);
+        scrollArea.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollArea.offsetLeft;
+            const walk = (x - startX) * 2; 
+            scrollArea.scrollLeft = scrollLeft - walk;
+        });
+
+        function scrollLine(offset) {
+            scrollArea.scrollBy({ left: offset, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

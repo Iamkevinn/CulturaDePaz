@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memoria Histórica en Clave de Cultura de Paz</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           VARIABLES Y BASE (Sin degradados)
+           ========================================== */
+        :root {
+            --primary: #14213D;
+            --secondary: #344E41;
+            --accent: #B11226;
+            --paper: #F5F3F0;
+            --dark: #050505;
+            --body-bg: #EAE6DF;
+            --light-border: #dcd8d0;
+            
+            /* Colores de feedback en tonos sólidos */
+            --success: #285e3f;
+            --success-light: #e8f5e9;
+            --warning: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--dark);
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* ==========================================
+           HEADER LISO Y PROFESIONAL
+           ========================================== */
+        header {
+            background-color: var(--primary); 
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 8px solid var(--accent);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 5%;
+            background-color: var(--paper);
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--primary);
+        }
+
+        .client-logo {
+            height: 60px;
+            max-width: 250px;
+            object-fit: contain;
+        }
+
+        .course-title {
+            color: var(--paper);
+            font-size: 2.2rem;
+            font-weight: 700;
+            max-width: 800px;
+            margin-top: 60px;
+        }
+
+        /* ==========================================
+           BARRA DE PROGRESO Y NAVEGACIÓN
+           ========================================== */
+        .progress-bar-wrapper {
+            background-color: var(--paper);
+            border-bottom: 2px solid var(--light-border);
+            padding: 14px 30px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .progress-label {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 8px;
+            background-color: var(--light-border);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary); 
+            transition: width 0.4s ease;
+        }
+
+        .progress-counter {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* ==========================================
+           ÁREA DE TARJETAS
+           ========================================== */
+        .cards-viewport {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cards-track {
+            display: flex;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            align-items: flex-start;
+        }
+
+        .slide-card {
+            min-width: 100%;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            padding: 0 20px 30px;
+            scrollbar-width: thin;
+        }
+
+        .card {
+            background-color: var(--paper);
+            padding: 45px;
+            margin: 40px auto;
+            max-width: 900px;
+            box-shadow: 0 10px 0 rgba(20, 33, 61, 0.05);
+            border: 2px solid var(--light-border);
+            border-top: 6px solid var(--primary);
+            border-radius: 4px;
+        }
+
+        .card::before {
+            content: attr(data-label);
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--paper);
+            padding: 6px 18px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            line-height: 1.3;
+        }
+
+        .card p {
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            color: #2a2a2a;
+        }
+
+        /* ==========================================
+           COMPONENTES DE APRENDIZAJE ACTIVO
+           ========================================== */
+        .active-module {
+            background-color: #fff;
+            border: 2px solid var(--secondary);
+            border-radius: 4px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .active-module h3 {
+            color: var(--secondary);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .instruction-tag {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--paper);
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 2px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        /* BANCO DE PALABRAS Y DROPZONES */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed var(--light-border);
+        }
+
+        .word-btn {
+            background-color: var(--paper);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 8px 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .word-btn:hover, .word-btn.selected {
+            background-color: var(--primary);
+            color: var(--paper);
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 140px;
+            height: 30px;
+            border-bottom: 3px solid var(--secondary);
+            background-color: rgba(52, 78, 65, 0.08);
+            text-align: center;
+            vertical-align: bottom;
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: bold;
+            padding: 0 10px;
+            margin: 0 5px;
+            transition: background 0.3s;
+        }
+
+        .drop-zone.filled {
+            background-color: var(--secondary);
+            color: var(--paper);
+            border-bottom-color: var(--primary);
+            cursor: default;
+        }
+
+        /* GRID PARA RELACIONAR */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        @media(max-width: 768px) { .match-grid { grid-template-columns: 1fr; } }
+
+        .match-box {
+            background-color: var(--paper);
+            border: 2px solid var(--light-border);
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .match-box.selected {
+            border-color: var(--primary);
+            background-color: var(--primary);
+            color: var(--paper);
+        }
+        .match-box.solved {
+            background-color: var(--secondary);
+            color: var(--paper);
+            border-color: var(--secondary);
+            cursor: default;
+        }
+
+        /* DETECTAR ERROR TEXTUAL */
+        .error-text-box {
+            background-color: var(--body-bg);
+            padding: 20px;
+            border-left: 6px solid var(--primary);
+            font-size: 1.15rem;
+            line-height: 1.8;
+            font-family: 'Merriweather', serif;
+        }
+        
+        .clickable-segment {
+            cursor: pointer;
+            border-bottom: 2px dotted var(--dark);
+            padding: 0 2px;
+            transition: 0.2s;
+        }
+        .clickable-segment:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        .clickable-segment.solved {
+            background-color: var(--accent);
+            color: var(--paper);
+            border: none;
+            font-weight: bold;
+        }
+
+        /* ==========================================
+           MATRIZ INTERACTIVA (TEMA 3 UNIFICADO)
+           ========================================== */
+        .matrix-row {
+            background-color: var(--paper);
+            border: 2px solid var(--light-border);
+            border-left: 6px solid var(--secondary);
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            .matrix-row {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .matrix-info { flex: 1; padding-right: 20px; border-right: 2px dashed var(--light-border); }
+            .matrix-action { width: 300px; flex-shrink: 0; padding-left: 20px; }
+        }
+        
+        .matrix-location {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            background-color: var(--body-bg);
+            padding: 6px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            border: 1px solid var(--light-border);
+        }
+        
+        .matrix-desc {
+            font-size: 1rem;
+            color: var(--dark);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+        
+        .block-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--secondary);
+            background-color: #fff;
+            color: var(--primary);
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .block-select:focus { border-color: var(--primary); outline: none; }
+        
+        /* Estado de éxito en la fila de la matriz */
+        .matrix-row.success-row {
+            border-color: var(--success);
+            border-left-color: var(--success);
+            background-color: var(--success-light);
+        }
+        .matrix-row.success-row .block-select {
+            background-color: var(--success);
+            color: var(--paper);
+            border-color: var(--success);
+            pointer-events: none;
+        }
+        .matrix-row.success-row .matrix-location {
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        /* BOTONES GLOBALES */
+        .btn-action {
+            background-color: var(--primary);
+            color: var(--paper);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.3s;
+        }
+        .btn-action:hover { background-color: var(--accent); }
+
+        /* FOOTER DE NAVEGACIÓN */
+        .nav-footer {
+            background-color: var(--primary);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-top: 4px solid var(--accent);
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            color: var(--paper);
+            border: 2px solid var(--paper);
+            padding: 10px 22px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background-color: var(--paper);
+            color: var(--primary);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.next-btn {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+        .nav-btn.next-btn:hover:not(:disabled) {
+            background-color: #d1152d;
+        }
+
+        /* MODAL DE FEEDBACK */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(5, 5, 5, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-box {
+            background-color: var(--paper);
+            width: 90%;
+            max-width: 450px;
+            padding: 30px;
+            text-align: center;
+            border-top: 10px solid var(--primary);
+        }
+        .modal-title {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+        .modal-text {
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="../Styles/UNP I.svg" alt="Logo Institucional UNP" class="client-logo"
+                onerror="this.onerror=null; this.src='https://via.placeholder.com/250x60/F5F3F0/14213D?text=LOGO+UNP';">
+        </div>
+        <h1 class="course-title">Memoria Histórica en Clave de Cultura de Paz</h1>
+    </header>
+
+    <div class="progress-bar-wrapper">
+        <span class="progress-label">Progreso del Módulo</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" style="width: 33.33%"></div>
+        </div>
+        <span class="progress-counter" id="progress-counter">1 / 3</span>
+    </div>
+
+    <div class="cards-viewport">
+        <div class="cards-track" id="cards-track">
+
+            <!-- =========================================================
+                 TARJETA 1: QUÉ ES LA MEMORIA HISTÓRICA
+                 ========================================================= -->
+            <div class="slide-card">
+                <div class="card" data-label="Concepto Fundamental">
+                    <h2>¿Qué es la memoria histórica?</h2>
+                    <p>La memoria histórica es un vehículo para el esclarecimiento de los hechos violentos, la dignificación de las voces de las víctimas y la construcción de una paz sostenible en los territorios.</p>
+
+                    <div class="active-module">
+                        <span class="instruction-tag">Reconstruir Concepto</span>
+                        <h3>El Deber del Estado (Ley de Víctimas)</h3>
+                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Toca una palabra del banco inferior y luego toca el espacio vacío para reconstruir el mandato oficial.</p>
+                        
+                        <p style="font-size: 1.15rem; line-height: 2.2;">
+                            "El deber de memoria del Estado significa que las autoridades deben jugar un rol frente a la promoción de procesos de construcción de <span class="drop-zone" data-answer="memoria" onclick="dropWord(this, 'act1')"></span>, como aporte a la realización del derecho a la <span class="drop-zone" data-answer="verdad" onclick="dropWord(this, 'act1')"></span> y el derecho a la <span class="drop-zone" data-answer="reparacion" onclick="dropWord(this, 'act1')"></span> integral de las víctimas."
+                        </p>
+
+                        <div class="word-bank" id="act1-bank">
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="olvido">Olvido sistemático</button>
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="verdad">Verdad</button>
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="venganza">Venganza</button>
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="reparacion">Reparación</button>
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="memoria">Memoria histórica</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =========================================================
+                 TARJETA 2: RELACIONAR PROPÓSITOS Y DETECTAR ERROR
+                 ========================================================= -->
+            <div class="slide-card">
+                <div class="card" data-label="Pilares de Acción">
+                    <h2>Memoria, verdad y no repetición</h2>
+                    
+                    <div class="active-module">
+                        <span class="instruction-tag">Conectar Causa y Consecuencia</span>
+                        <h3>Los cuatro pilares de la memoria</h3>
+                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Selecciona el verbo de la izquierda y conéctalo con su objetivo correspondiente a la derecha.</p>
+                        
+                        <div class="match-grid" id="act2-grid">
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div class="match-box src-box" data-id="1" onclick="selectSource(this, 'act2')">Recordar</div>
+                                <div class="match-box src-box" data-id="2" onclick="selectSource(this, 'act2')">Comprender</div>
+                                <div class="match-box src-box" data-id="3" onclick="selectSource(this, 'act2')">Transformar</div>
+                                <div class="match-box src-box" data-id="4" onclick="selectSource(this, 'act2')">Construir</div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div class="match-box tgt-box" data-match="4" onclick="selectTarget(this, 'act2')">Garantías sociales e institucionales de no repetición.</div>
+                                <div class="match-box tgt-box" data-match="1" onclick="selectTarget(this, 'act2')">Para dimensionar el daño y sus causas originarias.</div>
+                                <div class="match-box tgt-box" data-match="3" onclick="selectTarget(this, 'act2')">Para fortalecer la convivencia y la reparación simbólica.</div>
+                                <div class="match-box tgt-box" data-match="2" onclick="selectTarget(this, 'act2')">Para dignificar a las víctimas y reconocer sus voces.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="active-module" style="border-color: var(--accent);">
+                        <span class="instruction-tag" style="background-color: var(--accent);">Detectar Error Textual</span>
+                        <h3>Análisis Crítico de la Idea Clave</h3>
+                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Lee la siguiente afirmación. Haz clic en el fragmento que es <strong>FALSO</strong> según el enfoque de construcción de paz.</p>
+
+                        <div class="error-text-box">
+                            "La memoria histórica en clave de construcción de paz <span class="clickable-segment" onclick="checkError(this, true)">se limita exclusivamente a archivar el daño en bases de datos estatales para el olvido</span>, y no utiliza los testimonios, el arte, los rituales, ni las pedagogías comunitarias como <span class="clickable-segment" onclick="checkError(this, false)">herramientas para dignificar a las víctimas, reconstruir confianza y fortalecer la no repetición.</span>"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =========================================================
+                 TARJETA 3: LA MATRIZ DE INICIATIVAS (CUADRO UNIFICADO)
+                 ========================================================= -->
+            <div class="slide-card">
+                <div class="card" data-label="Cartografía Territorial">
+                    <h2>Iniciativas de memoria para la paz</h2>
+                    <p>Comunidades e instituciones han construido lugares y prácticas para transformar el dolor en reparación simbólica. Analiza el territorio y el propósito para identificar cada proyecto.</p>
+
+                    <div class="active-module">
+                        <span class="instruction-tag">Completar la Matriz</span>
+                        <h3>Directorio Nacional de Iniciativas</h3>
+                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Lee la ubicación y el porqué de cada proyecto. Despliega el menú en la columna derecha y selecciona la <strong>Iniciativa</strong> que le corresponde a esa región.</p>
+
+                        <div id="matrix-container">
+                            
+                            <!-- Item 1 -->
+                            <div class="matrix-row">
+                                <div class="matrix-info">
+                                    <span class="matrix-location">📍 Granada, Antioquia</span>
+                                    <p class="matrix-desc">Es reconocido por el CNMH como el primer lugar de memoria construido por una comunidad en Colombia. Usa fotografías, relatos e información sobre el conflicto para dignificar a las víctimas y promover una narrativa comunitaria de paz.</p>
+                                </div>
+                                <div class="matrix-action">
+                                    <select class="block-select act3-select" data-answer="salon">
+                                        <option value="">Selecciona la iniciativa...</option>
+                                        <option value="centro">Centro de Memoria, Paz y Reconciliación</option>
+                                        <option value="tejedoras">Tejedoras de Mampuján</option>
+                                        <option value="salon">Salón del Nunca Más</option>
+                                        <option value="museo_casa">Museo Casa de la Memoria</option>
+                                        <option value="cantadoras">Cantadoras de Pogue</option>
+                                        <option value="hilando">Hilando experiencias desde las memorias</option>
+                                        <option value="museo_mampujan">Museo de Arte y Memoria de Mampuján</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Item 2 -->
+                            <div class="matrix-row">
+                                <div class="matrix-info">
+                                    <span class="matrix-location">📍 Bojayá, Chocó</span>
+                                    <p class="matrix-desc">Las afrodescendientes transforman los alabaos en una práctica de memoria, resistencia cultural y transmisión colectiva del dolor, la esperanza y la vida comunitaria.</p>
+                                </div>
+                                <div class="matrix-action">
+                                    <select class="block-select act3-select" data-answer="cantadoras">
+                                        <option value="">Selecciona la iniciativa...</option>
+                                        <option value="centro">Centro de Memoria, Paz y Reconciliación</option>
+                                        <option value="tejedoras">Tejedoras de Mampuján</option>
+                                        <option value="salon">Salón del Nunca Más</option>
+                                        <option value="museo_casa">Museo Casa de la Memoria</option>
+                                        <option value="cantadoras">Cantadoras de Pogue / Voces de resistencia</option>
+                                        <option value="hilando">Hilando experiencias desde las memorias</option>
+                                        <option value="museo_mampujan">Museo de Arte y Memoria de Mampuján</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Item 3 -->
+                            <div class="matrix-row">
+                                <div class="matrix-info">
+                                    <span class="matrix-location">📍 María La Baja, Bolívar</span>
+                                    <p class="matrix-desc">Las mujeres han usado los telares para narrar el desplazamiento, sanar colectivamente y reconstruir vínculos comunitarios, convirtiendo el dolor en un nuevo comienzo.</p>
+                                </div>
+                                <div class="matrix-action">
+                                    <select class="block-select act3-select" data-answer="tejedoras">
+                                        <option value="">Selecciona la iniciativa...</option>
+                                        <option value="centro">Centro de Memoria, Paz y Reconciliación</option>
+                                        <option value="tejedoras">Tejedoras de Mampuján</option>
+                                        <option value="salon">Salón del Nunca Más</option>
+                                        <option value="museo_casa">Museo Casa de la Memoria</option>
+                                        <option value="cantadoras">Cantadoras de Pogue</option>
+                                        <option value="hilando">Hilando experiencias desde las memorias</option>
+                                        <option value="museo_mampujan">Museo de Arte y Memoria de Mampuján</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Item 4 -->
+                            <div class="matrix-row">
+                                <div class="matrix-info">
+                                    <span class="matrix-location">📍 Montes de María</span>
+                                    <p class="matrix-desc">Surge como mecanismo de reparación simbólica y reconciliación. La comunidad eligió crear este espacio para transformar hechos dolorosos en sanación y dignificación colectiva.</p>
+                                </div>
+                                <div class="matrix-action">
+                                    <select class="block-select act3-select" data-answer="museo_mampujan">
+                                        <option value="">Selecciona la iniciativa...</option>
+                                        <option value="centro">Centro de Memoria, Paz y Reconciliación</option>
+                                        <option value="tejedoras">Tejedoras de Mampuján</option>
+                                        <option value="salon">Salón del Nunca Más</option>
+                                        <option value="museo_casa">Museo Casa de la Memoria</option>
+                                        <option value="cantadoras">Cantadoras de Pogue</option>
+                                        <option value="hilando">Hilando experiencias desde las memorias</option>
+                                        <option value="museo_mampujan">Museo de Arte y Memoria de Mampuján</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Item 5 -->
+                            <div class="matrix-row">
+                                <div class="matrix-info">
+                                    <span class="matrix-location">📍 Bogotá</span>
+                                    <p class="matrix-desc">Es una institución orientada a formular estrategias de memoria para la paz, promover espacios de encuentro, reconciliación y participación de distintos sectores sociales.</p>
+                                </div>
+                                <div class="matrix-action">
+                                    <select class="block-select act3-select" data-answer="centro">
+                                        <option value="">Selecciona la iniciativa...</option>
+                                        <option value="centro">Centro de Memoria, Paz y Reconciliación</option>
+                                        <option value="tejedoras">Tejedoras de Mampuján</option>
+                                        <option value="salon">Salón del Nunca Más</option>
+                                        <option value="museo_casa">Museo Casa de la Memoria</option>
+                                        <option value="cantadoras">Cantadoras de Pogue</option>
+                                        <option value="hilando">Hilando experiencias desde las memorias</option>
+                                        <option value="museo_mampujan">Museo de Arte y Memoria de Mampuján</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Item 6 -->
+                            <div class="matrix-row">
+                                <div class="matrix-info">
+                                    <span class="matrix-location">📍 Medellín</span>
+                                    <p class="matrix-desc">Desarrolla exposiciones, talleres y procesos pedagógicos para dignificar a las víctimas y promover reparación. En 2024 reportó más de 57.000 interacciones con sus contenidos.</p>
+                                </div>
+                                <div class="matrix-action">
+                                    <select class="block-select act3-select" data-answer="museo_casa">
+                                        <option value="">Selecciona la iniciativa...</option>
+                                        <option value="centro">Centro de Memoria, Paz y Reconciliación</option>
+                                        <option value="tejedoras">Tejedoras de Mampuján</option>
+                                        <option value="salon">Salón del Nunca Más</option>
+                                        <option value="museo_casa">Museo Casa de la Memoria</option>
+                                        <option value="cantadoras">Cantadoras de Pogue</option>
+                                        <option value="hilando">Hilando experiencias desde las memorias</option>
+                                        <option value="museo_mampujan">Museo de Arte y Memoria de Mampuján</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Item 7 -->
+                            <div class="matrix-row">
+                                <div class="matrix-info">
+                                    <span class="matrix-location">📍 Suárez, Cauca</span>
+                                    <p class="matrix-desc">Es una herramienta pedagógica de la Comisión de la Verdad orientada a reconstruir memorias individuales, colectivas e históricas para la resignificación del pasado y la reconstrucción del tejido social.</p>
+                                </div>
+                                <div class="matrix-action">
+                                    <select class="block-select act3-select" data-answer="hilando">
+                                        <option value="">Selecciona la iniciativa...</option>
+                                        <option value="centro">Centro de Memoria, Paz y Reconciliación</option>
+                                        <option value="tejedoras">Tejedoras de Mampuján</option>
+                                        <option value="salon">Salón del Nunca Más</option>
+                                        <option value="museo_casa">Museo Casa de la Memoria</option>
+                                        <option value="cantadoras">Cantadoras de Pogue</option>
+                                        <option value="hilando">Hilando experiencias desde las memorias</option>
+                                        <option value="museo_mampujan">Museo de Arte y Memoria de Mampuján</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <button class="btn-action" onclick="checkMatrix()">Validar Matriz</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NAVEGACIÓN FOOTER -->
+    <div class="nav-footer">
+        <button class="nav-btn prev-btn" id="btn-prev" onclick="navigate(-1)" disabled>Anterior</button>
+        <button class="nav-btn next-btn" id="btn-next" onclick="navigate(1)">Siguiente Módulo</button>
+    </div>
+
+    <!-- MODAL DE FEEDBACK -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-box" id="modal-box">
+            <h2 id="modal-title" class="modal-title">Resultado</h2>
+            <p id="modal-text" class="modal-text">Mensaje</p>
+            <button class="btn-action" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // NAVEGACIÓN Y PROGRESO
+        // ==========================================
+        const track = document.getElementById('cards-track');
+        const slides = document.querySelectorAll('.slide-card');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        function updateUI() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            document.getElementById('btn-prev').disabled = currentSlide === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (currentSlide === totalSlides - 1) {
+                btnNext.textContent = 'Finalizar Curso';
+                btnNext.onclick = () => showModal(true, '¡Excelente!', 'Has completado todas las actividades interactivas sobre Memoria Histórica.');
+            } else {
+                btnNext.textContent = 'Siguiente Módulo';
+                btnNext.onclick = () => navigate(1);
+            }
+
+            const pct = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.getElementById('progress-counter').textContent = (currentSlide + 1) + ' / ' + totalSlides;
+        }
+
+        function navigate(dir) {
+            currentSlide += dir;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            
+            slides[currentSlide].scrollTop = 0;
+            updateUI();
+        }
+
+        // ==========================================
+        // MODAL SYSTEM
+        // ==========================================
+        function showModal(isSuccess, title, text) {
+            const modal = document.getElementById('custom-modal');
+            const modalBox = document.getElementById('modal-box');
+            
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerHTML = text;
+            
+            if (isSuccess) {
+                document.getElementById('modal-title').style.color = 'var(--success)';
+                modalBox.style.borderTopColor = 'var(--success)';
+            } else {
+                document.getElementById('modal-title').style.color = 'var(--warning)';
+                modalBox.style.borderTopColor = 'var(--warning)';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').style.display = 'none';
+        }
+
+        // ==========================================
+        // ACTIVIDAD 1: COMPLETAR FRASES 
+        // ==========================================
+        let act1_activeWord = null;
+
+        function selectWord(btn, actId) {
+            const group = document.getElementById(`${actId}-bank`);
+            group.querySelectorAll('.word-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            act1_activeWord = { val: btn.dataset.val, text: btn.innerText, el: btn };
+        }
+
+        function dropWord(zone, actId) {
+            if (!act1_activeWord) {
+                showModal(false, 'Acción requerida', 'Primero toca una palabra del banco inferior.');
+                return;
+            }
+
+            if (zone.dataset.answer === act1_activeWord.val) {
+                zone.innerText = act1_activeWord.text;
+                zone.classList.add('filled');
+                act1_activeWord.el.style.display = 'none'; 
+                act1_activeWord = null; 
+
+                const remaining = document.querySelectorAll('.drop-zone:not(.filled)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, '¡Concepto Reconstruido!', 'Has comprendido perfectamente el mandato del Estado en la Ley de Víctimas.'), 400);
+                }
+            } else {
+                showModal(false, 'Contexto incorrecto', 'Esa palabra no encaja conceptualmente en este espacio. Piensa en los derechos fundamentales de las víctimas.');
+            }
+        }
+
+        // ==========================================
+        // ACTIVIDAD 2: RELACIONAR 
+        // ==========================================
+        let activeMatch = { act2: null };
+
+        function selectSource(btn, actId) {
+            if (btn.classList.contains('solved')) return;
+            const grid = document.getElementById(`${actId}-grid`);
+            grid.querySelectorAll('.src-box').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            activeMatch[actId] = { id: btn.dataset.id, el: btn };
+        }
+
+        function selectTarget(targetBtn, actId) {
+            if (targetBtn.classList.contains('solved')) return;
+            
+            const src = activeMatch[actId];
+            if (!src) {
+                showModal(false, 'Paso faltante', 'Primero selecciona un concepto de la columna izquierda.');
+                return;
+            }
+
+            if (targetBtn.dataset.match === src.id) {
+                targetBtn.classList.add('solved');
+                src.el.classList.add('solved');
+                src.el.classList.remove('selected');
+                activeMatch[actId] = null; 
+
+                const grid = document.getElementById(`${actId}-grid`);
+                const remaining = grid.querySelectorAll('.src-box:not(.solved)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, '¡Conexiones Correctas!', 'Has relacionado correctamente los conceptos.'), 400);
+                }
+            } else {
+                showModal(false, 'Conexión Incorrecta', 'El concepto y la descripción no coinciden según la lectura. Inténtalo de nuevo.');
+            }
+        }
+
+        // ==========================================
+        // ACTIVIDAD 2 (PARTE 2): DETECTAR ERROR
+        // ==========================================
+        function checkError(segment, isCorrect) {
+            if (segment.classList.contains('solved')) return;
+
+            if (isCorrect) {
+                segment.classList.add('solved');
+                showModal(true, '¡Análisis crítico correcto!', 'Exacto. La memoria histórica no busca archivar ni fomentar el olvido. Su propósito vital es usar las voces, el arte y los testimonios como herramientas vivas de transformación y no repetición.');
+            } else {
+                showModal(false, 'Interpretación Incorrecta', 'Ese fragmento es completamente CIERTO dentro del marco de la Cultura de Paz. Busca la frase que contradiga el propósito de la memoria.');
+            }
+        }
+
+        // ==========================================
+        // ACTIVIDAD 3: MATRIZ DE INICIATIVAS
+        // ==========================================
+        function checkMatrix() {
+            const selects = document.querySelectorAll('.act3-select');
+            let allCorrect = true;
+            let correctCount = 0;
+            let total = selects.length;
+
+            selects.forEach(select => {
+                const row = select.closest('.matrix-row');
+                const answer = select.dataset.answer;
+                const value = select.value;
+
+                if (value === "") {
+                    allCorrect = false;
+                } else if (value === answer) {
+                    row.classList.add('success-row');
+                    select.disabled = true;
+                    correctCount++;
+                } else {
+                    row.classList.remove('success-row');
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                showModal(true, '¡Cartografía Completa!', 'Excelente trabajo. Has logrado mapear e identificar las 7 iniciativas de memoria para la paz a nivel nacional.');
+            } else if (correctCount > 0) {
+                showModal(false, 'Vas por buen camino', `Has clasificado correctamente ${correctCount} de ${total} iniciativas. Las correctas se han marcado en verde. Revisa las opciones restantes.`);
+            } else {
+                showModal(false, 'Verifica tus respuestas', 'Aún no has acertado ninguna iniciativa. Revisa cuidadosamente la ubicación (Lugar) y el propósito antes de seleccionar en el menú.');
+            }
+        }
+
+    </script>
+</body>
+</html>

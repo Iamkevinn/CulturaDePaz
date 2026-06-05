@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Línea de Tiempo Interactiva - Parte 2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+        :root {
+            --bg-color: #2c1e16;
+            --paper-bg: #f4e8d1;
+            --paper-dark: #e6d2b5;
+            --ink-color: #2c1e16;
+            --highlight-red: #8b2626;
+            --gold-accent: #b8860b;
+            --success-green: #2e592e;
+            --node-pending: #e6a817;
+            --node-done: #2e592e;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--bg-color);
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            color: var(--ink-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            background-color: var(--paper-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            width: 100%;
+            max-width: 1400px;
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .header-section {
+            padding: 40px 60px 10px 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--highlight-red);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--highlight-red);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .intro-container {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--gold-accent);
+            border-left: 6px solid var(--highlight-red);
+            padding: 25px 40px;
+            margin: 20px auto;
+            max-width: 950px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .intro-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            text-align: justify;
+            font-style: italic;
+            color: #4a3320;
+            margin: 0;
+        }
+
+        .instructions {
+            font-size: 1.1rem;
+            color: #553a25d8;
+            max-width: 800px;
+            margin: 15px auto 0 auto;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            background: var(--paper-dark);
+            padding: 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .timeline-scroll-area {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            cursor: grab;
+            padding: 30px 0 60px 0; 
+            scroll-behavior: smooth;
+        }
+        
+        .timeline-scroll-area:active { cursor: grabbing; }
+        .timeline-scroll-area::-webkit-scrollbar { display: none; }
+        .timeline-scroll-area { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .timeline-track {
+            display: inline-flex;
+            position: relative;
+            min-width: 100%;
+            padding: 0 100px;
+            align-items: center;
+            height: 750px;
+        }
+
+        .timeline-line-center {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #333;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .timeline-line-center::after {
+            content: '';
+            position: absolute;
+            right: 20px;
+            top: -6px;
+            border: 8px solid transparent;
+            border-left-color: #333;
+        }
+
+        .timeline-era-col {
+            position: relative;
+            width: 480px; 
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            margin: 0 40px;
+            z-index: 4;
+        }
+
+        .era-panel {
+            background: linear-gradient(135deg, var(--paper-bg) 0%, var(--paper-dark) 100%);
+            border: 4px double var(--highlight-red);
+            border-radius: 4px;
+            padding: 30px;
+            text-align: justify;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .era-panel h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: var(--highlight-red);
+            text-align: center;
+            margin-top: 0;
+            border-bottom: 2px dashed var(--gold-accent);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .era-panel p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--ink-color);
+            margin: 0;
+        }
+
+        .timeline-col {
+            position: relative;
+            width: 340px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .node-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background-color: var(--node-pending);
+            border: 3px solid #333;
+            border-radius: 50%;
+            z-index: 3;
+            transition: all 0.4s ease;
+        }
+
+        .dashed-line {
+            position: absolute;
+            left: 50%;
+            width: 0;
+            border-left: 3px dashed #666;
+            z-index: 2;
+        }
+        .col-top .dashed-line { bottom: 50%; height: 70px; }
+        .col-bottom .dashed-line { top: 50%; height: 70px; }
+
+        .node-date {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2rem;
+            white-space: nowrap;
+            background: var(--paper-bg);
+            padding: 2px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--gold-accent);
+        }
+        .col-top .node-date { bottom: calc(50% - 35px); }
+        .col-bottom .node-date { top: calc(50% - 35px); }
+
+        .card-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px; 
+            background: #fff;
+            border: 1px solid var(--gold-accent);
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .card-container:hover { 
+            transform: translateX(-50%) translateY(-5px); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            border-color: var(--highlight-red);
+        }
+        .col-top .card-container { bottom: calc(50% + 70px); }
+        .col-bottom .card-container { top: calc(50% + 70px); }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 180px; 
+            overflow: hidden;
+            border-bottom: 3px solid var(--paper-dark);
+            position: relative;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.5) contrast(1.1);
+            transition: transform 0.6s ease, filter 0.6s ease;
+        }
+
+        .card-container:hover .card-img {
+            transform: scale(1.08);
+            filter: sepia(0.1) contrast(1.1);
+        }
+
+        .card-content {
+            padding: 15px;
+            text-align: center;
+            background: #fdfbf7;
+        }
+
+        .card-title { 
+            font-size: 1.1rem; 
+            color: var(--highlight-red); 
+            font-weight: bold; 
+            line-height: 1.3; 
+            margin-bottom: 15px; 
+        }
+        
+        .btn-open {
+            background: var(--paper-dark);
+            color: var(--ink-color);
+            border: 1px solid var(--gold-accent);
+            padding: 8px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .card-container:hover .btn-open { 
+            background: var(--highlight-red); 
+            color: white; 
+            border-color: var(--highlight-red);
+        }
+
+        .stamp-mini {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            background: var(--success-green);
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 10;
+        }
+
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(44, 30, 22, 0.85);
+            color: white;
+            border: 2px solid var(--gold-accent);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .nav-arrow:hover { background: var(--highlight-red); scale: 1.1; }
+        .arrow-left { left: 25px; }
+        .arrow-right { right: 25px; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-content {
+            background-color: var(--paper-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            width: 95%;
+            max-width: 1000px;
+            height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative;
+            border: 3px solid var(--gold-accent);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+        }
+
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        .btn-close {
+            position: absolute;
+            top: 15px; right: 20px;
+            background: rgba(255,255,255,0.8);
+            border: 1px solid var(--highlight-red);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem; color: var(--highlight-red);
+            cursor: pointer;
+            z-index: 10;
+            display: flex; justify-content: center; align-items: center;
+            transition: 0.3s;
+        }
+        .btn-close:hover { background: var(--highlight-red); color: white; }
+
+        .modal-left {
+    flex: 1.1; /* Le damos un poquito más de ancho a la imagen en PC */
+    background-color: #1a120c; /* Fondo oscuro elegante */
+    background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png'); /* Textura de madera para mantener el estilo */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px; /* Un margen para que la foto no toque los bordes */
+    box-sizing: border-box;
+}
+.modal-header-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* ¡LA CLAVE! Fuerza a que se vea el 100% de la imagen sin recortar nada */
+    filter: sepia(0.15) contrast(1.1); /* Reduje un poco el sepia para que no se pierda tanta nitidez */
+    
+    /* Efecto visual de fotografía física de archivo */
+    border: 4px solid var(--paper-bg); 
+    border-radius: 2px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+    transition: transform 0.4s ease;
+}
+
+/* Efecto lupa: Al acercar el mouse, la foto se hace ligeramente más grande para ver detalles */
+.modal-header-img:hover {
+    transform: scale(1.05);
+}
+        .modal-right {
+            flex: 1.2;
+            padding: 40px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.4);
+        }
+
+        .modal-right::-webkit-scrollbar { width: 8px; }
+        .modal-right::-webkit-scrollbar-track { background: transparent; }
+        .modal-right::-webkit-scrollbar-thumb { background: var(--paper-dark); border-radius: 4px; }
+
+        .btn-audio {
+            background: var(--paper-bg);
+            color: var(--ink-color);
+            border: 1px solid var(--gold-accent);
+            padding: 6px 15px;
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px; 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .btn-audio:hover { background: var(--paper-dark); border-color: var(--highlight-red); }
+        .btn-audio.playing { background: var(--highlight-red); color: white; border-color: var(--highlight-red); }
+
+        .modal-text-content { 
+            font-size: 1.15rem; 
+            line-height: 1.8; 
+            text-align: justify; 
+            margin-bottom: 25px;
+            color: #332211;
+        }
+        .modal-text-content strong { color: var(--highlight-red); font-weight: 800;}
+
+        .challenge-box {
+            background: rgba(255,255,255,0.7);
+            border: 2px dashed var(--gold-accent);
+            padding: 25px; 
+            border-radius: 6px;
+        }
+
+        select.historical-select {
+            background: #fff; border: 1px solid var(--paper-dark); border-bottom: 3px solid var(--highlight-red);
+            font-family: 'Lora', serif; font-size: 1.05rem; color: var(--highlight-red); font-weight: bold;
+            padding: 2px 5px; cursor: pointer; outline: none; text-align: center; border-radius: 3px;
+        }
+
+        .feedback-msg {
+            display: none; margin-top: 15px; padding: 12px; font-style: italic; border-left: 4px solid var(--error-red); background: #fce8e8; color: var(--error-red); font-weight: bold;
+        }
+
+        .stamp-success {
+            display: none; color: var(--success-green); font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: bold;
+            border: 4px solid var(--success-green); padding: 20px; text-align: center; transform: rotate(-5deg); margin-top: 20px; background: rgba(255,255,255,0.9);
+        }
+
+        @media (max-width: 900px) {
+            .modal-content { flex-direction: column; height: 90vh; }
+            .modal-left { flex: none; height: 250px; }
+            .modal-right { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        
+        <div class="header-section">
+            <h1>Huellas de la Violencia en Colombia - Parte 2</h1>
+            
+            <div class="intro-container">
+                <p class="intro-text">
+                    Esta segunda parte del recurso explora los seis temas interconectados que marcaron la historia de Colombia a mediados del siglo XX: desde el recrudecimiento de la violencia bipartidista y el Bogotazo, hasta el pacto del Frente Nacional y el surgimiento de nuevas insurgencias.
+                </p>
+            </div>
+            
+            <div class="instructions">
+                Misión: Explora el archivo. Analiza las fotografías, escucha los relatos y reconstruye los expedientes.
+            </div>
+        </div>
+
+        <button class="nav-arrow arrow-left" onclick="scrollLine(-400)">&#10094;</button>
+        <button class="nav-arrow arrow-right" onclick="scrollLine(400)">&#10095;</button>
+
+        <div class="timeline-scroll-area" id="scroll-area">
+            <div class="timeline-track" id="timeline-track">
+                <div class="timeline-line-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+            <div class="modal-left">
+                <img src="" id="modal-img" class="modal-header-img">
+            </div>
+            <div class="modal-right">
+                <h2 id="modal-title" style="margin-top:0; margin-bottom:10px; font-family:'Cinzel', serif; color:var(--highlight-red);">Título</h2>
+                
+                <button id="btn-audio" class="btn-audio" onclick="toggleAudio()">
+                    <span id="audio-icon">🔊</span> <span id="audio-text">Escuchar Relato</span>
+                </button>
+
+                <div id="modal-desc" class="modal-text-content" style="border-top: 1px solid var(--paper-dark); padding-top: 15px;"></div>
+                
+                <div class="challenge-box" id="modal-challenge-area">
+                    <h4 style="margin:0 0 15px 0; color:var(--highlight-red); font-family:'Cinzel', serif; font-size: 1.2rem;">Análisis y Certificación</h4>
+                    <div id="modal-challenge-text" style="line-height: 2.2; font-size: 1.1rem; color: #222;"></div>
+                    
+                    <div id="modal-feedback" class="feedback-msg"></div>
+                    
+                    <button class="btn-open" id="modal-verify-btn" style="margin-top: 20px; font-size: 1.1rem; padding: 15px; background: var(--highlight-red); color: white;">Certificar Expediente</button>
+                    
+                    <div id="modal-stamp" class="stamp-success">EXPEDIENTE APROBADO</div>
+                    <div id="modal-extra" style="display:none; margin-top:20px; padding:20px; background:#e8f0e8; border-left:5px solid var(--success-green); font-size: 1.05rem; line-height:1.6; color: #1a331a;"></div>
+                    
+                    <button class="btn-open" id="modal-continue-btn" style="display:none; margin-top: 20px; font-size: 1.1rem; padding: 15px; background: var(--success-green); color: white;" onclick="closeModal()">Volver a la línea de tiempo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // BASE DE DATOS - PARTE 2
+        const erasData = [
+            {
+                eraTitle: "Transición Política y Social (1946 - 1974)",
+                eraIntro: "Este periodo marcó una transición crítica en la historia de Colombia, caracterizado por una sucesión de crisis institucionales que configuraron las dinámicas del conflicto armado contemporáneo.",
+                events: [
+                    {
+                        id: 1, 
+                        date: "1946-1953",
+                        title: "1. Retorno del Partido Conservador al poder",
+                        image: "../Sources/Retorno_Conservador.jpg", 
+                        text: "En 1946, el Partido Conservador volvió al poder con los presidentes Mariano Ospina Pérez y Laureano Gómez. Este cambio agudizó las tensiones políticas acumuladas entre liberales y conservadores, especialmente en zonas rurales donde las identidades partidistas estaban fuertemente ligadas a la vida comunitaria, el acceso al poder local y las disputas por la tierra. Surgimiento del grupo paramilitar conservador “Los pájaros” financiado por terratenientes y uso de la policía (Chulavita) para asesinar y perseguir liberales.",
+                        challenge: "El cambio de gobierno agudizó las {tensiones} políticas y sociales, propiciando el surgimiento del grupo paramilitar “Los {pajaros}” y el uso de la policía ({chulavita}) para asesinar y perseguir opositores.",
+                        options: { 
+                            tensiones: ["alianzas", "tensiones", "economías"], 
+                            pajaros: ["jaguares", "pajaros", "halcones"],
+                            chulavita: ["chulavita", "militar", "extranjera"]
+                        },
+                        correct: { tensiones: "tensiones", pajaros: "pajaros", chulavita: "chulavita" },
+                        extra: ""
+                    },
+                    {
+                        id: 2, 
+                        date: "1948",
+                        title: "2. Asesinato de Jorge Eliécer Gaitán-El Bogotazo",
+                        image: "../Sources/Bogotazo2.jpg",
+                        text: "El asesinato de Jorge Eliécer Gaitán, líder liberal con amplio respaldo popular, produjo una fuerte conmoción social y política. El Bogotazo expresó la crisis de legitimidad del orden político y desencadenó disturbios, destrucción urbana y una mayor radicalización de la violencia partidista en distintas regiones del país.",
+                        challenge: "El Bogotazo expresó una profunda crisis de {legitimidad} en el orden político, desencadenando disturbios, destrucción urbana y una mayor {radicalizacion} de la violencia en las regiones.",
+                        options: { 
+                            legitimidad: ["economía", "legitimidad", "educación"],
+                            radicalizacion: ["pacificación", "radicalizacion", "negociación"]
+                        },
+                        correct: { legitimidad: "legitimidad", radicalizacion: "radicalizacion" },
+                        extra: ""
+                    },
+                    {
+                        id: 3, 
+                        date: "1946-1958",
+                        title: "3. Periodo de La Violencia",
+                        image: "../Sources/PeriodoDeViolencia.jpg",
+                        text: "",
+                        challenge: "La Violencia fue un periodo de confrontación política y social marcado por las persecuciones, asesinatos, {desplazamientos} y control territorial entre sectores liberales y conservadores. Aunque tuvo una expresión partidista, también se relacionó con conflictos {agrarios} disputas locales, venganzas, control de tierras y ausencia efectiva del Estado en varios territorios. Durante este periodo, Mariano Ospina cerró el Congreso, por ello los liberales se apartaron de las elecciones de 1950, desencadenando el ascenso de Laureano Gómez a la presidencia.",
+                        options: { 
+                            desplazamientos: ["alianzas", "desplazamientos", "elecciones"],
+                            agrarios: ["industriales", "agrarios", "culturales"],
+                        },
+                        correct: { desplazamientos: "desplazamientos", agrarios: "agrarios"},
+                        extra: ""
+                    },
+                    {
+                        id: 4, 
+                        date: "1953-1957",
+                        title: "4. Gobierno de Gustavo Rojas Pinilla",
+                        image: "../Sources/RojasPinilla.jpeg",
+                        text: "",
+                        challenge: "En medio de la crisis, el golpe de Estado de 1953, mediante el cual Gustavo Rojas Pinilla depuso al presidente Laureano Gómez, fue respaldado inicialmente por sectores de las {elites} políticas, económicas y religiosas, que vieron en el gobierno militar una salida de orden y {pacificacion}. Su administración promovió amnistías y acuerdos de paz, como la “Paz del Llano” con las guerrillas liberales; sin embargo, no logró resolver las causas {estructurales} de la violencia y terminó enfrentándose a los partidos tradicionales.",
+                        options: { 
+                            elites: ["masas", "elites", "guerrillas"],
+                            pacificacion: ["guerra", "pacificacion", "venganza"],
+                            estructurales: ["temporales", "estructurales", "menores"]
+                        },
+                        correct: { elites: "elites", pacificacion: "pacificacion", estructurales: "estructurales" },
+                        extra: ""
+                    },
+                    
+                ]
+            }
+        ];
+
+        // LOGICA DE RENDERIZADO
+        const trackDiv = document.getElementById('timeline-track');
+        let currentActiveEventId = null;
+        let globalCounter = 0; 
+
+        erasData.forEach((eraInfo) => {
+            const eraHTML = `
+                <div class="timeline-era-col">
+                    <div class="era-panel">
+                        <h2>${eraInfo.eraTitle}</h2>
+                        <p>${eraInfo.eraIntro}</p>
+                    </div>
+                </div>
+            `;
+            trackDiv.insertAdjacentHTML('beforeend', eraHTML);
+
+            eraInfo.events.forEach((ev) => {
+                const isTop = globalCounter % 2 === 0;
+                const colClass = isTop ? 'col-top' : 'col-bottom';
+                
+                const colHTML = `
+                    <div class="timeline-col ${colClass}" id="col-${ev.id}">
+                        <div class="node-circle" id="circle-${ev.id}"></div>
+                        <div class="dashed-line"></div>
+                        <div class="node-date">${ev.date}</div>
+                        
+                        <div class="card-container" onclick="openModal(${ev.id})">
+                            <div class="card-img-wrapper">
+                                <img src="${ev.image}" class="card-img">
+                                <div class="stamp-mini" id="stamp-mini-${ev.id}">✓ APROBADO</div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">${ev.title}</div>
+                                <button class="btn-open">Analizar Expediente</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                trackDiv.insertAdjacentHTML('beforeend', colHTML);
+                globalCounter++;
+            });
+        });
+
+        // FUNCIONES DEL MODAL
+        function getEventById(id) {
+            for(let era of erasData) {
+                let found = era.events.find(e => e.id === id);
+                if(found) return found;
+            }
+            return null;
+        }
+
+function openModal(id) {
+            const ev = getEventById(id);
+            currentActiveEventId = id;
+
+            document.getElementById('modal-img').src = ev.image;
+            document.getElementById('modal-title').innerText = ev.title;
+            document.getElementById('modal-desc').innerHTML = ev.text;
+
+            // Reiniciar el audio si está activo
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                document.getElementById('btn-audio').classList.remove('playing');
+                document.getElementById('audio-icon').innerText = '🔊';
+                document.getElementById('audio-text').innerText = 'Escuchar Relato';
+            }
+
+            const challengeArea = document.getElementById('modal-challenge-area');
+
+            // VALIDACIÓN: Si el reto está vacío, ocultamos la caja
+            if (!ev.challenge || ev.challenge.trim() === "") {
+                challengeArea.style.display = 'none';
+                
+                // Marcamos el nodo como completado automáticamente ya que solo es de lectura
+                document.getElementById(`circle-${id}`).style.backgroundColor = 'var(--node-done)';
+                document.getElementById(`circle-${id}`).style.borderColor = 'var(--gold-accent)';
+                document.getElementById(`stamp-mini-${id}`).style.display = 'block';
+                
+            } else {
+                // Si hay reto, mostramos la caja y generamos los selectores
+                challengeArea.style.display = 'block';
+                
+                let challengeHtml = ev.challenge;
+                window.currentSelects = []; 
+
+                for (const [key, optionsArray] of Object.entries(ev.options)) {
+                    let selectHtml = `<select id="sel-${key}" class="historical-select"><option value="" disabled selected>[Vacío]</option>`;
+                    let shuffled = optionsArray.sort(() => 0.5 - Math.random());
+                    shuffled.forEach(opt => selectHtml += `<option value="${opt}">${opt}</option>`);
+                    selectHtml += `</select>`;
+                    
+                    challengeHtml = challengeHtml.replace(`{${key}}`, selectHtml);
+                    window.currentSelects.push({ id: `sel-${key}`, correctVal: ev.correct[key] });
+                }
+
+                document.getElementById('modal-challenge-text').innerHTML = challengeHtml;
+                
+                // Reiniciar estados visuales del reto
+                document.getElementById('modal-feedback').style.display = 'none';
+                document.getElementById('modal-stamp').style.display = 'none';
+                document.getElementById('modal-extra').style.display = 'none';
+                document.getElementById('modal-continue-btn').style.display = 'none';
+                document.getElementById('modal-verify-btn').style.display = 'block';
+            }
+
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() {
+            if ('speechSynthesis' in window && speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+
+        function toggleAudio() {
+            if (!('speechSynthesis' in window)) {
+                alert("Tu navegador no soporta la lectura de texto por voz.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-audio');
+            const icon = document.getElementById('audio-icon');
+            const textSpan = document.getElementById('audio-text');
+
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                btn.classList.remove('playing');
+                icon.innerText = '🔊';
+                textSpan.innerText = 'Escuchar Relato';
+            } else {
+                const ev = getEventById(currentActiveEventId);
+                
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = ev.text;
+                const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+
+                const textToRead = ev.title + ". " + cleanText;
+                
+                const utterance = new SpeechSynthesisUtterance(textToRead);
+                utterance.lang = 'es-CO'; 
+                utterance.rate = 0.95; 
+                
+                utterance.onend = function() {
+                    btn.classList.remove('playing');
+                    icon.innerText = '🔊';
+                    textSpan.innerText = 'Escuchar Relato';
+                };
+
+                speechSynthesis.speak(utterance);
+                
+                btn.classList.add('playing');
+                icon.innerText = '🔇';
+                textSpan.innerText = 'Detener Audio';
+            }
+        }
+
+        // VALIDACIÓN
+        document.getElementById('modal-verify-btn').onclick = function() {
+            let allCorrect = true;
+            let allAnswered = true;
+            const feedback = document.getElementById('modal-feedback');
+
+            window.currentSelects.forEach(sel => {
+                const el = document.getElementById(sel.id);
+                if (el.value === "") allAnswered = false;
+                if (el.value !== sel.correctVal) allCorrect = false;
+            });
+
+            if (!allAnswered) {
+                feedback.innerText = "Faltan datos en el expediente. Complete todos los campos.";
+                feedback.style.display = 'block';
+                return;
+            }
+
+            if (allCorrect) {
+                feedback.style.display = 'none';
+                this.style.display = 'none'; 
+                document.getElementById('modal-stamp').style.display = 'block';
+                
+                const ev = getEventById(currentActiveEventId);
+                if(ev.extra !== "") {
+                    const extraBox = document.getElementById('modal-extra');
+                    extraBox.innerHTML = ev.extra;
+                    extraBox.style.display = 'block';
+                }
+
+                document.getElementById('modal-continue-btn').style.display = 'block';
+
+                document.getElementById(`circle-${currentActiveEventId}`).style.backgroundColor = 'var(--node-done)';
+                document.getElementById(`circle-${currentActiveEventId}`).style.borderColor = 'var(--gold-accent)';
+                document.getElementById(`stamp-mini-${currentActiveEventId}`).style.display = 'block';
+
+            } else {
+                feedback.innerText = "Análisis incorrecto. Revisa el texto y elige nuevamente.";
+                feedback.style.display = 'block';
+                setTimeout(() => feedback.style.display = 'none', 3000);
+            }
+        };
+
+        // DRAG AND SCROLL
+        const scrollArea = document.getElementById('scroll-area');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scrollArea.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - scrollArea.offsetLeft;
+            scrollLeft = scrollArea.scrollLeft;
+        });
+        scrollArea.addEventListener('mouseleave', () => isDown = false);
+        scrollArea.addEventListener('mouseup', () => isDown = false);
+        scrollArea.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollArea.offsetLeft;
+            const walk = (x - startX) * 2; 
+            scrollArea.scrollLeft = scrollLeft - walk;
+        });
+
+        function scrollLine(offset) {
+            scrollArea.scrollBy({ left: offset, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

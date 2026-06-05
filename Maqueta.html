@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theme Playground · E‑Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────── */
+:root{
+  /* Course theme (editable) */
+  --primary:#1A6B8A; --secondary:#2E8AA7; --accent:#E07B39;
+  --light:#F5F9FA; --highlight:#FFF1C7; --dark:#1C2B33;
+  --text:#1C2B33; --text-muted:#6B8998;
+  --success:#2D7D5A; --danger:#C03B3B;
+  --border:#D4E2E9; --card:#FFFFFF;
+
+  /* App chrome (fixed) */
+  --app-bg:#0E1217;
+  --panel-bg:#151C23;
+  --panel-border:#242E38;
+  --panel-hover:#1D2830;
+  --input-bg:#1D2830;
+  --input-border:#2D3D4A;
+  --label:#8BA3B3;
+  --label-sm:11px;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --r-sm:6px; --r-md:10px; --r-lg:16px;
+  --transition:0.18s ease;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+
+body{
+  font-family:var(--sans);
+  background:var(--app-bg);
+  color:#D0DDE6;
+  font-size:14px;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+/* ─── TOPBAR ─────────────────────────────────────────────── */
+.topbar{
+  height:52px;
+  background:var(--panel-bg);
+  border-bottom:1px solid var(--panel-border);
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:16px;
+  flex-shrink:0;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.topbar-logo{
+  font-family:var(--serif);
+  font-size:1.1rem;
+  color:#EAF2F6;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.topbar-logo-dot{
+  width:8px;height:8px;
+  background:var(--primary);
+  border-radius:50%;
+  transition:background var(--transition);
+}
+
+.topbar-sep{width:1px;height:24px;background:var(--panel-border)}
+
+.topbar-label{
+  font-size:12px;
+  color:var(--label);
+  letter-spacing:.04em;
+}
+
+.topbar-wcag{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+}
+
+.wcag-pill{
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:600;
+  font-family:var(--mono);
+  background:#0D1F0F;
+  color:#4DBD74;
+  border:1px solid #1E4A27;
+  transition:all .3s;
+}
+
+.wcag-pill.warn{
+  background:#201207;
+  color:#E09040;
+  border-color:#5A2D08;
+}
+
+/* ─── LAYOUT ─────────────────────────────────────────────── */
+.layout{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  flex:1;
+  overflow:hidden;
+}
+
+/* ─── SIDEBAR ────────────────────────────────────────────── */
+.sidebar{
+  background:var(--panel-bg);
+  border-right:1px solid var(--panel-border);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.sidebar-inner{
+  flex:1;
+  overflow-y:auto;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.sidebar-inner::-webkit-scrollbar{width:4px}
+.sidebar-inner::-webkit-scrollbar-track{background:transparent}
+.sidebar-inner::-webkit-scrollbar-thumb{background:var(--panel-border);border-radius:4px}
+
+/* section header */
+.sec-head{
+  font-size:var(--label-sm);
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--label);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.sec-head::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--panel-border);
+}
+
+/* ─── COLOR PICKERS ─────────────────────────────────────── */
+.color-grid{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.color-row{
+  display:grid;
+  grid-template-columns:18px 1fr auto 66px;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:var(--r-sm);
+  transition:background var(--transition);
+  cursor:default;
+}
+
+.color-row:hover{background:var(--panel-hover)}
+
+.color-swatch{
+  width:18px;height:18px;
+  border-radius:4px;
+  border:1px solid rgba(255,255,255,.1);
+  flex-shrink:0;
+  cursor:pointer;
+  transition:transform var(--transition);
+}
+
+.color-swatch:hover{transform:scale(1.15)}
+
+/* hide native color input, proxy via swatch click */
+.color-input{
+  position:absolute;
+  opacity:0;
+  width:0;height:0;
+  pointer-events:none;
+}
+
+.color-label{
+  font-size:12px;
+  color:#A8BEC8;
+  font-family:var(--mono);
+}
+
+.color-desc{
+  font-size:11px;
+  color:#4E6370;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.hex-input{
+  width:66px;
+  background:var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:4px;
+  color:#D0DDE6;
+  font-family:var(--mono);
+  font-size:11px;
+  padding:3px 6px;
+  text-transform:uppercase;
+}
+
+.hex-input:focus{
+  outline:none;
+  border-color:var(--primary);
+}
+
+/* ─── QUICK PALETTE ─────────────────────────────────────── */
+.qp-textarea{
+  width:100%;
+  min-height:90px;
+  background:var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:var(--r-md);
+  color:#D0DDE6;
+  font-family:var(--mono);
+  font-size:12px;
+  padding:10px;
+  resize:vertical;
+  line-height:1.6;
+  transition:border var(--transition);
+}
+
+.qp-textarea:focus{
+  outline:none;
+  border-color:var(--primary);
+}
+
+.qp-textarea::placeholder{color:#3D5060}
+
+.btn-group{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:8px;
+}
+
+.btn{
+  padding:8px 10px;
+  border:none;
+  border-radius:var(--r-sm);
+  font-family:var(--sans);
+  font-size:12px;
+  font-weight:500;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  transition:all var(--transition);
+  white-space:nowrap;
+}
+
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn:active{transform:translateY(0);filter:brightness(.95)}
+
+.btn-order{background:#2A4A5A;color:#9ECFE0}
+.btn-auto{background:#1E4A36;color:#6DD4A4}
+.btn-copy{background:#3A2D16;color:#D4A855}
+.btn-export{background:#2A1E3A;color:#A07BC8}
+.btn-import{background:var(--input-bg);color:#A8BEC8;border:1px solid var(--input-border)}
+.btn-download{background:var(--input-bg);color:#A8BEC8;border:1px solid var(--input-border)}
+
+/* copy success flash */
+.btn-copy.success{background:#1E4A36;color:#6DD4A4}
+
+/* ─── IMPORT / EXPORT ───────────────────────────────────── */
+.code-area{
+  width:100%;
+  min-height:80px;
+  background:var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:var(--r-md);
+  color:#D0DDE6;
+  font-family:var(--mono);
+  font-size:11px;
+  padding:10px;
+  resize:vertical;
+  line-height:1.65;
+}
+
+.code-area:focus{
+  outline:none;
+  border-color:var(--primary);
+}
+
+/* ─── TOAST ──────────────────────────────────────────────── */
+.toast{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#1E4A36;
+  color:#6DD4A4;
+  border:1px solid #2A6A4E;
+  padding:9px 20px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:500;
+  opacity:0;
+  pointer-events:none;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:9999;
+  white-space:nowrap;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* ─── PREVIEW AREA ───────────────────────────────────────── */
+.preview-area{
+  background:var(--light);
+  overflow-y:auto;
+  padding:24px;
+  transition:background var(--transition);
+}
+
+.preview-area::-webkit-scrollbar{width:6px}
+.preview-area::-webkit-scrollbar-track{background:transparent}
+.preview-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px}
+
+.preview-grid{
+  max-width:760px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+/* ── preview components (use course theme vars) ── */
+.pv-header{
+  background:var(--primary);
+  color:#fff;
+  padding:20px 24px;
+  border-radius:var(--r-lg);
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.pv-header-text h2{
+  font-family:var(--serif);
+  font-size:1.3rem;
+  margin-bottom:4px;
+}
+
+.pv-header-text p{
+  font-size:12px;
+  opacity:.75;
+}
+
+.pv-badge-pill{
+  margin-left:auto;
+  background:rgba(255,255,255,.18);
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.pv-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:18px;
+  transition:background var(--transition),border-color var(--transition);
+}
+
+.pv-tabs{
+  display:flex;
+  gap:0;
+  border-bottom:1px solid var(--border);
+  margin-bottom:14px;
+}
+
+.pv-tab{
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-muted);
+  border-bottom:2.5px solid transparent;
+  margin-bottom:-1px;
+  cursor:pointer;
+  transition:all var(--transition);
+}
+
+.pv-tab:hover{color:var(--primary)}
+
+.pv-tab.active{
+  color:var(--primary);
+  border-bottom-color:var(--primary);
+}
+
+.pv-label{
+  display:inline-block;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  background:var(--highlight);
+  color:var(--dark);
+  padding:3px 10px;
+  border-radius:20px;
+  margin-bottom:8px;
+  transition:background var(--transition);
+}
+
+.pv-title{
+  font-family:var(--serif);
+  font-size:1.1rem;
+  color:var(--text);
+  margin-bottom:6px;
+  transition:color var(--transition);
+}
+
+.pv-body{
+  font-size:13.5px;
+  color:var(--text-muted);
+  line-height:1.65;
+}
+
+.pv-btn-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.pv-btn{
+  padding:9px 18px;
+  border:none;
+  border-radius:var(--r-sm);
+  font-family:var(--sans);
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all var(--transition);
+}
+
+.pv-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.pv-btn.primary{background:var(--primary);color:#fff}
+.pv-btn.secondary{background:var(--secondary);color:#fff}
+.pv-btn.accent{background:var(--accent);color:#fff}
+.pv-btn.dark{background:var(--dark);color:#fff}
+.pv-btn.outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}
+
+.pv-accordion{
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  overflow:hidden;
+}
+
+.pv-accordion summary{
+  list-style:none;
+  padding:12px 16px;
+  font-weight:500;
+  font-size:13.5px;
+  cursor:pointer;
+  background:var(--card);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  transition:background var(--transition);
+}
+
+.pv-accordion summary::after{
+  content:'›';
+  font-size:18px;
+  color:var(--primary);
+  transition:transform var(--transition);
+}
+
+.pv-accordion[open] summary::after{transform:rotate(90deg)}
+
+.pv-accordion summary:hover{background:var(--highlight)}
+
+.pv-accordion-body{
+  padding:12px 16px;
+  font-size:13.5px;
+  color:var(--text-muted);
+  background:var(--card);
+  border-top:1px solid var(--border);
+}
+
+.pv-timeline{display:flex;flex-direction:column;gap:0}
+
+.pv-tl-item{
+  display:flex;
+  gap:14px;
+  position:relative;
+}
+
+.pv-tl-item:not(:last-child)::before{
+  content:'';
+  position:absolute;
+  left:10px;
+  top:22px;
+  bottom:-14px;
+  width:2px;
+  background:var(--border);
+}
+
+.pv-tl-dot{
+  width:22px;height:22px;
+  background:var(--accent);
+  border-radius:50%;
+  flex-shrink:0;
+  margin-top:2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  color:#fff;
+  font-weight:700;
+  transition:background var(--transition);
+}
+
+.pv-tl-content{
+  padding-bottom:14px;
+}
+
+.pv-tl-year{
+  font-weight:600;
+  font-size:13px;
+  color:var(--primary);
+  transition:color var(--transition);
+}
+
+.pv-tl-text{
+  font-size:13px;
+  color:var(--text-muted);
+  margin-top:2px;
+}
+
+.pv-drag-area{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.pv-draggable{
+  background:var(--primary);
+  color:#fff;
+  padding:10px 14px;
+  border-radius:var(--r-sm);
+  font-size:13px;
+  font-weight:500;
+  cursor:grab;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:background var(--transition);
+}
+
+.pv-draggable::before{content:'⠿';opacity:.5}
+
+.pv-dropzone{
+  border:2px dashed var(--border);
+  padding:10px 14px;
+  border-radius:var(--r-sm);
+  font-size:13px;
+  color:var(--text-muted);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  transition:border-color var(--transition);
+}
+
+.pv-dropzone-label{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+}
+
+.pv-flashcard{
+  background:var(--primary);
+  color:#fff;
+  padding:24px;
+  border-radius:var(--r-lg);
+  text-align:center;
+  transition:background var(--transition);
+}
+
+.pv-flashcard-kicker{
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  opacity:.65;
+  margin-bottom:10px;
+}
+
+.pv-flashcard-term{
+  font-family:var(--serif);
+  font-size:1.4rem;
+  margin-bottom:8px;
+}
+
+.pv-flashcard-hint{
+  font-size:11px;
+  opacity:.45;
+}
+
+.pv-info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.pv-info-cell{
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  padding:14px;
+  background:var(--card);
+  transition:border-color var(--transition),background var(--transition);
+}
+
+.pv-info-cell-title{
+  font-weight:600;
+  font-size:13.5px;
+  color:var(--text);
+  margin-bottom:4px;
+}
+
+.pv-info-cell-body{
+  font-size:12.5px;
+  color:var(--text-muted);
+}
+
+.pv-quiz-option{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  font-size:13px;
+  color:var(--text-muted);
+  cursor:pointer;
+  transition:all var(--transition);
+  background:var(--card);
+}
+
+.pv-quiz-option:hover{border-color:var(--primary);color:var(--text)}
+
+.pv-quiz-option.correct{border-color:var(--success);background:#EBF8F2;color:var(--success)}
+.pv-quiz-option.wrong{border-color:var(--danger);background:#FCEAEA;color:var(--danger)}
+
+.pv-opt-letter{
+  width:26px;height:26px;
+  border-radius:50%;
+  background:var(--light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:600;
+  flex-shrink:0;
+}
+
+.pv-quiz-option.correct .pv-opt-letter{background:var(--success);color:#fff}
+.pv-quiz-option.wrong .pv-opt-letter{background:var(--danger);color:#fff}
+
+/* preview section dividers */
+.pv-section-label{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  opacity:.6;
+  margin-top:4px;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:700px){
+  .layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .sidebar{max-height:50vh}
+  .topbar-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="topbar-logo-dot" id="logo-dot"></div>
+    Theme Playground
+  </div>
+  <div class="topbar-sep"></div>
+  <span class="topbar-label">E‑Learning · Cultura de Paz</span>
+  <div class="topbar-wcag">
+    <span style="color:var(--label);font-size:12px">WCAG</span>
+    <span class="wcag-pill" id="wcag-pill">—</span>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- ── SIDEBAR ─────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <!-- COLOR PICKERS -->
+      <div>
+        <div class="sec-head">Variables de color</div>
+        <div class="color-grid" id="color-grid"></div>
+      </div>
+
+      <!-- QUICK PALETTE -->
+      <div>
+        <div class="sec-head">Paleta rápida</div>
+        <textarea class="qp-textarea" id="paletteInput" placeholder="#E5B83A
+#243B8A
+#D65C5C
+#F4E8D4
+#2D2D2D
+
+o cualquier texto con hex..."></textarea>
+        <div class="btn-group">
+          <button class="btn btn-order" onclick="applyPalette()" title="Aplica en orden: primary → secondary → accent → light → dark">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="4" height="4" rx="1" fill="currentColor"/><rect x="7" y="1" width="4" height="4" rx="1" fill="currentColor" opacity=".5"/><rect x="1" y="7" width="4" height="4" rx="1" fill="currentColor" opacity=".3"/><rect x="7" y="7" width="4" height="4" rx="1" fill="currentColor" opacity=".15"/></svg>
+            Por orden
+          </button>
+          <button class="btn btn-auto" onclick="applyPaletteAuto()" title="La IA detecta qué color es primary, accent, etc.">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M6 3v3l2 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Automático
+          </button>
+          <button class="btn btn-copy" id="btnCopyAuto" onclick="copyAutoPalette()" title="Copia el :root generado automáticamente al portapapeles">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 3V2a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1h-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Copiar CSS
+          </button>
+          <button class="btn btn-export" onclick="exportAutoPalette()" title="Descarga el CSS generado como archivo .css">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Exportar
+          </button>
+        </div>
+      </div>
+
+      <!-- IMPORT -->
+      <div>
+        <div class="sec-head">Importar :root</div>
+        <textarea class="code-area" id="importBox" placeholder=":root {
+  --primary: #77442C;
+  --accent: #6A81A5;
+  ...
+}" style="min-height:80px"></textarea>
+        <div style="margin-top:6px;display:flex;gap:6px">
+          <button class="btn btn-import" style="flex:1" onclick="importTheme()">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 9V2M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Importar
+          </button>
+        </div>
+      </div>
+
+      <!-- EXPORT -->
+      <div>
+        <div class="sec-head">Exportar tema</div>
+        <textarea class="code-area" id="output" readonly style="min-height:120px;cursor:default;background:#101820;color:#7FB3C8"></textarea>
+        <div style="margin-top:6px;display:flex;gap:6px">
+          <button class="btn btn-copy" id="btnCopyTheme" style="flex:1" onclick="copyTheme()">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 3V2a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1h-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Copiar :root
+          </button>
+          <button class="btn btn-download" onclick="downloadTheme()">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            .css
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ── PREVIEW ──────────────────────────── -->
+  <main class="preview-area" id="previewArea">
+    <div class="preview-grid">
+
+      <p class="pv-section-label">Header del curso</p>
+      <div class="pv-header">
+        <div>
+          <div style="font-size:11px;opacity:.65;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px">Módulo 1</div>
+          <div class="pv-header-text">
+            <h2>Cultura de Paz</h2>
+            <p>Seguridad Humana · 8 min · 3 objetivos</p>
+          </div>
+        </div>
+        <div class="pv-badge-pill">Módulo activo</div>
+      </div>
+
+      <p class="pv-section-label">Navegación + contenido</p>
+      <div class="pv-card">
+        <div class="pv-tabs">
+          <div class="pv-tab active">Lección</div>
+          <div class="pv-tab">Quiz</div>
+          <div class="pv-tab">Flashcards</div>
+          <div class="pv-tab">Actividad</div>
+        </div>
+        <span class="pv-label">Concepto clave</span>
+        <h3 class="pv-title">¿Qué es la Cultura de Paz?</h3>
+        <p class="pv-body">Conjunto de valores, actitudes y comportamientos que rechazan la violencia y promueven el diálogo para la resolución pacífica de conflictos, según la Resolución 52/13 de la ONU.</p>
+      </div>
+
+      <p class="pv-section-label">Botones</p>
+      <div class="pv-card">
+        <div class="pv-btn-row">
+          <button class="pv-btn primary">Principal</button>
+          <button class="pv-btn secondary">Secundario</button>
+          <button class="pv-btn accent">CTA / Acento</button>
+          <button class="pv-btn dark">Oscuro</button>
+          <button class="pv-btn outline">Outline</button>
+        </div>
+      </div>
+
+      <p class="pv-section-label">Quiz</p>
+      <div class="pv-card">
+        <p style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:12px">¿Cuántas dimensiones tiene la Seguridad Humana del PNUD?</p>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div class="pv-quiz-option wrong"><span class="pv-opt-letter">A</span>5 dimensiones</div>
+          <div class="pv-quiz-option correct"><span class="pv-opt-letter">B</span>7 dimensiones ✓</div>
+          <div class="pv-quiz-option"><span class="pv-opt-letter">C</span>9 dimensiones</div>
+        </div>
+      </div>
+
+      <p class="pv-section-label">Acordeón</p>
+      <div class="pv-card" style="padding:0;overflow:hidden">
+        <details class="pv-accordion" open>
+          <summary>¿Qué son los Derechos Humanos?</summary>
+          <div class="pv-accordion-body">Son derechos inherentes a todos los seres humanos, sin distinción alguna de raza, sexo, nacionalidad o cualquier otra condición.</div>
+        </details>
+        <details class="pv-accordion">
+          <summary>¿Qué es el DIH?</summary>
+          <div class="pv-accordion-body">El Derecho Internacional Humanitario limita los efectos de los conflictos armados protegiendo a quienes no participan en las hostilidades.</div>
+        </details>
+      </div>
+
+      <p class="pv-section-label">Línea de tiempo</p>
+      <div class="pv-card">
+        <div class="pv-timeline">
+          <div class="pv-tl-item">
+            <div class="pv-tl-dot">✓</div>
+            <div class="pv-tl-content">
+              <div class="pv-tl-year">1948 — DUDH</div>
+              <div class="pv-tl-text">Declaración Universal de los Derechos Humanos, ONU.</div>
+            </div>
+          </div>
+          <div class="pv-tl-item">
+            <div class="pv-tl-dot">✓</div>
+            <div class="pv-tl-content">
+              <div class="pv-tl-year">1999 — Cultura de Paz</div>
+              <div class="pv-tl-text">Resolución 53/243 de la Asamblea General.</div>
+            </div>
+          </div>
+          <div class="pv-tl-item">
+            <div class="pv-tl-dot" style="background:var(--border)"></div>
+            <div class="pv-tl-content" style="padding-bottom:0">
+              <div class="pv-tl-year">2016 — Acuerdo de Paz</div>
+              <div class="pv-tl-text">Colombia firma el acuerdo de paz histórico.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="pv-section-label">Actividad drag & drop</p>
+      <div class="pv-card">
+        <div class="pv-drag-area">
+          <div>
+            <p style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Conceptos</p>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div class="pv-draggable">Vacunas y salud</div>
+              <div class="pv-draggable">Empleo digno</div>
+              <div class="pv-draggable">Calidad del aire</div>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Dimensión</p>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div class="pv-dropzone"><span class="pv-dropzone-label">💊 Sanitaria</span><span>Suelta aquí…</span></div>
+              <div class="pv-dropzone"><span class="pv-dropzone-label">💼 Económica</span><span>Suelta aquí…</span></div>
+              <div class="pv-dropzone" style="border-color:var(--success);background:#EBF8F2"><span class="pv-dropzone-label" style="color:var(--success)">🌿 Ambiental ✓</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="pv-section-label">Flashcard</p>
+      <div class="pv-flashcard">
+        <div class="pv-flashcard-kicker">Término</div>
+        <div class="pv-flashcard-term">Seguridad Humana</div>
+        <div style="font-size:13px;opacity:.85;margin-top:8px;line-height:1.6">Enfoque centrado en el individuo que identifica amenazas como el hambre, la enfermedad y la violencia.</div>
+        <div class="pv-flashcard-hint" style="margin-top:12px">clic para voltear</div>
+      </div>
+
+      <p class="pv-section-label">Tarjetas informativas</p>
+      <div class="pv-info-grid">
+        <div class="pv-info-cell">
+          <div class="pv-info-cell-title">DDHH</div>
+          <div class="pv-info-cell-body">Protegen la dignidad inherente de todo ser humano.</div>
+        </div>
+        <div class="pv-info-cell">
+          <div class="pv-info-cell-title">DIH</div>
+          <div class="pv-info-cell-body">Limita los efectos de los conflictos armados.</div>
+        </div>
+        <div class="pv-info-cell">
+          <div class="pv-info-cell-title">Paz positiva</div>
+          <div class="pv-info-cell-body">Ausencia de guerra + presencia de justicia.</div>
+        </div>
+        <div class="pv-info-cell">
+          <div class="pv-info-cell-title">ODS 16</div>
+          <div class="pv-info-cell-body">Paz, justicia e instituciones sólidas.</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ──────────────────────────────────────────
+   VARIABLE DEFINITIONS & DESCRIPTIONS
+────────────────────────────────────────── */
+const VARS = [
+  { key:'--primary',    val:'#1A6B8A', desc:'Header, botones principales' },
+  { key:'--secondary',  val:'#2E8AA7', desc:'Elementos secundarios'       },
+  { key:'--accent',     val:'#E07B39', desc:'CTA, interacciones'          },
+  { key:'--light',      val:'#F5F9FA', desc:'Fondo de página'             },
+  { key:'--highlight',  val:'#FFF1C7', desc:'Badges, resaltados'          },
+  { key:'--dark',       val:'#1C2B33', desc:'Botón oscuro'                },
+  { key:'--text',       val:'#1C2B33', desc:'Texto principal'             },
+  { key:'--text-muted', val:'#6B8998', desc:'Texto secundario'            },
+  { key:'--success',    val:'#2D7D5A', desc:'Correcto / positivo'         },
+  { key:'--danger',     val:'#C03B3B', desc:'Error / incorrecto'          },
+  { key:'--border',     val:'#D4E2E9', desc:'Bordes y separadores'        },
+  { key:'--card',       val:'#FFFFFF', desc:'Fondo de tarjetas'           },
+];
+
+/* ──────────────────────────────────────────
+   BUILD COLOR CONTROLS
+────────────────────────────────────────── */
+const grid = document.getElementById('color-grid');
+
+VARS.forEach(({ key, val, desc }) => {
+  const row = document.createElement('div');
+  row.className = 'color-row';
+
+  const swatch = document.createElement('div');
+  swatch.className = 'color-swatch';
+  swatch.style.background = val;
+  swatch.title = key;
+
+  const hiddenInput = document.createElement('input');
+  hiddenInput.type = 'color';
+  hiddenInput.className = 'color-input';
+  hiddenInput.value = val;
+  hiddenInput.dataset.var = key;
+  hiddenInput.id = 'ci_' + key.replace('--','').replace('-','_');
+
+  swatch.onclick = () => hiddenInput.click();
+
+  const label = document.createElement('div');
+  label.className = 'color-label';
+  label.textContent = key;
+
+  const description = document.createElement('div');
+  description.className = 'color-desc';
+  description.textContent = desc;
+
+  const hexInput = document.createElement('input');
+  hexInput.type = 'text';
+  hexInput.className = 'hex-input';
+  hexInput.value = val.toUpperCase();
+  hexInput.maxLength = 7;
+  hexInput.dataset.var = key;
+
+  /* hidden color → swatch + hex sync */
+  hiddenInput.addEventListener('input', () => {
+    const v = hiddenInput.value;
+    applyVar(key, v);
+    swatch.style.background = v;
+    hexInput.value = v.toUpperCase();
+  });
+
+  /* hex text → swatch + color sync */
+  hexInput.addEventListener('input', () => {
+    const v = hexInput.value.trim();
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
+      applyVar(key, v);
+      swatch.style.background = v;
+      hiddenInput.value = v;
+    }
+  });
+
+  hexInput.addEventListener('blur', () => {
+    const v = hexInput.value.trim();
+    if (!/^#[0-9A-Fa-f]{6}$/.test(v)) {
+      hexInput.value = hiddenInput.value.toUpperCase();
+    }
+  });
+
+  row.appendChild(swatch);
+  row.appendChild(hiddenInput);
+  row.appendChild(label);
+  row.appendChild(hexInput);
+  grid.appendChild(row);
+});
+
+/* ──────────────────────────────────────────
+   APPLY / SYNC HELPERS
+────────────────────────────────────────── */
+function applyVar(key, value) {
+  document.documentElement.style.setProperty(key, value);
+  if (key === '--primary') {
+    document.getElementById('logo-dot').style.background = value;
+  }
+  exportTheme();
+  checkWCAG();
+  saveTheme();
+}
+
+function getVarValue(key) {
+  return document.querySelector(`[data-var="${key}"]`)?.value || '';
+}
+
+function setVarValue(key, value) {
+  document.documentElement.style.setProperty(key, value);
+
+  /* update hidden color input */
+  const ci = document.querySelector(`input[type=color][data-var="${key}"]`);
+  if (ci) ci.value = value;
+
+  /* update swatch */
+  const row = ci?.closest('.color-row');
+  if (row) {
+    const swatch = row.querySelector('.color-swatch');
+    if (swatch) swatch.style.background = value;
+    const hexIn = row.querySelector('.hex-input');
+    if (hexIn) hexIn.value = value.toUpperCase();
+  }
+
+  if (key === '--primary') {
+    document.getElementById('logo-dot').style.background = value;
+  }
+}
+
+/* ──────────────────────────────────────────
+   EXPORT / COPY / DOWNLOAD
+────────────────────────────────────────── */
+function exportTheme() {
+  const lines = VARS.map(({ key, desc }) => {
+    const v = getVarValue(key);
+    return `  ${key}: ${v}; /* ${desc} */`;
+  }).join('\n');
+  document.getElementById('output').value = `:root {\n${lines}\n}`;
+}
+
+function copyTheme() {
+  navigator.clipboard.writeText(document.getElementById('output').value)
+    .then(() => {
+      flashBtn('btnCopyTheme');
+      showToast('✓ :root copiado al portapapeles');
+    });
+}
+
+function downloadTheme() {
+  const blob = new Blob([document.getElementById('output').value], { type: 'text/css' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'theme.css';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ──────────────────────────────────────────
+   IMPORT
+────────────────────────────────────────── */
+function importTheme() {
+  const txt = document.getElementById('importBox').value;
+  const rx = /(--[\w-]+)\s*:\s*(#[0-9A-Fa-f]{6})/g;
+  let m, count = 0;
+  while ((m = rx.exec(txt)) !== null) {
+    setVarValue(m[1], m[2]);
+    count++;
+  }
+  exportTheme();
+  checkWCAG();
+  saveTheme();
+  if (count > 0) showToast(`✓ ${count} variable${count > 1 ? 's' : ''} importada${count > 1 ? 's' : ''}`);
+}
+
+/* ──────────────────────────────────────────
+   COLOR MATH
+────────────────────────────────────────── */
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  return {
+    r: parseInt(hex.substr(0, 2), 16),
+    g: parseInt(hex.substr(2, 2), 16),
+    b: parseInt(hex.substr(4, 2), 16)
+  };
+}
+
+function brightness(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  return r * 0.299 + g * 0.587 + b * 0.114;
+}
+
+function saturation(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  return Math.max(r, g, b) - Math.min(r, g, b);
+}
+
+function lum(hex) {
+  const a = hex.match(/\w\w/g)
+    .map(x => parseInt(x, 16) / 255)
+    .map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+/* ──────────────────────────────────────────
+   APPLY PALETTE (ORDER)
+────────────────────────────────────────── */
+function applyPalette() {
+  const colors = document.getElementById('paletteInput').value.match(/#[0-9A-Fa-f]{6}/g);
+  if (!colors) { showToast('⚠ No se encontraron colores hex'); return; }
+  const map = ['--primary','--secondary','--accent','--light','--dark'];
+  colors.forEach((c, i) => { if (i < map.length) setVarValue(map[i], c); });
+  exportTheme(); checkWCAG(); saveTheme();
+  showToast(`✓ ${Math.min(colors.length, map.length)} colores aplicados por orden`);
+}
+
+/* ──────────────────────────────────────────
+   APPLY PALETTE (AUTO)
+────────────────────────────────────────── */
+function buildAutoMapping(colors) {
+  if (!colors || colors.length < 3) return null;
+  const sorted = [...colors].sort((a, b) => brightness(a) - brightness(b));
+  const dark = sorted[0];
+  const light = sorted[sorted.length - 1];
+  const accent = [...colors].sort((a, b) => saturation(b) - saturation(a))[0];
+  const rest = colors.filter(c => c !== dark && c !== light && c !== accent);
+  const primary = rest[0] || colors[0];
+  const secondary = rest[1] || colors[1];
+  return { '--primary': primary, '--secondary': secondary, '--accent': accent, '--light': light, '--dark': dark };
+}
+
+function applyPaletteAuto() {
+  const colors = document.getElementById('paletteInput').value.match(/#[0-9A-Fa-f]{6}/g);
+  const map = buildAutoMapping(colors);
+  if (!map) { showToast('⚠ Se necesitan al menos 3 colores'); return; }
+  Object.entries(map).forEach(([k, v]) => setVarValue(k, v));
+  exportTheme(); checkWCAG(); saveTheme();
+  showToast('✓ Paleta aplicada automáticamente');
+}
+
+/* ──────────────────────────────────────────
+   GENERATE AUTO CSS (full :root block)
+────────────────────────────────────────── */
+function generateAutoCSS() {
+  const colors = document.getElementById('paletteInput').value.match(/#[0-9A-Fa-f]{6}/g);
+  const map = buildAutoMapping(colors);
+  if (!map) return null;
+
+  const descriptions = {
+    '--primary':   'Header, botones principales, tabs activos',
+    '--secondary': 'Elementos secundarios, hover states',
+    '--accent':    'Llamadas a la acción, interacciones',
+    '--light':     'Fondo principal de la página',
+    '--dark':      'Botón oscuro, fondo oscuro',
+  };
+
+  const lines = Object.entries(map)
+    .map(([k, v]) => `  ${k}: ${v}; /* ${descriptions[k] || ''} */`)
+    .join('\n');
+
+  return `/* ==========================================
+   THEME · E-Learning — generado automáticamente
+   ========================================== */
+
+:root {
+${lines}
+}`;
+}
+
+/* ──────────────────────────────────────────
+   COPY AUTO CSS  ← FUNCIÓN QUE FALTABA
+────────────────────────────────────────── */
+function copyAutoPalette() {
+  const css = generateAutoCSS();
+  if (!css) { showToast('⚠ Se necesitan al menos 3 colores'); return; }
+  navigator.clipboard.writeText(css)
+    .then(() => {
+      flashBtn('btnCopyAuto');
+      showToast('✓ CSS automático copiado al portapapeles');
+    })
+    .catch(() => {
+      /* fallback for browsers without clipboard API */
+      const ta = document.createElement('textarea');
+      ta.value = css;
+      ta.style.cssText = 'position:fixed;top:-999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      flashBtn('btnCopyAuto');
+      showToast('✓ CSS automático copiado');
+    });
+}
+
+/* ──────────────────────────────────────────
+   EXPORT AUTO CSS
+────────────────────────────────────────── */
+function exportAutoPalette() {
+  const css = generateAutoCSS();
+  if (!css) { showToast('⚠ Se necesitan al menos 3 colores'); return; }
+  const blob = new Blob([css], { type: 'text/css' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'auto-theme.css';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('✓ Archivo auto-theme.css descargado');
+}
+
+/* ──────────────────────────────────────────
+   WCAG CONTRAST
+────────────────────────────────────────── */
+function checkWCAG() {
+  const p = getVarValue('--primary') || '#1A6B8A';
+  const t = getVarValue('--text')    || '#1C2B33';
+  const L1 = lum(p), L2 = lum(t);
+  const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  const pill = document.getElementById('wcag-pill');
+  pill.textContent = `Primary/Text ${ratio.toFixed(2)}:1`;
+  pill.className = 'wcag-pill' + (ratio >= 4.5 ? '' : ' warn');
+}
+
+/* ──────────────────────────────────────────
+   TOAST & BUTTON FLASH
+────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function flashBtn(id) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  const orig = btn.className;
+  btn.className = orig + ' success';
+  setTimeout(() => { btn.className = orig; }, 2000);
+}
+
+/* ──────────────────────────────────────────
+   PERSISTENCE (localStorage)
+────────────────────────────────────────── */
+function saveTheme() {
+  localStorage.setItem('tp-theme', document.getElementById('output').value);
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('tp-theme');
+  if (!saved) return;
+  const rx = /(--[\w-]+)\s*:\s*(#[0-9A-Fa-f]{6})/g;
+  let m;
+  while ((m = rx.exec(saved)) !== null) setVarValue(m[1], m[2]);
+}
+
+/* ──────────────────────────────────────────
+   INIT
+────────────────────────────────────────── */
+exportTheme();
+checkWCAG();
+loadTheme();
+</script>
+</body>
+</html>

@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultura de Paz y Construcción de Paz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ==========================================
+   VARIABLES Y BASE
+   ========================================== */
+:root {
+    --primary: #14213D;
+    --secondary: #344E41;
+    --accent: #B11226;
+    --paper: #F5F3F0;
+    --dark: #050505;
+    --body-bg: #EAE6DF;
+    --light-border: #dcd8d0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background-color:var(--body-bg);color:var(--dark);font-family:'Roboto',sans-serif;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3,.serif{font-family:'Merriweather',serif}
+
+/* ==========================================
+   HEADER
+   ========================================== */
+header {
+  background: linear-gradient(rgba(5,5,5,.88), rgba(20,33,61,.92)),
+              url("../sources/flagcolombia.jpg") no-repeat center/cover;
+  min-height: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 30px;
+  text-align: center;
+  border-bottom: 6px solid var(--primary);
+  position: relative;
+}
+.logo-container{position:absolute;top:20px;left:5%;background:rgba(245,243,240,.95);padding:10px 20px;border-radius:4px;box-shadow:0 4px 6px rgba(0,0,0,.3)}
+.client-logo{height:60px;max-width:250px;object-fit:contain}
+.course-title{color:var(--paper);font-size:2.2rem;font-weight:700;max-width:800px;margin-top:60px;text-shadow:2px 2px 4px rgba(0,0,0,.8)}
+.course-sub{color:rgba(245,243,240,.7);font-size:1rem;margin-top:10px;letter-spacing:1px;text-transform:uppercase}
+
+/* ==========================================
+   PROGRESO Y NAVEGACIÓN
+   ========================================== */
+.progress-bar-wrapper{background:var(--primary);padding:14px 30px;display:flex;align-items:center;gap:18px;flex-shrink:0;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.progress-label{color:rgba(255,255,255,.7);font-size:.8rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.progress-track{flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--secondary),#56a07a);border-radius:99px;transition:width .4s ease}
+.progress-counter{color:white;font-size:.85rem;font-weight:700;white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums}
+
+/* ÍNDICE */
+.card-index{display:flex;gap:6px;padding:10px 30px;background:#fff;border-bottom:1px solid var(--light-border);overflow-x:auto;flex-shrink:0;scrollbar-width:thin}
+.card-index::-webkit-scrollbar{height:4px}
+.card-index::-webkit-scrollbar-thumb{background:var(--light-border);border-radius:99px}
+.index-dot{flex-shrink:0;padding:5px 12px;border-radius:99px;font-size:.72rem;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .2s;white-space:nowrap;background:var(--body-bg);color:#666}
+.index-dot:hover{border-color:var(--secondary);color:var(--secondary)}
+.index-dot.active{background:var(--primary);color:white;border-color:var(--primary)}
+.index-dot.visited{background:#e6f4ea;color:var(--secondary);border-color:var(--secondary)}
+
+/* ==========================================
+   ÁREA DE TARJETAS
+   ========================================== */
+.cards-viewport{flex:1;overflow:hidden;position:relative}
+.cards-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1);height:100%;align-items:flex-start}
+.slide-card{min-width:100%;max-height:calc(100vh - 320px);overflow-y:auto;padding:0 20px 30px;scrollbar-width:thin}
+.slide-card::-webkit-scrollbar{width:5px}
+.slide-card::-webkit-scrollbar-thumb{background:var(--light-border);border-radius:99px}
+
+/* ==========================================
+   NAV INFERIOR
+   ========================================== */
+.nav-footer{background:var(--paper);border-top:2px solid var(--light-border);padding:14px 30px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,.07)}
+.nav-btn{display:flex;align-items:center;gap:8px;padding:10px 22px;border:2px solid var(--primary);background:transparent;color:var(--primary);font-size:.9rem;font-weight:700;font-family:'Roboto',sans-serif;cursor:pointer;border-radius:6px;transition:all .2s;text-transform:uppercase;letter-spacing:1px}
+.nav-btn:hover:not(:disabled){background:var(--primary);color:white}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.nav-btn.next-btn{background:var(--primary);color:white}
+.nav-btn.next-btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent)}
+.nav-btn.finished-btn{background:var(--secondary);border-color:var(--secondary);color:white}
+.slide-title-display{text-align:center;font-size:.85rem;color:#888;font-style:italic;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ==========================================
+   CARD BASE
+   ========================================== */
+#focus-box{background:var(--primary);color:white;padding:20px 30px;margin-bottom:30px;border-left:6px solid var(--secondary);font-size:1.05rem;box-shadow:0 4px 10px rgba(0,0,0,.15);margin-top:30px}
+.card{background:var(--paper);padding:45px;margin-bottom:40px;box-shadow:0 10px 20px rgba(0,0,0,.1);border-top:1px solid #d8d2c8;border-bottom:1px solid #d8d2c8;border-radius:4px;margin-top:30px}
+.card::before{content:attr(data-label);display:inline-block;background-color:var(--dark);color:var(--paper);padding:6px 18px;font-size:.85rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:25px}
+.card h2{color:var(--primary);margin-bottom:15px;font-size:1.8rem;line-height:1.3}
+.card h2::after{content:"";display:block;width:60px;height:4px;background:var(--accent);margin-top:10px;margin-bottom:20px}
+.card p{font-size:1.05rem;margin-bottom:16px;color:#2a2a2a}
+.reading-block{background:#faf9f7;border-left:4px solid var(--secondary);padding:22px;margin:18px 0;border-radius:0 8px 8px 0}
+.reading-block p:last-child{margin-bottom:0}
+.key-impacts{display:grid;gap:10px;margin:20px 0}
+.key-impact{background:#fff;padding:14px 18px;border-left:4px solid var(--secondary);border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.05);font-size:1rem}
+.key-impact strong{color:var(--primary)}
+.highlight-number{color:var(--accent);font-weight:900}
+.impact-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px;margin:20px 0}
+.impact-stat{background:#fff;padding:18px;border-left:5px solid var(--accent);box-shadow:0 4px 10px rgba(0,0,0,.05);border-radius:6px}
+.impact-stat strong{display:block;font-size:1.6rem;color:var(--primary);margin-bottom:4px;font-family:'Merriweather',serif}
+.timeline-note{background:#f4fbf7;border:1px solid #d7e7dd;padding:18px;border-radius:8px;margin:18px 0}
+.quote-block{background:#faf9f7;padding:25px;border-left:4px solid #a89f91;font-style:italic;font-size:1.1rem;color:#2b2925;margin:20px 0;border-radius:0 6px 6px 0;font-family:'Merriweather',serif}
+.quote-block cite{display:block;font-style:normal;font-size:.85rem;margin-top:10px;color:#888;font-family:'Roboto',sans-serif;font-weight:700}
+
+/* Concepto destacado */
+.concept-pill{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:white;padding:6px 16px;border-radius:4px;font-size:.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:4px 4px 4px 0}
+
+/* Tabla comparativa de lectura */
+.compare-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.95rem}
+.compare-table th{background:var(--primary);color:white;padding:12px 16px;text-align:left;font-weight:700}
+.compare-table td{padding:12px 16px;border-bottom:1px solid var(--light-border);vertical-align:top}
+.compare-table tr:nth-child(even) td{background:rgba(20,33,61,.03)}
+.compare-table .col-cdp{border-left:4px solid var(--primary)}
+.compare-table .col-cpp{border-left:4px solid var(--secondary)}
+
+/* Teoría autor */
+.teorico-box{background:#fff;border:1px solid var(--light-border);border-top:5px solid var(--primary);border-radius:6px;padding:20px 24px;margin:14px 0;box-shadow:0 4px 8px rgba(0,0,0,.05)}
+.teorico-box h3{color:var(--primary);margin-bottom:8px;font-size:1.1rem}
+.teorico-box.secondary{border-top-color:var(--secondary)}
+.teorico-box.secondary h3{color:var(--secondary)}
+.teorico-tag{display:inline-block;background:var(--dark);color:white;font-size:.75rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;margin-bottom:10px;border-radius:2px}
+
+/* ==========================================
+   MÓDULOS ACTIVOS
+   ========================================== */
+.active-module{background-color:#fff;border:2px solid var(--secondary);border-radius:8px;padding:30px;margin:25px 0;box-shadow:0 4px 6px rgba(0,0,0,.05)}
+.active-module h3{color:var(--secondary);font-size:1.2rem;margin-bottom:10px;font-family:'Roboto',sans-serif}
+.instruction-tag{display:inline-block;background-color:var(--accent);color:white;padding:4px 10px;font-size:.78rem;font-weight:bold;text-transform:uppercase;border-radius:4px;margin-bottom:12px;letter-spacing:1px}
+.block-select{appearance:none;-webkit-appearance:none;width:100%;padding:13px 45px 13px 16px;font-family:'Roboto',sans-serif;font-size:.95rem;font-weight:500;color:var(--dark);background-color:#fff;border:2px solid #ccc;border-radius:6px;cursor:pointer;background-image:url('data:image/svg+xml;utf8,<svg fill="%23B11226" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');background-repeat:no-repeat;background-position:right 14px center;background-size:24px;box-shadow:0 4px 6px rgba(0,0,0,.04);transition:all .3s ease}
+.block-select:hover{border-color:var(--accent);box-shadow:0 4px 12px rgba(177,18,38,.1)}
+.block-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(20,33,61,.15)}
+.inline-select{appearance:none;-webkit-appearance:none;background-color:#f4fbf7;border:2px solid var(--secondary);color:var(--secondary);font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;padding:4px 35px 4px 12px;margin:4px 2px;border-radius:6px;cursor:pointer;background-image:url('data:image/svg+xml;utf8,<svg fill="%23344E41" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');background-repeat:no-repeat;background-position:right 8px center;background-size:20px;box-shadow:0 2px 0 rgba(52,78,65,.2);transition:all .2s;vertical-align:middle}
+.inline-select:focus{outline:none;box-shadow:0 0 0 3px rgba(52,78,65,.3)}
+.match-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:14px}
+.match-row{display:flex;flex-direction:column;align-items:flex-start;gap:10px;background:#fdfdfd;padding:18px;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.02)}
+.match-row>span,.match-row>strong{font-size:1rem;line-height:1.4;color:var(--primary);width:100%}
+.options-grid{display:grid;gap:10px}
+.option-label{display:flex;align-items:center;padding:14px;background:#fff;border:1px solid #ccc;cursor:pointer;transition:.2s;border-radius:6px}
+.option-label:hover{border-color:var(--secondary);box-shadow:0 4px 6px rgba(0,0,0,.05)}
+.option-label input{transform:scale(1.3);margin-right:15px;accent-color:var(--secondary)}
+button.validate-btn{background-color:var(--dark);color:white;border:none;padding:12px 24px;font-size:.95rem;font-weight:700;cursor:pointer;border-radius:4px;margin-top:18px;transition:.3s;font-family:'Roboto',sans-serif}
+button.validate-btn:hover{background-color:var(--accent)}
+.feedback{margin-top:14px;padding:14px;border-radius:4px;display:none;font-weight:500;font-size:.95rem}
+.feedback.success{display:block;background:#e6f4ea;color:#1e4620;border-left:4px solid #1e4620}
+.feedback.error{display:block;background:#fce8e6;color:#a50e0e;border-left:4px solid #a50e0e}
+.flow-container{display:flex;flex-direction:column;gap:18px;align-items:center;margin:20px 0}
+.flow-node{background:white;border:2px solid var(--primary);padding:22px;border-radius:8px;width:100%;max-width:600px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.flow-node>strong{display:block;margin-bottom:10px;color:var(--primary);font-size:1rem}
+.flow-arrow{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:15px solid var(--primary)}
+.statement-box{background:#fdf5f6;padding:25px;border-left:5px solid var(--accent);font-family:'Merriweather',serif;font-size:1.1rem;line-height:1.9;margin-bottom:14px}
+.clickable-phrase{display:inline;border-bottom:2px dashed #999;cursor:pointer;transition:.3s;padding:2px 4px;border-radius:2px}
+.clickable-phrase:hover{background:rgba(0,0,0,.05)}
+.clickable-phrase.selected{background:rgba(177,18,38,.18);border-color:var(--accent);color:var(--accent);font-weight:bold}
+.clickable-phrase.wrong-pick{background:rgba(52,78,65,.12);border-color:var(--secondary);color:var(--secondary);font-weight:bold}
+
+/* ==========================================
+   BANCO DE PALABRAS
+   ========================================== */
+.word-bank-sentence{background:#faf9f7;border-left:4px solid var(--primary);padding:22px 26px;font-size:1.05rem;line-height:2.6;margin:14px 0;border-radius:0 6px 6px 0}
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;padding:14px;background:#f0f4f0;border:1px dashed var(--secondary);border-radius:6px;margin:10px 0;min-height:50px}
+.wb-blank{display:inline-block;min-width:90px;border-bottom:2.5px solid var(--primary);margin:0 3px;padding:2px 10px;font-weight:700;color:var(--secondary);cursor:pointer;text-align:center;vertical-align:middle;transition:all .2s;border-radius:2px 2px 0 0}
+.wb-blank:empty::before{content:'·····';color:#b0b0b0;font-weight:400;font-style:italic}
+.wb-blank.wb-filled{background:rgba(52,78,65,.1);border-bottom-color:var(--secondary)}
+.wb-blank:hover{background:rgba(177,18,38,.07)}
+.wb-chip{background:var(--primary);color:var(--paper);border:2px solid transparent;padding:7px 15px;border-radius:4px;cursor:pointer;font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:500;transition:all .2s}
+.wb-chip:hover:not(:disabled):not(.wb-used){background:var(--secondary);transform:translateY(-1px)}
+.wb-chip:disabled,.wb-chip.wb-used{opacity:.3;cursor:not-allowed;transform:none}
+.wb-chip.wb-selected{background:var(--accent);transform:translateY(-2px);box-shadow:0 3px 8px rgba(177,18,38,.3)}
+
+/* ==========================================
+   CLASIFICAR EN 2 COLUMNAS
+   ========================================== */
+.classify-wrapper{margin:16px 0}
+.classify-items-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding:14px;background:#f4f4f2;border:1px solid var(--light-border);border-radius:6px;min-height:46px}
+.classify-chip{padding:6px 14px;background:var(--dark);color:white;border-radius:4px;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.classify-chip:hover{background:var(--primary);transform:translateY(-1px)}
+.classify-chip.placed{opacity:.3;cursor:default;transform:none}
+.classify-chip.selected{background:var(--accent);transform:translateY(-2px);box-shadow:0 3px 8px rgba(177,18,38,.3)}
+.classify-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.classify-col{border:2px dashed var(--light-border);border-radius:8px;overflow:hidden;background:#fff;transition:border-color .2s}
+.classify-col:hover{border-color:var(--secondary)}
+.classify-col-head{padding:11px 16px;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:1px}
+.classify-col-head.cdp{background:var(--primary);color:white}
+.classify-col-head.cpp{background:var(--secondary);color:white}
+.classify-col-body{padding:12px;min-height:90px;display:flex;flex-direction:column;gap:6px;cursor:pointer}
+.classify-placed{padding:8px 12px;border-radius:4px;font-size:.88rem;font-weight:500;background:rgba(20,33,61,.07);border-left:3px solid var(--primary);display:flex;justify-content:space-between;align-items:center}
+.classify-placed .remove-x{color:#999;cursor:pointer;font-size:1.1rem;line-height:1;background:none;border:none;padding:0;margin:0}
+.classify-placed .remove-x:hover{color:var(--accent)}
+
+/* ==========================================
+   TRIÁNGULO GALTUNG
+   ========================================== */
+.galtung-layout{display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px;background:rgba(20,33,61,.03);border:1px solid var(--light-border);border-radius:8px;margin:14px 0}
+.gt-top-row{display:flex;justify-content:center;width:100%}
+.gt-bot-row{display:flex;gap:20px;justify-content:center;width:100%}
+.gt-divider{width:100%;display:flex;justify-content:center;gap:20px;align-items:center}
+.gt-line{flex:1;height:2px;background:rgba(20,33,61,.15);max-width:120px}
+.gt-icon{color:rgba(20,33,61,.3);font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.gt-slot{border:2px dashed var(--light-border);border-radius:8px;padding:14px 18px;min-width:155px;min-height:68px;text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.gt-slot-hint{font-size:.72rem;color:#aaa;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.gt-slot-placed{font-weight:700;color:var(--secondary);font-size:.92rem;min-height:22px;display:block}
+.gt-slot.gt-active{border-color:var(--accent);background:rgba(177,18,38,.04);box-shadow:0 0 0 3px rgba(177,18,38,.15)}
+.gt-slot.has-chip{border-color:var(--secondary);border-style:solid;background:#f4fbf7}
+.gt-slot:hover{border-color:var(--secondary)}
+.gt-chip-bank{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;justify-content:center}
+.gt-chip{background:var(--primary);color:white;border:2px solid var(--primary);padding:8px 18px;border-radius:20px;cursor:pointer;font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;transition:all .2s}
+.gt-chip:hover:not(:disabled){background:var(--secondary);border-color:var(--secondary)}
+.gt-chip:disabled{opacity:.3;cursor:not-allowed}
+.gt-chip.gt-selected{background:var(--accent);border-color:var(--accent);box-shadow:0 2px 8px rgba(177,18,38,.35)}
+
+/* ==========================================
+   REORDENAR (DRAG)
+   ========================================== */
+.reorder-list{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.reorder-item{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#fff;border:1px solid var(--light-border);border-left:4px solid var(--primary);border-radius:0 6px 6px 0;cursor:grab;transition:all .2s;user-select:none}
+.reorder-item:hover{box-shadow:0 4px 10px rgba(0,0,0,.08);transform:translateX(2px)}
+.reorder-item.dragging{opacity:.4;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.reorder-item.drag-over-top{border-top:3px solid var(--accent)}
+.reorder-item.drag-over-bot{border-bottom:3px solid var(--accent)}
+.reorder-handle{color:#ccc;font-size:1.1rem;flex-shrink:0;cursor:grab}
+.reorder-num{width:30px;height:30px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;transition:background .2s}
+.reorder-text{font-size:.95rem;color:var(--dark);line-height:1.4}
+
+/* ==========================================
+   CASO CORTO / ESCENARIO
+   ========================================== */
+.case-box{background:#fdf5f6;border-left:5px solid var(--accent);padding:22px 26px;border-radius:0 8px 8px 0;margin:14px 0;font-family:'Merriweather',serif;font-size:1rem;line-height:1.85}
+
+/* ==========================================
+   PAUSA REFLEXIVA
+   ========================================== */
+.pause-slide-card{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;padding:50px 30px}
+.pause-slide-inner{max-width:680px;width:100%;padding:50px;background:linear-gradient(135deg,rgba(20,33,61,.04),rgba(177,18,38,.04));border-left:6px solid var(--accent);border-radius:8px;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.07)}
+.pause-slide-inner::before{content:"⏸";position:absolute;top:10px;right:20px;font-size:5rem;color:rgba(20,33,61,.06)}
+.micro-pause-label{display:inline-block;background:var(--accent);color:white;padding:6px 12px;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:4px;margin-bottom:14px}
+.pause-question{margin-top:18px;padding:16px;background:rgba(255,255,255,.7);border-radius:6px;font-style:italic;border-left:4px solid var(--secondary)}
+
+/* MODAL */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,5,.9);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;visibility:hidden;transition:.3s}
+.modal-overlay.active{opacity:1;visibility:visible}
+.modal-box{background:var(--paper);padding:40px;max-width:500px;width:90%;text-align:center;border-top:8px solid var(--primary);transform:translateY(20px);transition:.3s;border-radius:8px}
+.modal-overlay.active .modal-box{transform:translateY(0)}
+.modal-title{color:var(--primary);font-size:1.6rem;margin-bottom:14px}
+.modal-text{font-size:1rem;color:#444;line-height:1.7;margin-bottom:20px}
+
+@media(max-width:768px){
+    .card{padding:22px}
+    .nav-btn{padding:10px 14px;font-size:.8rem}
+    .slide-title-display{display:none}
+    .course-title{font-size:1.6rem}
+    .classify-cols{grid-template-columns:1fr}
+    .gt-bot-row{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo-container">
+        <img src="../Styles/UNP I.svg" alt="Logo Institucional UNP" class="client-logo"
+            onerror="this.onerror=null;this.src='https://via.placeholder.com/250x60/14213D/F5F3F0?text=UNP';">
+    </div>
+    <h1 class="course-title">Cultura de Paz y Construcción de Paz</h1>
+    <p class="course-sub">Módulo · Resolución 53/243 de la ONU · Lederach · Galtung · Paz Total</p>
+</header>
+
+<!-- PROGRESO -->
+<div class="progress-bar-wrapper">
+    <span class="progress-label">Progreso</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:11.11%"></div></div>
+    <span class="progress-counter" id="progress-counter">1 / 9</span>
+</div>
+
+<!-- ÍNDICE -->
+<div class="card-index" id="card-index"></div>
+
+<!-- VIEWPORT -->
+<div class="cards-viewport">
+<div class="cards-track" id="cards-track">
+
+<!-- ═══════════════════════════════════════
+     T1 ¿Qué es la Cultura de Paz?
+     ═══════════════════════════════════════ -->
+<div class="slide-card" data-title="¿Qué es la Cultura de Paz?">
+<div id="focus-box"></div>
+<div class="card" data-label="Fundamentos Conceptuales">
+<h2>¿Qué es la Cultura de Paz?</h2>
+
+<div class="reading-block">
+    <p>La <strong>UNESCO</strong> define la cultura de paz como un conjunto de <strong>valores, actitudes y estilos de vida</strong> basados en el <strong>respeto a la vida</strong> y la práctica de la <strong>no violencia</strong> a través de la <strong>educación</strong> y el <strong>diálogo</strong>.</p>
+    <p>La <strong>Declaración y Programa de Acción sobre una Cultura de Paz</strong> (Resolución 53/243 de la Asamblea General de la ONU, 1999), impulsada por la UNESCO, sistematizó sus fundamentos en ocho pilares y principios operativos.</p>
+</div>
+
+<p><strong>Principios clave:</strong> el compromiso con el arreglo pacífico de conflictos, la promoción de los derechos humanos y la igualdad de oportunidades entre hombres y mujeres.</p>
+
+<div class="timeline-note">
+    <strong>Paz positiva:</strong> implica condiciones de justicia social, equidad y un correcto funcionamiento del gobierno, más allá de la simple ausencia de guerra.<br><br>
+    <strong>Modificación de mentalidades:</strong> requiere un esfuerzo generalizado para que niños y adultos comprendan valores como la tolerancia, la cooperación y la solidaridad.
+</div>
+
+<div class="active-module">
+    <span class="instruction-tag">Banco de Palabras</span>
+    <h3>Reconstruye la definición de la UNESCO</h3>
+    <p>Haz clic en una palabra del banco para ubicarla en el primer espacio disponible. Haz clic en un espacio ya llenado para devolver la palabra.</p>
+
+    <div class="word-bank-sentence">
+        <p>"La UNESCO define la cultura de paz como un conjunto de
+        <span class="wb-blank" id="wb0" data-answer="valores" onclick="wbClick(this)"></span>,
+        <span class="wb-blank" id="wb1" data-answer="actitudes" onclick="wbClick(this)"></span> y
+        <span class="wb-blank" id="wb2" data-answer="estilos de vida" onclick="wbClick(this)"></span>
+        basados en el
+        <span class="wb-blank" id="wb3" data-answer="respeto a la vida" onclick="wbClick(this)"></span>
+        y la práctica de la
+        <span class="wb-blank" id="wb4" data-answer="no violencia" onclick="wbClick(this)"></span>
+        a través de la
+        <span class="wb-blank" id="wb5" data-answer="educación" onclick="wbClick(this)"></span>
+        y el
+        <span class="wb-blank" id="wb6" data-answer="diálogo" onclick="wbClick(this)"></span>."
+        </p>
+    </div>
+
+    <div class="word-bank" id="wb-bank">
+        <button class="wb-chip" data-word="diálogo" onclick="wbChipClick(this)">diálogo</button>
+        <button class="wb-chip" data-word="respeto a la vida" onclick="wbChipClick(this)">respeto a la vida</button>
+        <button class="wb-chip" data-word="estilos de vida" onclick="wbChipClick(this)">estilos de vida</button>
+        <button class="wb-chip" data-word="no violencia" onclick="wbChipClick(this)">no violencia</button>
+        <button class="wb-chip" data-word="valores" onclick="wbChipClick(this)">valores</button>
+        <button class="wb-chip" data-word="actitudes" onclick="wbChipClick(this)">actitudes</button>
+        <button class="wb-chip" data-word="educación" onclick="wbChipClick(this)">educación</button>
+    </div>
+
+    <button class="validate-btn" onclick="checkWB1()">Verificar definición</button>
+    <div id="fb-wb1" class="feedback"></div>
+</div>
+</div>
+</div><!-- /T1 -->
+
+<!-- ═══════════════════════════════════════
+     T2 Los 8 pilares
+     ═══════════════════════════════════════ -->
+<div class="slide-card" data-title="Los ocho pilares de la ONU">
+<div class="card" data-label="Resolución 53/243 · 1999">
+<h2>Los ocho pilares de la Cultura de Paz</h2>
+
+<p>La Resolución 53/243 de la Asamblea General de la ONU (1999) definió ocho áreas de acción para construir una cultura de paz a nivel global. Cada pilar articula un dominio específico de transformación social.</p>
+
+<div class="key-impacts">
+    <div class="key-impact"><strong>1. Educación para la paz:</strong> fomentar una cultura de paz como base para la investigación, educación y acción.</div>
+    <div class="key-impact"><strong>2. Derechos humanos:</strong> respeto pleno y garantía de los derechos fundamentales de toda persona.</div>
+    <div class="key-impact"><strong>3. Igualdad entre géneros:</strong> garantía de igualdad de oportunidades entre hombres y mujeres.</div>
+    <div class="key-impact"><strong>4. Participación democrática:</strong> promoción de formas de gobierno participativas y transparentes.</div>
+    <div class="key-impact"><strong>5. Comprensión, tolerancia y solidaridad:</strong> reconocimiento de la diversidad cultural y el diálogo intercultural.</div>
+    <div class="key-impact"><strong>6. Comunicación participativa:</strong> fomento de medios libres y espacios de voz para las comunidades.</div>
+    <div class="key-impact"><strong>7. Libre flujo de información:</strong> acceso abierto a la información como garantía de ciudadanía.</div>
+    <div class="key-impact"><strong>8. Desarrollo sostenible:</strong> garantizar condiciones materiales justas para que la paz sea posible.</div>
+</div>
+
+<div class="active-module">
+    <span class="instruction-tag">Eliminar el Intruso</span>
+    <h3>¿Cuál NO es un pilar de la Resolución 53/243?</h3>
+    <p>Lee atentamente los ocho pilares y detecta cuál de las siguientes afirmaciones <em>no</em> corresponde a ninguno de ellos.</p>
+    <div class="options-grid">
+        <label class="option-label"><input type="radio" name="pilares" value="A"> <span>Educación para la paz como base de investigación, educación y acción.</span></label>
+        <label class="option-label"><input type="radio" name="pilares" value="B"> <span>Libre flujo de información y comunicación participativa.</span></label>
+        <label class="option-label"><input type="radio" name="pilares" value="C"> <span>Fortalecimiento de capacidades militares para garantizar la seguridad nacional.</span></label>
+        <label class="option-label"><input type="radio" name="pilares" value="D"> <span>Desarrollo sostenible e igualdad entre géneros.</span></label>
+        <label class="option-label"><input type="radio" name="pilares" value="E"> <span>Participación democrática y comprensión, tolerancia y solidaridad.</span></label>
+    </div>
+    <button class="validate-btn" onclick="checkIntruder2()">Identificar intruso</button>
+    <div id="fb-int2" class="feedback"></div>
+</div>
+
+<div class="active-module" style="border-color:#344E41;margin-top:20px">
+    <span class="instruction-tag" style="background:#344E41">Relacionar Pilar → Dimensión</span>
+    <h3>¿A qué dimensión pertenece cada pilar?</h3>
+    <p>Asocia cada pilar con la dimensión de la vida social que transforma principalmente.</p>
+    <div class="match-grid">
+        <div class="match-row">
+            <strong>Libre flujo de información</strong>
+            <select id="p1" class="block-select">
+                <option value="">Selecciona la dimensión...</option>
+                <option value="pol">Dimensión política y democrática</option>
+                <option value="com">Dimensión comunicativa y epistémica</option>
+                <option value="eco">Dimensión económica y ambiental</option>
+            </select>
+        </div>
+        <div class="match-row">
+            <strong>Desarrollo sostenible</strong>
+            <select id="p2" class="block-select">
+                <option value="">Selecciona la dimensión...</option>
+                <option value="pol">Dimensión política y democrática</option>
+                <option value="com">Dimensión comunicativa y epistémica</option>
+                <option value="eco">Dimensión económica y ambiental</option>
+            </select>
+        </div>
+        <div class="match-row">
+            <strong>Participación democrática</strong>
+            <select id="p3" class="block-select">
+                <option value="">Selecciona la dimensión...</option>
+                <option value="pol">Dimensión política y democrática</option>
+                <option value="com">Dimensión comunicativa y epistémica</option>
+                <option value="eco">Dimensión económica y ambiental</option>
+            </select>
+        </div>
+    </div>
+    <button class="validate-btn" onclick="checkPilares2()" style="background:#344E41">Verificar relaciones</button>
+    <div id="fb-pil2" class="feedback"></div>
+</div>
+</div>
+</div><!-- /T2 -->
+
+<!-- ═══════════════════════════════════════
+     T3 CdP vs Construcción de Paz
+     ═══════════════════════════════════════ -->
+<div class="slide-card" data-title="Cultura de Paz vs. Construcción de Paz">
+<div class="card" data-label="Conceptos y Relaciones">
+<h2>Entre la Cultura de Paz y la Construcción de Paz</h2>
+
+<table class="compare-table">
+    <tr>
+        <th style="width:40%">Cultura de Paz</th>
+        <th style="width:40%">Construcción de Paz</th>
+    </tr>
+    <tr>
+        <td class="col-cdp">Conjunto de valores, actitudes y prácticas que promueven el respeto por la vida, los derechos humanos, la dignidad, el diálogo, la inclusión y el rechazo a la violencia.</td>
+        <td class="col-cpp">Proceso de transformación de las causas del conflicto mediante la verdad, la justicia, la reparación, la reconciliación, la participación ciudadana y la reconstrucción del tejido social.</td>
+    </tr>
+    <tr>
+        <td class="col-cdp">Fortalece las formas cotidianas de convivencia.</td>
+        <td class="col-cpp">Busca crear condiciones sociales e institucionales para que la violencia no se repita.</td>
+    </tr>
+</table>
+
+<div class="quote-block">
+    "La paz no es solo ausencia de guerra; es una práctica social que se construye mediante memoria, diálogo, reconocimiento del otro y transformación de las relaciones afectadas por la violencia."
+    <cite>— UNESCO, 1999; Lederach, 1998, 2007</cite>
+</div>
+
+<div class="active-module">
+    <span class="instruction-tag">Clasificar Elementos</span>
+    <h3>¿A qué concepto pertenece cada idea?</h3>
+    <p>Haz clic en una idea del banco para seleccionarla (se resalta en rojo), luego haz clic en la columna correcta para ubicarla. Haz clic en el ✕ de una idea colocada para devolverla.</p>
+
+    <div class="classify-wrapper">
+        <div class="classify-items-pool" id="classify-pool">
+            <button class="classify-chip" data-id="1" data-text="Valores, actitudes y prácticas cotidianas" onclick="classifySelect(this)">Valores, actitudes y prácticas cotidianas</button>
+            <button class="classify-chip" data-id="2" data-text="Transformación de causas del conflicto" onclick="classifySelect(this)">Transformación de causas del conflicto</button>
+            <button class="classify-chip" data-id="3" data-text="Respeto por la vida y los DD. HH." onclick="classifySelect(this)">Respeto por la vida y los DD. HH.</button>
+            <button class="classify-chip" data-id="4" data-text="Verdad, justicia, reparación y reconciliación" onclick="classifySelect(this)">Verdad, justicia, reparación y reconciliación</button>
+            <button class="classify-chip" data-id="5" data-text="Rechazo cotidiano a la violencia" onclick="classifySelect(this)">Rechazo cotidiano a la violencia</button>
+            <button class="classify-chip" data-id="6" data-text="Reconstrucción del tejido social" onclick="classifySelect(this)">Reconstrucción del tejido social</button>
+        </div>
+        <div class="classify-cols">
+            <div class="classify-col">
+                <div class="classify-col-head cdp">Cultura de Paz</div>
+                <div class="classify-col-body" id="col-cdp" onclick="classifyDrop('cdp')"></div>
+            </div>
+            <div class="classify-col">
+                <div class="classify-col-head cpp">Construcción de Paz</div>
+                <div class="classify-col-body" id="col-cpp" onclick="classifyDrop('cpp')"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="validate-btn" onclick="checkClassify3()">Verificar clasificación</button>
+    <div id="fb-cls3" class="feedback"></div>
+</div>
+</div>
+</div><!-- /T3 -->
+
+<!-- ═══════════════════════════════════════
+     PAUSA 1
+     ═══════════════════════════════════════ -->
+<div class="slide-card pause-slide-card" data-title="⏸ Pausa reflexiva">
+<div class="pause-slide-inner">
+    <span class="micro-pause-label">Micro-pausa reflexiva</span>
+    <h3 style="color:var(--primary);margin:12px 0 14px;font-size:1.4rem">Convivir en paz vs. construir paz</h3>
+    <p style="font-size:1.05rem;line-height:1.85">
+        Una persona puede respetar a sus vecinos, dialogar y rechazar la violencia — eso es cultura de paz — pero ¿es suficiente para transformar las causas profundas de un conflicto armado?
+    </p>
+    <div class="pause-question">
+        <strong style="color:var(--secondary)">Reflexiona:</strong>
+        ¿Qué distingue <em>convivir en paz</em> de <em>construir paz</em>? ¿Puede existir una sin la otra?
+    </div>
+</div>
+</div><!-- /PAUSA 1 -->
+
+<!-- ═══════════════════════════════════════
+     T5 Santos · Epistemología del Sur
+     ═══════════════════════════════════════ -->
+<div class="slide-card" data-title="Santos: Epistemología del Sur">
+<div class="card" data-label="Marcos Teóricos · Santos">
+<h2>Boaventura de Sousa Santos</h2>
+
+<div class="teorico-box">
+    <span class="teorico-tag">Epistemología del Sur</span>
+    <h3>Reconocer los saberes marginados</h3>
+    <p>Propone <strong>reconocer y validar los conocimientos de comunidades marginadas</strong> —campesinas, indígenas, afro y populares— frente al conocimiento científico hegemónico. Cuestiona que solo el saber académico occidental sea válido para comprender la realidad.</p>
+</div>
+
+<div class="teorico-box secondary">
+    <span class="teorico-tag" style="background:var(--secondary)">Ecología de Saberes</span>
+    <h3>Diálogo entre ciencia y saberes ancestrales</h3>
+    <p>Propone un <strong>diálogo horizontal entre el conocimiento científico y los saberes ancestrales, campesinos y populares</strong>. No se trata de reemplazar uno por otro, sino de reconocer que conviven en el mismo mundo y se enriquecen mutuamente.</p>
+</div>
+
+<div class="teorico-box">
+    <span class="teorico-tag">Interculturalidad Crítica</span>
+    <h3>Cuestionar el poder, no solo la diferencia</h3>
+    <p><strong>Cuestiona las relaciones de poder arraigadas</strong> para construir nuevas formas de convivencia sin racismo ni exclusión. Va más allá del multiculturalismo descriptivo: exige transformar las estructuras que producen desigualdad.</p>
+</div>
+
+<div class="active-module">
+    <span class="instruction-tag">Relacionar Concepto → Definición</span>
+    <h3>Conecta cada idea de Santos con su núcleo</h3>
+    <p>Lee las definiciones y selecciona cuál corresponde a cada concepto del autor. Pon atención a los matices: las tres opciones son similares pero enfatizan aspectos distintos.</p>
+    <div class="match-grid" style="grid-template-columns:1fr">
+        <div class="match-row">
+            <strong>Epistemología del Sur</strong>
+            <select id="s1" class="block-select">
+                <option value="">Selecciona la definición correcta...</option>
+                <option value="A">Validar los conocimientos de comunidades marginadas frente al saber científico hegemónico.</option>
+                <option value="B">Diálogo horizontal entre conocimiento científico y saberes ancestrales, campesinos y populares.</option>
+                <option value="C">Transformar las relaciones de poder que producen racismo y exclusión para construir nuevas formas de convivencia.</option>
+            </select>
+        </div>
+        <div class="match-row">
+            <strong>Ecología de Saberes</strong>
+            <select id="s2" class="block-select">
+                <option value="">Selecciona la definición correcta...</option>
+                <option value="A">Validar los conocimientos de comunidades marginadas frente al saber científico hegemónico.</option>
+                <option value="B">Diálogo horizontal entre conocimiento científico y saberes ancestrales, campesinos y populares.</option>
+                <option value="C">Transformar las relaciones de poder que producen racismo y exclusión para construir nuevas formas de convivencia.</option>
+            </select>
+        </div>
+        <div class="match-row">
+            <strong>Interculturalidad Crítica</strong>
+            <select id="s3" class="block-select">
+                <option value="">Selecciona la definición correcta...</option>
+                <option value="A">Validar los conocimientos de comunidades marginadas frente al saber científico hegemónico.</option>
+                <option value="B">Diálogo horizontal entre conocimiento científico y saberes ancestrales, campesinos y populares.</option>
+                <option value="C">Transformar las relaciones de poder que producen racismo y exclusión para construir nuevas formas de convivencia.</option>
+            </select>
+        </div>
+    </div>
+    <button class="validate-btn" onclick="checkSantos5()">Verificar conexiones</button>
+    <div id="fb-san5" class="feedback"></div>
+</div>
+</div>
+</div><!-- /T5 -->
+
+<!-- ═══════════════════════════════════════
+     T6 Galtung · Triángulo
+     ═══════════════════════════════════════ -->
+<div class="slide-card" data-title="Galtung: Triángulo de la violencia">
+<div class="card" data-label="Marcos Teóricos · Galtung">
+<h2>Johan Galtung: El triángulo de la violencia</h2>
+
+<div class="key-impacts">
+    <div class="key-impact"><strong>Paz negativa:</strong> ausencia de violencia directa, como guerra o conflicto físico.</div>
+    <div class="key-impact"><strong>Paz positiva:</strong> ausencia de violencia estructural y presencia de justicia, igualdad y cooperación.</div>
+    <div class="key-impact"><strong>Paz neutra:</strong> espacio de equilibrio entre conflicto y armonía.</div>
+</div>
+
+<div class="reading-block">
+    <p>Galtung propone que la resolución de conflictos debe ser <strong>integral</strong>: no basta con eliminar la violencia directa, sino que también es necesario transformar las estructuras y culturas que la generan.</p>
+    <p>El <strong>triángulo de la violencia</strong> identifica tres formas relacionadas entre sí: la <em>violencia directa</em> (visible, corporal), la <em>violencia estructural</em> (sistémica, invisible) y la <em>violencia cultural</em> (simbólica, legitimadora de las otras dos). La educación para la paz es fundamental como base teórica para investigación, educación y acción.</p>
+</div>
+
+<div class="active-module">
+    <span class="instruction-tag">Completar el Triángulo</span>
+    <h3>Ubica cada tipo de violencia en el triángulo de Galtung</h3>
+    <p>Haz clic en un concepto del banco (se resalta) y luego haz clic en el vértice correspondiente para ubicarlo. Lee las pistas de cada posición.</p>
+
+    <div class="galtung-layout">
+        <div class="gt-top-row">
+            <div class="gt-slot" id="gt-top" data-answer="directa" onclick="gtPlace(this)">
+                <span class="gt-slot-hint">Cima · Visible y corporal</span>
+                <span class="gt-slot-placed" id="gtp-top"></span>
+            </div>
+        </div>
+        <div class="gt-divider">
+            <div class="gt-line"></div>
+            <span class="gt-icon">Triángulo de la Violencia</span>
+            <div class="gt-line"></div>
+        </div>
+        <div class="gt-bot-row">
+            <div class="gt-slot" id="gt-left" data-answer="estructural" onclick="gtPlace(this)">
+                <span class="gt-slot-hint">Base izq · Sistémica e invisible</span>
+                <span class="gt-slot-placed" id="gtp-left"></span>
+            </div>
+            <div class="gt-slot" id="gt-right" data-answer="cultural" onclick="gtPlace(this)">
+                <span class="gt-slot-hint">Base der · Simbólica, legitima a las otras</span>
+                <span class="gt-slot-placed" id="gtp-right"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="gt-chip-bank" id="gt-bank">
+        <button class="gt-chip" data-id="directa" data-label="Violencia directa" onclick="gtChipClick(this)">Violencia directa</button>
+        <button class="gt-chip" data-id="estructural" data-label="Violencia estructural" onclick="gtChipClick(this)">Violencia estructural</button>
+        <button class="gt-chip" data-id="cultural" data-label="Violencia cultural" onclick="gtChipClick(this)">Violencia cultural</button>
+    </div>
+
+    <button class="validate-btn" onclick="checkTriangle6()">Verificar triángulo</button>
+    <div id="fb-tri6" class="feedback"></div>
+</div>
+
+<div class="active-module" style="border-color:#7d6b5d;margin-top:20px">
+    <span class="instruction-tag" style="background:#7d6b5d">Detectar el Error</span>
+    <h3>¿Qué hace falsa esta afirmación sobre Galtung?</h3>
+    <p>Lee el siguiente texto. <strong>Haz clic sobre la frase o segmento que invalida la afirmación</strong> desde la teoría del triángulo.</p>
+
+    <div class="statement-box" id="galtung-error-text">
+        Según Galtung, cuando un conflicto armado termina y la violencia directa cesa —es decir, cuando ya no hay combates ni muertes— <span class="clickable-phrase" onclick="gtSelectPhrase(this, true)">puede afirmarse que ya se alcanzó la paz positiva</span>, pues el principal obstáculo ha sido removido y las condiciones de justicia, igualdad y cooperación se restablecen de forma natural.
+    </div>
+    <div id="fb-ger6" class="feedback"></div>
+</div>
+</div>
+</div><!-- /T6 -->
+
+<!-- ═══════════════════════════════════════
+     T7 Lederach
+     ═══════════════════════════════════════ -->
+<div class="slide-card" data-title="Lederach: Construcción de paz">
+<div class="card" data-label="Marcos Teóricos · Lederach">
+<h2>John Paul Lederach: Construir paz desde los territorios</h2>
+
+<div class="reading-block">
+    <p><strong>La paz no es solo ausencia de guerra:</strong> implica transformar relaciones dañadas por la violencia. Lederach sostiene que la construcción de paz debe partir de los <strong>territorios, las comunidades y sus redes sociales</strong>.</p>
+    <p>La <strong>reconciliación</strong> es un proceso de largo plazo que exige <em>verdad, memoria, justicia y reparación</em>. La <strong>"imaginación moral"</strong> permite pensar caminos creativos para romper ciclos de violencia.</p>
+</div>
+
+<div class="quote-block">
+    "Para Lederach, construir paz significa transformar las relaciones que sostienen el conflicto y crear nuevas formas de convivencia basadas en la dignidad, la memoria y la reconciliación."
+    <cite>— Lederach, 1997, 2005</cite>
+</div>
+
+<div class="key-impacts">
+    <div class="key-impact">Una cultura de paz se construye mediante diálogo, reconocimiento del otro, participación y reconstrucción del tejido social.</div>
+    <div class="key-impact">La "imaginación moral" es la capacidad de concebir respuestas creativas que rompan ciclos de violencia sin reproducir lógicas de guerra.</div>
+</div>
+
+<div class="active-module">
+    <span class="instruction-tag">Reconstruir la Secuencia</span>
+    <h3>Ordena el proceso de construcción de paz según Lederach</h3>
+    <p>Arrastra los pasos para reconstruir la lógica de Lederach. El orden importa: cada paso es condición del siguiente.</p>
+
+    <div class="reorder-list" id="reorder-7">
+        <div class="reorder-item" draggable="true" data-order="3">
+            <span class="reorder-handle">⣿</span>
+            <span class="reorder-num">?</span>
+            <span class="reorder-text">Practicar reconciliación y participación ciudadana como proceso de largo plazo.</span>
+        </div>
+        <div class="reorder-item" draggable="true" data-order="1">
+            <span class="reorder-handle">⣿</span>
+            <span class="reorder-num">?</span>
+            <span class="reorder-text">Reconocer que el conflicto dañó relaciones y transformarlas es el objetivo central.</span>
+        </div>
+        <div class="reorder-item" draggable="true" data-order="4">
+            <span class="reorder-handle">⣿</span>
+            <span class="reorder-num">?</span>
+            <span class="reorder-text">Usar la "imaginación moral" para crear nuevas formas de convivencia basadas en la dignidad.</span>
+        </div>
+        <div class="reorder-item" draggable="true" data-order="2">
+            <span class="reorder-handle">⣿</span>
+            <span class="reorder-num">?</span>
+            <span class="reorder-text">Garantizar verdad, memoria, justicia y reparación desde los territorios y comunidades.</span>
+        </div>
+    </div>
+
+    <button class="validate-btn" onclick="checkOrder7()">Verificar secuencia</button>
+    <div id="fb-ord7" class="feedback"></div>
+</div>
+
+<div class="active-module" style="border-color:var(--accent);margin-top:20px">
+    <span class="instruction-tag">Caso Corto · Decide</span>
+    <h3>¿Qué principio de Lederach aplica aquí?</h3>
+
+    <div class="case-box">
+        En una comunidad del Pacífico colombiano, los firmantes del Acuerdo de Paz han regresado. El gobierno instaló proyectos productivos, pero las familias de las víctimas se niegan a compartir espacios con los excombatientes. Los líderes locales proponen crear "círculos de escucha" donde víctimas y excombatientes puedan narrar sus experiencias antes de cualquier acuerdo comunitario.
+    </div>
+
+    <p style="margin:10px 0 8px"><strong>¿Cuál es el fundamento principal que orienta esta iniciativa desde Lederach?</strong></p>
+    <div class="options-grid">
+        <label class="option-label"><input type="radio" name="caso7" value="A"><span>La paz negativa: basta con que no haya violencia física para que la comunidad avance.</span></label>
+        <label class="option-label"><input type="radio" name="caso7" value="B"><span>La reconciliación como proceso que exige verdad, memoria y reconocimiento mutuo antes de cualquier acuerdo.</span></label>
+        <label class="option-label"><input type="radio" name="caso7" value="C"><span>La ecología de saberes: integrar conocimientos científicos y populares en la gestión del retorno.</span></label>
+        <label class="option-label"><input type="radio" name="caso7" value="D"><span>La paz positiva de Galtung: crear estructuras institucionales que garanticen igualdad económica.</span></label>
+    </div>
+    <button class="validate-btn" onclick="checkCaso7()" style="background:var(--accent);margin-top:14px">Tomar decisión</button>
+    <div id="fb-cas7" class="feedback"></div>
+</div>
+</div>
+</div><!-- /T7 -->
+
+<!-- ═══════════════════════════════════════
+     PAUSA 2
+     ═══════════════════════════════════════ -->
+<div class="slide-card pause-slide-card" data-title="⏸ Pausa reflexiva">
+<div class="pause-slide-inner">
+    <span class="micro-pause-label">Micro-pausa reflexiva</span>
+    <h3 style="color:var(--primary);margin:12px 0 14px;font-size:1.4rem">La imaginación moral</h3>
+    <p style="font-size:1.05rem;line-height:1.85">
+        Lederach habla de "imaginación moral" como la capacidad de ver más allá de los ciclos de violencia. No se trata de ignorar el conflicto, sino de imaginar formas de romperlo que no reproduzcan las mismas lógicas que lo generaron.
+    </p>
+    <div class="pause-question">
+        <strong style="color:var(--secondary)">Reflexiona:</strong>
+        ¿Qué requiere una persona o una comunidad para tener "imaginación moral"? ¿Cuál sería un ejemplo concreto en el contexto colombiano?
+    </div>
+</div>
+</div><!-- /PAUSA 2 -->
+
+<!-- ═══════════════════════════════════════
+     T9 Paz Total
+     ═══════════════════════════════════════ -->
+<div class="slide-card" data-title="Paz Total: política de Estado">
+<div class="card" data-label="Marco Legal y Político">
+<h2>Paz Total: política de Estado para la construcción de paz</h2>
+
+<div class="reading-block">
+    <p>La <strong>Paz Total</strong> es una política de Estado creada mediante la <strong>Ley 2272 de 2022</strong>, orientada a avanzar hacia una paz estable y duradera mediante el diálogo, la negociación, el sometimiento a la justicia y la transformación territorial.</p>
+    <p>Su enfoque parte de la <strong>seguridad humana</strong>: la protección de la vida, la dignidad, los derechos humanos, las comunidades, la naturaleza y los territorios afectados por la violencia.</p>
+</div>
+
+<div class="key-impacts">
+    <div class="key-impact">Implementación integral del <strong>Acuerdo Final de Paz de 2016</strong>.</div>
+    <div class="key-impact"><strong>Negociaciones políticas</strong> con grupos armados organizados.</div>
+    <div class="key-impact"><strong>Acercamientos con estructuras criminales</strong> de alto impacto para su sometimiento y desmantelamiento.</div>
+    <div class="key-impact"><strong>Garantías para las víctimas:</strong> verdad, justicia, reparación y no repetición.</div>
+    <div class="key-impact"><strong>Impulso a la cultura de paz,</strong> la reconciliación, la convivencia y la no estigmatización.</div>
+    <div class="key-impact"><strong>Transformación de territorios</strong> afectados por economías ilegales, pobreza, exclusión y conflicto armado.</div>
+</div>
+
+<div class="active-module">
+    <span class="instruction-tag">Definición Incompleta</span>
+    <h3>Reconstruye la definición de Paz Total</h3>
+    <p>Usa los menús para completar la definición legal y conceptual de esta política.</p>
+
+    <p style="line-height:2.4;font-size:1.05rem;padding:20px;background:#faf9f7;border-left:4px solid var(--primary);border-radius:0 8px 8px 0">
+        La Paz Total es una política de Estado creada mediante la Ley
+        <select id="pt1" class="inline-select">
+            <option value="">[Número]</option>
+            <option value="1448">1448 de 2011</option>
+            <option value="2272">2272 de 2022</option>
+            <option value="975">975 de 2005</option>
+        </select>,
+        orientada a avanzar hacia una paz
+        <select id="pt2" class="inline-select">
+            <option value="">[Tipo]</option>
+            <option value="total">total e inmediata</option>
+            <option value="est">estable y duradera</option>
+            <option value="neg">negativa y formal</option>
+        </select>
+        mediante el diálogo, la negociación y la transformación territorial. Su enfoque central es la
+        <select id="pt3" class="inline-select">
+            <option value="">[Enfoque]</option>
+            <option value="seg">seguridad humana</option>
+            <option value="mil">seguridad militar del Estado</option>
+            <option value="pol">seguridad jurídica</option>
+        </select>,
+        lo que significa proteger la vida, la dignidad, los
+        <select id="pt4" class="inline-select">
+            <option value="">[Objeto de protección]</option>
+            <option value="rec">recursos naturales y la soberanía</option>
+            <option value="dh">derechos humanos, comunidades, naturaleza y territorios</option>
+            <option value="ins">intereses del Estado y las instituciones</option>
+        </select>
+        afectados por la violencia.
+    </p>
+
+    <button class="validate-btn" onclick="checkPT9()">Verificar definición</button>
+    <div id="fb-pt9" class="feedback"></div>
+</div>
+
+<div class="active-module" style="border-color:#344E41;margin-top:20px">
+    <span class="instruction-tag" style="background:#344E41">Clasificar Componentes</span>
+    <h3>¿Qué componente de la Paz Total describe cada enunciado?</h3>
+    <p>Relaciona cada descripción con el componente específico de la política.</p>
+    <div class="match-grid">
+        <div class="match-row">
+            <span>Implica someter a la justicia y desmantelar bandas criminales de alto impacto sin reconocimiento político.</span>
+            <select id="pt5" class="block-select">
+                <option value="">Selecciona el componente...</option>
+                <option value="neg">Negociaciones políticas con grupos armados</option>
+                <option value="cri">Acercamientos con estructuras criminales</option>
+                <option value="vic">Garantías para las víctimas</option>
+            </select>
+        </div>
+        <div class="match-row">
+            <span>Garantizar verdad, justicia, reparación y no repetición para quienes sufrieron el conflicto.</span>
+            <select id="pt6" class="block-select">
+                <option value="">Selecciona el componente...</option>
+                <option value="neg">Negociaciones políticas con grupos armados</option>
+                <option value="cri">Acercamientos con estructuras criminales</option>
+                <option value="vic">Garantías para las víctimas</option>
+            </select>
+        </div>
+        <div class="match-row">
+            <span>Promover la cultura de paz, la reconciliación, la convivencia y la no estigmatización.</span>
+            <select id="pt7" class="block-select">
+                <option value="">Selecciona el componente...</option>
+                <option value="cul">Impulso a la cultura de paz y reconciliación</option>
+                <option value="ter">Transformación territorial</option>
+                <option value="aku">Implementación del Acuerdo de 2016</option>
+            </select>
+        </div>
+    </div>
+    <button class="validate-btn" onclick="checkPTComp9()" style="background:#344E41">Verificar componentes</button>
+    <div id="fb-ptc9" class="feedback"></div>
+</div>
+</div>
+</div><!-- /T9 -->
+
+</div><!-- /cards-track -->
+</div><!-- /cards-viewport -->
+
+<!-- NAV FOOTER -->
+<div class="nav-footer">
+    <button class="nav-btn prev-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Anterior</button>
+    <span class="slide-title-display" id="slide-title-display"></span>
+    <button class="nav-btn next-btn" id="btn-next" onclick="navigate(1)">Siguiente →</button>
+</div>
+
+<!-- MODAL -->
+<div id="custom-modal" class="modal-overlay">
+    <div class="modal-box">
+        <h2 id="modal-title" class="modal-title">Resultado</h2>
+        <p id="modal-text" class="modal-text"></p>
+        <button onclick="closeModal()">Continuar</button>
+    </div>
+</div>
+
+<script>
+/* =============================================
+   FOCUS BOX ALEATORIO
+   ============================================= */
+const focuses = [
+    "Concéntrate en distinguir los marcos teóricos: Santos, Galtung y Lederach proponen herramientas distintas para pensar la paz.",
+    "Presta atención a la diferencia entre <em>ausencia de violencia</em> y <em>presencia de justicia</em>. Esa distinción atraviesa todo el módulo.",
+    "Identifica cómo cada concepto se conecta con el contexto colombiano y la política de Paz Total."
+];
+document.getElementById("focus-box").innerHTML =
+    "<strong>Foco de aprendizaje activo:</strong> " + focuses[Math.floor(Math.random()*focuses.length)];
+
+/* =============================================
+   SISTEMA DE NAVEGACIÓN
+   ============================================= */
+const track = document.getElementById('cards-track');
+const slides = Array.from(track.querySelectorAll('.slide-card'));
+const total = slides.length;
+let current = 0;
+const visited = new Set([0]);
+
+const indexEl = document.getElementById('card-index');
+slides.forEach((slide, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'index-dot' + (i===0?' active':'');
+    dot.textContent = slide.dataset.title;
+    dot.onclick = () => goTo(i);
+    indexEl.appendChild(dot);
+});
+
+function goTo(idx) {
+    if (idx<0||idx>=total) return;
+    current = idx;
+    visited.add(idx);
+    track.style.transform = `translateX(-${current*100}%)`;
+    slides[current].scrollTop = 0;
+    updateUI();
+}
+function navigate(dir){ goTo(current+dir); }
+
+function updateUI() {
+    const pct = ((current+1)/total)*100;
+    document.getElementById('progress-fill').style.width = pct+'%';
+    document.getElementById('progress-counter').textContent = (current+1)+' / '+total;
+    document.getElementById('btn-prev').disabled = current===0;
+    const nxt = document.getElementById('btn-next');
+    if (current===total-1) {
+        nxt.textContent = '✓ Finalizar';
+        nxt.className = 'nav-btn finished-btn';
+        nxt.onclick = ()=>showModal(true,'¡Módulo completado!','Has recorrido todos los temas. Puedes volver a cualquier tarjeta desde el índice superior.');
+    } else {
+        nxt.textContent = 'Siguiente →';
+        nxt.className = 'nav-btn next-btn';
+        nxt.onclick = ()=>navigate(1);
+    }
+    document.getElementById('slide-title-display').textContent = slides[current].dataset.title;
+    indexEl.querySelectorAll('.index-dot').forEach((d,i)=>{
+        d.classList.remove('active','visited');
+        if(i===current) d.classList.add('active');
+        else if(visited.has(i)) d.classList.add('visited');
+    });
+}
+updateUI();
+
+/* =============================================
+   HELPERS DE FEEDBACK Y MODAL
+   ============================================= */
+function showFeedback(id, ok, msg) {
+    const el = document.getElementById(id);
+    el.className = 'feedback '+(ok?'success':'error');
+    el.innerHTML = msg;
+}
+function showModal(ok, title, text) {
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-title').style.color = ok ? 'var(--secondary)' : 'var(--accent)';
+    document.getElementById('modal-text').innerHTML = text;
+    document.getElementById('custom-modal').classList.add('active');
+}
+function closeModal(){ document.getElementById('custom-modal').classList.remove('active'); }
+
+/* =============================================
+   T1 · BANCO DE PALABRAS
+   ============================================= */
+let wbSelectedChip = null;
+const wbAnswers = ['valores','actitudes','estilos de vida','respeto a la vida','no violencia','educación','diálogo'];
+
+function wbChipClick(chipEl) {
+    document.querySelectorAll('.wb-chip').forEach(c=>c.classList.remove('wb-selected'));
+    if (wbSelectedChip===chipEl) { wbSelectedChip=null; return; }
+    wbSelectedChip = chipEl;
+    chipEl.classList.add('wb-selected');
+}
+
+function wbClick(blankEl) {
+    if (wbSelectedChip && !wbSelectedChip.classList.contains('wb-used')) {
+        // Place word into blank
+        const prev = blankEl.dataset.placed;
+        if (prev) {
+            const prevChip = document.querySelector(`.wb-chip[data-word="${prev}"]`);
+            if (prevChip) { prevChip.classList.remove('wb-used'); }
+        }
+        blankEl.textContent = wbSelectedChip.dataset.word;
+        blankEl.dataset.placed = wbSelectedChip.dataset.word;
+        blankEl.classList.add('wb-filled');
+        wbSelectedChip.classList.add('wb-used');
+        wbSelectedChip.classList.remove('wb-selected');
+        wbSelectedChip = null;
+    } else if (blankEl.dataset.placed) {
+        // Clear blank and return word
+        const word = blankEl.dataset.placed;
+        const chip = document.querySelector(`.wb-chip[data-word="${word}"]`);
+        if (chip) chip.classList.remove('wb-used');
+        blankEl.textContent = '';
+        blankEl.dataset.placed = '';
+        blankEl.classList.remove('wb-filled');
+    }
+}
+
+function checkWB1() {
+    let allOk = true, allFilled = true;
+    document.querySelectorAll('.wb-blank').forEach((b,i)=>{
+        if (!b.dataset.placed) allFilled=false;
+        if (b.dataset.placed !== wbAnswers[i]) allOk=false;
+    });
+    if (!allFilled) { showFeedback('fb-wb1',false,'Faltan palabras por ubicar. Completa todos los espacios.'); return; }
+    if (allOk) {
+        showFeedback('fb-wb1',true,'¡Perfecto! Has reconstruido la definición exacta de la UNESCO. Recuerda: la cultura de paz articula <em>valores</em>, <em>actitudes</em> y <em>estilos de vida</em> —tres dimensiones que van de lo interno a lo relacional—, siempre desde el respeto y la no violencia.');
+    } else {
+        showFeedback('fb-wb1',false,'Algunas palabras no están en el lugar correcto. Haz clic en un espacio para devolver la palabra y vuelve a intentarlo.');
+    }
+}
+
+/* =============================================
+   T2 · INTRUSO + PILARES
+   ============================================= */
+function checkIntruder2() {
+    const sel = document.querySelector('[name="pilares"]:checked')?.value;
+    if (!sel) { showModal(false,'Selecciona una opción','Por favor elige la opción que crees incorrecta.'); return; }
+    if (sel==='C') {
+        showModal(true,'¡Intruso detectado!','Correcto. El "fortalecimiento de capacidades militares" <strong>no es</strong> ninguno de los ocho pilares de la Resolución 53/243. La Cultura de Paz excluye explícitamente lógicas de seguridad basadas en la fuerza y las reemplaza por diálogo, participación y desarrollo.');
+    } else {
+        showModal(false,'No es esa','Esa opción sí corresponde a uno o más pilares de la Resolución 53/243. Busca la que introduce una lógica ajena a la cultura de paz.');
+    }
+}
+
+function checkPilares2() {
+    const p1=document.getElementById('p1').value;
+    const p2=document.getElementById('p2').value;
+    const p3=document.getElementById('p3').value;
+    if (p1==='com' && p2==='eco' && p3==='pol') {
+        showFeedback('fb-pil2',true,'¡Excelente! "Libre flujo" opera en la dimensión comunicativa (acceso al conocimiento), "desarrollo sostenible" en la económico-ambiental (condiciones materiales de vida), y "participación democrática" en la dimensión política (cómo se toman decisiones colectivas).');
+    } else {
+        showFeedback('fb-pil2',false,'Hay asociaciones incorrectas. Piensa: ¿cuál pilar habla de cómo circula la información? ¿Cuál del medioambiente y la economía? ¿Cuál de la democracia?');
+    }
+}
+
+/* =============================================
+   T3 · CLASIFICAR
+   ============================================= */
+const classifyAnswers = { '1':'cdp','2':'cpp','3':'cdp','4':'cpp','5':'cdp','6':'cpp' };
+let classifySelected = null;
+
+function classifySelect(chipEl) {
+    if (chipEl.classList.contains('placed')) return;
+    document.querySelectorAll('.classify-chip').forEach(c=>c.classList.remove('selected'));
+    if (classifySelected===chipEl) { classifySelected=null; return; }
+    classifySelected = chipEl;
+    chipEl.classList.add('selected');
+}
+
+function classifyDrop(col) {
+    if (!classifySelected) return;
+    const id = classifySelected.dataset.id;
+    const text = classifySelected.dataset.text;
+    classifySelected.classList.remove('selected');
+    classifySelected.classList.add('placed');
+    classifySelected = null;
+    const bodyEl = document.getElementById('col-'+col);
+    const placed = document.createElement('div');
+    placed.className = 'classify-placed';
+    placed.dataset.id = id;
+    placed.dataset.col = col;
+    placed.innerHTML = `${text} <button class="remove-x" onclick="classifyRemove('${id}','${col}',this.parentElement)">✕</button>`;
+    bodyEl.appendChild(placed);
+}
+
+function classifyRemove(id, col, el) {
+    el.remove();
+    const chip = document.querySelector(`.classify-chip[data-id="${id}"]`);
+    if (chip) { chip.classList.remove('placed','selected'); }
+}
+
+function checkClassify3() {
+    const placed = document.querySelectorAll('.classify-placed');
+    if (placed.length < 6) { showFeedback('fb-cls3',false,'Faltan elementos por clasificar. Asigna todas las ideas antes de verificar.'); return; }
+    let ok=true;
+    placed.forEach(p=>{ if(classifyAnswers[p.dataset.id]!==p.dataset.col) ok=false; });
+    if (ok) {
+        showFeedback('fb-cls3',true,'¡Clasificación perfecta! La clave está en entender que la cultura de paz opera en lo cotidiano (valores, prácticas, actitudes) mientras la construcción de paz opera en lo institucional y estructural (verdad, justicia, reparación, tejido social). Ambas son complementarias.');
+    } else {
+        showFeedback('fb-cls3',false,'Hay ideas en la columna incorrecta. Revisa: ¿"reconstrucción del tejido social" es práctica cotidiana o proceso institucional? ¿Y "rechazar la violencia"?');
+    }
+}
+
+/* =============================================
+   T5 · SANTOS
+   ============================================= */
+function checkSantos5() {
+    const s1=document.getElementById('s1').value;
+    const s2=document.getElementById('s2').value;
+    const s3=document.getElementById('s3').value;
+    if (!s1||!s2||!s3) { showFeedback('fb-san5',false,'Completa las tres asociaciones.'); return; }
+    if (s1==='A'&&s2==='B'&&s3==='C') {
+        showFeedback('fb-san5',true,'¡Correcto! Las tres categorías de Santos forman un sistema: primero se <em>valida</em> que existen saberes marginados (Epistemología del Sur), luego se los pone en <em>diálogo</em> horizontal con la ciencia (Ecología de saberes) y finalmente se <em>transforma</em> la estructura de poder que produce exclusión (Interculturalidad crítica).');
+    } else {
+        showFeedback('fb-san5',false,'Hay confusión entre las definiciones. Clave: "Epistemología del Sur" es sobre <em>reconocer</em>; "Ecología de saberes" es sobre el <em>diálogo</em>; "Interculturalidad crítica" es sobre <em>transformar las relaciones de poder</em>.');
+    }
+}
+
+/* =============================================
+   T6 · TRIÁNGULO GALTUNG
+   ============================================= */
+let gtSelected = null;
+const gtAnswerLabels = { 'directa':'Violencia directa','estructural':'Violencia estructural','cultural':'Violencia cultural' };
+
+function gtChipClick(chipEl) {
+    if (chipEl.disabled) return;
+    document.querySelectorAll('.gt-chip').forEach(c=>c.classList.remove('gt-selected'));
+    if (gtSelected===chipEl) { gtSelected=null; return; }
+    gtSelected = chipEl;
+    chipEl.classList.add('gt-selected');
+}
+
+function gtPlace(slotEl) {
+    if (!gtSelected) return;
+    const prevId = slotEl.dataset.placed;
+    if (prevId) {
+        const prevChip = document.querySelector(`.gt-chip[data-id="${prevId}"]`);
+        if (prevChip) { prevChip.disabled=false; prevChip.classList.remove('gt-selected'); }
+    }
+    const slotKey = slotEl.id.replace('gt-','');
+    const labelEl = document.getElementById('gtp-'+slotKey);
+    slotEl.dataset.placed = gtSelected.dataset.id;
+    labelEl.textContent = gtSelected.dataset.label;
+    slotEl.classList.add('has-chip');
+    gtSelected.classList.remove('gt-selected');
+    gtSelected.disabled = true;
+    gtSelected = null;
+}
+
+function checkTriangle6() {
+    const top = document.getElementById('gt-top').dataset.placed;
+    const left = document.getElementById('gt-left').dataset.placed;
+    const right = document.getElementById('gt-right').dataset.placed;
+    if(!top||!left||!right) { showFeedback('fb-tri6',false,'Ubica los tres tipos de violencia antes de verificar.'); return; }
+    if(top==='directa'&&left==='estructural'&&right==='cultural') {
+        showFeedback('fb-tri6',true,'¡Triángulo correcto! Para Galtung, la <em>violencia directa</em> (la más visible) está sostenida por la <em>violencia estructural</em> (la que opera en las instituciones y la economía) y legitimada por la <em>violencia cultural</em> (valores, religión, ideología). Eliminar solo una no desactiva el sistema.');
+    } else {
+        showFeedback('fb-tri6',false,'El triángulo tiene errores. Pista: la cima es lo más visible (cuerpos, hechos), la base izquierda es lo sistémico e invisible (estructuras), y la base derecha es lo simbólico que justifica las otras dos.');
+    }
+}
+
+function gtSelectPhrase(el, isCorrect) {
+    document.querySelectorAll('#galtung-error-text .clickable-phrase').forEach(p=>p.classList.remove('selected','wrong-pick'));
+    if (isCorrect) {
+        el.classList.add('selected');
+        showFeedback('fb-ger6',true,'¡Correcto! La frase "ya se alcanzó la paz positiva" es la que falsifica la afirmación. Para Galtung, cesar la violencia directa solo logra <em>paz negativa</em>. La paz positiva exige eliminar también la violencia estructural y cultural — un proceso que no ocurre de forma "natural" tras el cese al fuego.');
+    } else {
+        el.classList.add('wrong-pick');
+        showFeedback('fb-ger6',false,'Esa frase no es el error central. Busca el segmento que afirma que la paz positiva se alcanza automáticamente al cesar el conflicto armado.');
+    }
+}
+
+/* =============================================
+   T7 · REORDER LEDERACH
+   ============================================= */
+const list7 = document.getElementById('reorder-7');
+let dragging7 = null;
+
+list7.querySelectorAll('.reorder-item').forEach(item=>{
+    item.addEventListener('dragstart', e=>{
+        dragging7=item; item.classList.add('dragging');
+        e.dataTransfer.effectAllowed='move';
+    });
+    item.addEventListener('dragend', ()=>{
+        item.classList.remove('dragging','drag-over-top','drag-over-bot');
+        dragging7=null;
+        list7.querySelectorAll('.reorder-item').forEach(i=>i.classList.remove('drag-over-top','drag-over-bot'));
+        updateReorderNums();
+    });
+    item.addEventListener('dragover', e=>{
+        e.preventDefault();
+        if (!dragging7||dragging7===item) return;
+        const rect=item.getBoundingClientRect();
+        const mid=rect.top+rect.height/2;
+        list7.querySelectorAll('.reorder-item').forEach(i=>i.classList.remove('drag-over-top','drag-over-bot'));
+        if (e.clientY<mid) {
+            item.classList.add('drag-over-top');
+            list7.insertBefore(dragging7,item);
+        } else {
+            item.classList.add('drag-over-bot');
+            item.after(dragging7);
+        }
+    });
+});
+
+function updateReorderNums() {
+    list7.querySelectorAll('.reorder-item').forEach((item,i)=>{
+        item.querySelector('.reorder-num').textContent = i+1;
+    });
+}
+updateReorderNums();
+
+function checkOrder7() {
+    const items = [...list7.querySelectorAll('.reorder-item')];
+    const order = items.map(i=>parseInt(i.dataset.order));
+    if (JSON.stringify(order)===JSON.stringify([1,2,3,4])) {
+        showFeedback('fb-ord7',true,'¡Secuencia correcta! El proceso de Lederach sigue una lógica: primero <em>reconocer</em> el daño relacional, luego <em>garantizar</em> las condiciones (verdad, justicia), después <em>practicar</em> la reconciliación, y finalmente <em>imaginar</em> creativamente nuevas formas de convivencia. Cada paso depende del anterior.');
+    } else {
+        showFeedback('fb-ord7',false,'El orden no es correcto. Piensa: ¿qué debe ocurrir primero para que lo demás sea posible? La reconciliación no puede anticiparse a la garantía de verdad y justicia.');
+    }
+}
+
+function checkCaso7() {
+    const sel = document.querySelector('[name="caso7"]:checked')?.value;
+    if (!sel) { showFeedback('fb-cas7',false,'Selecciona una opción antes de decidir.'); return; }
+    if (sel==='B') {
+        showFeedback('fb-cas7',true,'¡Decisión acertada! Los "círculos de escucha" son una expresión de la <em>reconciliación como proceso de largo plazo</em> que exige verdad y reconocimiento mutuo (Lederach). No se busca acuerdo inmediato, sino transformar la relación. Ningún proyecto productivo puede reemplazar ese trabajo previo de memoria y escucha.');
+    } else {
+        showFeedback('fb-cas7',false,'Esa opción no describe adecuadamente el fundamento de los "círculos de escucha". Lederach enfatiza que antes de cualquier acuerdo o proyecto, la comunidad necesita un espacio donde víctimas y excombatientes puedan <em>narrar y ser reconocidos</em>. ¿Qué concepto de Lederach refiere a eso?');
+    }
+}
+
+/* =============================================
+   T9 · PAZ TOTAL
+   ============================================= */
+function checkPT9() {
+    const v1=document.getElementById('pt1').value;
+    const v2=document.getElementById('pt2').value;
+    const v3=document.getElementById('pt3').value;
+    const v4=document.getElementById('pt4').value;
+    if(!v1||!v2||!v3||!v4){ showFeedback('fb-pt9',false,'Completa todos los espacios antes de verificar.'); return; }
+    if(v1==='2272'&&v2==='est'&&v3==='seg'&&v4==='dh') {
+        showFeedback('fb-pt9',true,'¡Definición correcta! La Ley 2272 de 2022, paz estable y duradera, enfoque de seguridad humana, protección de derechos humanos, comunidades, naturaleza y territorios. Nota cómo el término "seguridad humana" desplaza el eje del Estado al individuo y sus comunidades.');
+    } else {
+        showFeedback('fb-pt9',false,'Hay errores. Recuerda: la ley es la 2272; la paz buscada es "estable y duradera" (no inmediata ni negativa); el enfoque es la "seguridad humana" (no la militar); y lo protegido son los derechos, comunidades y territorios (no los recursos del Estado).');
+    }
+}
+
+function checkPTComp9() {
+    const v5=document.getElementById('pt5').value;
+    const v6=document.getElementById('pt6').value;
+    const v7=document.getElementById('pt7').value;
+    if(!v5||!v6||!v7){ showFeedback('fb-ptc9',false,'Clasifica los tres componentes antes de verificar.'); return; }
+    if(v5==='cri'&&v6==='vic'&&v7==='cul') {
+        showFeedback('fb-ptc9',true,'¡Clasificación correcta! Clave: el sometimiento de estructuras criminales <em>no es</em> una negociación política (no hay reconocimiento político); las garantías para víctimas operan en el campo de la justicia transicional; y la promoción de cultura de paz y reconciliación es un componente preventivo que impide la repetición.');
+    } else {
+        showFeedback('fb-ptc9',false,'Hay confusión entre componentes similares. Pista: "estructuras criminales" y "grupos armados organizados" tienen tratamientos distintos en la Paz Total — uno es sometimiento, el otro es negociación política.');
+    }
+}
+</script>
+</body>
+</html>

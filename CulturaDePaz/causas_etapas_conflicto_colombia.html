@@ -1,0 +1,483 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans, sans-serif); }
+
+  .tab-nav {
+    display: flex; gap: 8px; padding: 0 0 1.5rem;
+  }
+  .tab-btn {
+    padding: 8px 20px; border-radius: var(--border-radius-md, 8px);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    color: var(--color-text-secondary);
+    font-size: 14px; cursor: pointer; transition: all .2s;
+    font-family: inherit;
+  }
+  .tab-btn.active {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+    font-weight: 500;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── CAUSAS ─────────────────────────────── */
+  .causas-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px; margin-bottom: 1.5rem;
+  }
+  .causa-card {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg, 12px);
+    padding: 1rem; cursor: pointer;
+    transition: all .2s; background: var(--color-background-primary);
+    text-align: center;
+  }
+  .causa-card:hover { border-color: var(--color-border-primary); transform: translateY(-2px); }
+  .causa-card.active-card { border-width: 1.5px; }
+  .causa-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+  .causa-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; }
+
+  .causa-detail {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem 1.5rem; min-height: 180px;
+    background: var(--color-background-secondary);
+    transition: opacity .25s;
+  }
+  .causa-detail h3 { font-size: 16px; font-weight: 500; margin-bottom: .75rem; color: var(--color-text-primary); }
+  .causa-item { margin-bottom: .75rem; }
+  .causa-item-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .causa-item-text { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin-top: 2px; }
+  .fuentes { font-size: 11px; color: var(--color-text-tertiary); margin-top: 1rem; font-style: italic; }
+
+  /* quiz inline */
+  .quiz-box {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md); padding: .75rem 1rem;
+    margin-top: 1rem; background: var(--color-background-primary);
+  }
+  .quiz-box p { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: .5rem; }
+  .quiz-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .quiz-opt {
+    font-size: 12px; padding: 5px 12px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: 20px; cursor: pointer; background: transparent;
+    color: var(--color-text-secondary); font-family: inherit;
+    transition: all .15s;
+  }
+  .quiz-opt:hover { background: var(--color-background-secondary); }
+  .quiz-opt.correct { background: var(--color-background-success); color: var(--color-text-success); border-color: var(--color-border-success); }
+  .quiz-opt.wrong { background: var(--color-background-danger); color: var(--color-text-danger); border-color: var(--color-border-danger); }
+  .quiz-feedback { font-size: 12px; margin-top: 6px; color: var(--color-text-secondary); }
+
+  /* ── ETAPAS ─────────────────────────────── */
+  .etapas-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+  .etapas-dots { display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    cursor: pointer; transition: all .2s;
+  }
+  .dot.active { background: var(--color-text-primary); }
+  .nav-arrow {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: var(--color-text-secondary);
+    transition: all .15s; font-family: inherit;
+  }
+  .nav-arrow:hover:not(:disabled) { border-color: var(--color-border-primary); color: var(--color-text-primary); }
+  .nav-arrow:disabled { opacity: .35; cursor: default; }
+
+  .etapa-card {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg); overflow: hidden;
+    background: var(--color-background-primary);
+  }
+  .etapa-header {
+    padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 12px;
+  }
+  .etapa-numero {
+    font-size: 11px; font-weight: 500; padding: 3px 10px;
+    border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+  }
+  .etapa-header h2 { font-size: 16px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; }
+  .etapa-header .periodo { font-size: 13px; color: var(--color-text-secondary); margin-top: 3px; }
+  .etapa-body { padding: 0 1.25rem 1.25rem; }
+
+  .char-list { list-style: none; margin-bottom: 1rem; }
+  .char-list li {
+    font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;
+    padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary);
+    display: flex; gap: 8px;
+  }
+  .char-list li:last-child { border-bottom: none; }
+  .char-list li::before { content: '—'; color: var(--color-text-tertiary); flex-shrink: 0; }
+
+  .etapa-quiz { margin-top: .5rem; }
+  .pregunta-label { font-size: 12px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .pregunta-text { font-size: 14px; color: var(--color-text-primary); margin-bottom: .75rem; font-weight: 500; }
+  .resp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .resp-btn {
+    font-size: 12px; padding: 8px 12px; text-align: left;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md); cursor: pointer;
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary); font-family: inherit;
+    line-height: 1.4; transition: all .15s;
+  }
+  .resp-btn:hover:not(:disabled) { border-color: var(--color-border-primary); color: var(--color-text-primary); }
+  .resp-btn.correct { background: var(--color-background-success); color: var(--color-text-success); border-color: var(--color-border-success); }
+  .resp-btn.wrong { background: var(--color-background-danger); color: var(--color-text-danger); border-color: var(--color-border-danger); }
+  .resp-btn:disabled { cursor: default; }
+  .etapa-feedback { font-size: 13px; margin-top: .75rem; color: var(--color-text-secondary); min-height: 20px; line-height: 1.5; }
+
+  .progress-bar-wrap { height: 3px; background: var(--color-background-secondary); margin: 1rem 0 0; border-radius: 2px; }
+  .progress-bar-fill { height: 100%; border-radius: 2px; background: var(--color-text-primary); transition: width .4s; }
+
+  .score-badge {
+    font-size: 12px; padding: 4px 10px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 20px; color: var(--color-text-secondary);
+    background: var(--color-background-secondary);
+  }
+</style>
+
+<h2 class="sr-only">Actividad interactiva: Causas y etapas del conflicto armado en Colombia</h2>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('causas')">Causas del conflicto</button>
+  <button class="tab-btn" onclick="switchTab('etapas')">Etapas históricas</button>
+</div>
+
+<!-- ═══════════ CAUSAS ═══════════ -->
+<div id="tab-causas" class="tab-panel active">
+  <div class="causas-grid" id="causas-grid"></div>
+  <div class="causa-detail" id="causa-detail">
+    <p style="color:var(--color-text-tertiary);font-size:14px;text-align:center;padding-top:40px">
+      Selecciona una causa para explorarla
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════ ETAPAS ═══════════ -->
+<div id="tab-etapas" class="tab-panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <div class="etapas-nav" style="flex:1">
+      <button class="nav-arrow" id="prev-btn" onclick="moveEtapa(-1)" disabled>‹</button>
+      <div class="etapas-dots" id="etapas-dots"></div>
+      <button class="nav-arrow" id="next-btn" onclick="moveEtapa(1)">›</button>
+    </div>
+    <span class="score-badge" id="score-badge">0 / 6 correctas</span>
+  </div>
+  <div id="etapa-container"></div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   DATOS — CAUSAS
+══════════════════════════════════════ */
+const CAUSAS = [
+  {
+    id: 'agrario',
+    icon: '🌾',
+    label: 'Problema agrario',
+    color: '#3B6D11',
+    colorBg: '#EAF3DE',
+    title: '1. El problema agrario: tierra y territorio',
+    items: [
+      { t: 'Distribución y tenencia', d: 'La histórica concentración de la tierra, el despojo violento y la falta de una reforma agraria efectiva han alimentado el conflicto desde sus orígenes.' },
+      { t: 'Conflictos de uso', d: 'El enfrentamiento entre diferentes concepciones de la tierra como fuente de rentabilidad versus sustento espiritual generó disputas entre campesinos, comunidades étnicas y grandes terratenientes.' },
+      { t: 'Abandono del campo', d: 'El Estado priorizó la colonización hacia territorios marginales en lugar de redistribuir la tierra productiva, dejando estas zonas bajo el control de grupos armados.' },
+    ],
+    quiz: { p: '¿Cuál fue una consecuencia del abandono del campo por parte del Estado?', opts: ['Reforma agraria efectiva', 'Control armado en zonas rurales', 'Redistribución de tierras', 'Expansión urbana ordenada'], c: 1, fb: 'Correcto. Al no hacer presencia en las zonas rurales, esos territorios quedaron bajo el control de grupos armados.' }
+  },
+  {
+    id: 'democracia',
+    icon: '🗳️',
+    label: 'Exclusión política',
+    color: '#534AB7',
+    colorBg: '#EEEDFE',
+    title: '2. Precariedad de la democracia y exclusión política',
+    items: [
+      { t: 'Participación limitada', d: 'Los pactos entre los partidos tradicionales, como el Frente Nacional, restringieron la participación de fuerzas disidentes o alternativas, lo que fue utilizado como justificación para la opción armada.' },
+      { t: 'Sectarismo y cultura política', d: 'Se mantuvo una cultura en la que el disenso era visto como una amenaza, recurriendo a la eliminación física del adversario político.' },
+      { t: 'Armas y urnas', d: 'La CEV señala la tendencia histórica de combinar la política legal con el uso de la violencia para acceder o mantenerse en el poder.' },
+    ],
+    quiz: { p: '¿Qué acuerdo político restringió la participación de otras fuerzas políticas en Colombia?', opts: ['Plan Colombia', 'El Frente Nacional', 'Acuerdo de La Habana', 'Constitución de 1886'], c: 1, fb: 'Correcto. El Frente Nacional estableció la alternancia entre liberales y conservadores, excluyendo otras fuerzas políticas.' }
+  },
+  {
+    id: 'institucional',
+    icon: '🏛️',
+    label: 'Debilidad del Estado',
+    color: '#854F0B',
+    colorBg: '#FAEEDA',
+    title: '3. Debilidad institucional y ausencia del Estado',
+    items: [
+      { t: 'Fragmentación territorial', d: 'Mientras el Estado hace presencia en los centros urbanos, las zonas rurales han sufrido un abandono institucional, lo que facilitó la instauración de órdenes sociales regulados por grupos armados.' },
+      { t: 'Modelo de seguridad', d: 'Las instituciones de seguridad actuaron bajo marcos ideológicos de la Guerra Fría, priorizando la doctrina del "enemigo interno" y la destrucción del adversario.' },
+    ],
+    quiz: { p: '¿Qué doctrina ideológica marcó el modelo de seguridad del Estado colombiano durante la Guerra Fría?', opts: ['Doctrina del desarrollo', 'Doctrina del enemigo interno', 'Doctrina de paz total', 'Doctrina agraria'], c: 1, fb: 'Correcto. La doctrina del "enemigo interno" priorizó la destrucción del adversario sobre la protección de los derechos.' }
+  },
+  {
+    id: 'dinamizadores',
+    icon: '💊',
+    label: 'Narcotráfico e impunidad',
+    color: '#993C1D',
+    colorBg: '#FAECE7',
+    title: '4. Dinamizadores del conflicto',
+    items: [
+      { t: 'Narcotráfico', d: 'Irrigó el conflicto con recursos abundantes, permitió el surgimiento de grupos paramilitares y penetró profundamente las estructuras del Estado y la sociedad.' },
+      { t: 'Impunidad', d: 'La ineficacia de la justicia para investigar y sancionar crímenes de lesa humanidad generó incentivos para la reproducción de la violencia y la desconfianza ciudadana en las instituciones.' },
+    ],
+    quiz: { p: '¿Cómo afectó el narcotráfico al conflicto armado?', opts: ['Lo redujo al financiar la paz', 'Lo dinamizó financiando grupos armados', 'Fue irrelevante para los actores', 'Solo afectó a las ciudades'], c: 1, fb: 'Correcto. El narcotráfico financió grupos paramilitares y guerrilleros, profundizando y prolongando el conflicto.' }
+  },
+  {
+    id: 'internacional',
+    icon: '🌐',
+    label: 'Contexto internacional',
+    color: '#185FA5',
+    colorBg: '#E6F1FB',
+    title: '5. Contexto internacional',
+    items: [
+      { t: 'Guerra Fría', d: 'Las tensiones globales, particularmente la Guerra Fría, influyeron en los referentes ideológicos y en las políticas contrainsurgentes adoptadas por el Estado colombiano, internacionalizando la confrontación interna.' },
+    ],
+    quiz: { p: '¿Qué conflicto global influenció las políticas contrainsurgentes de Colombia?', opts: ['Primera Guerra Mundial', 'Guerra del Pacífico', 'La Guerra Fría', 'Guerra de Corea'], c: 2, fb: 'Correcto. La Guerra Fría marcó el contexto ideológico de las políticas de seguridad colombianas.' }
+  },
+];
+
+/* ══════════════════════════════════════
+   DATOS — ETAPAS
+══════════════════════════════════════ */
+const ETAPAS = [
+  {
+    num: 'Antecedentes', periodo: '1946 – 1958', title: '"La Violencia" Bipartidista',
+    color: '#993C1D', colorBg: '#FAECE7',
+    chars: [
+      'Se agudizó la confrontación entre liberales y conservadores tras el retorno del Partido Conservador al poder en 1946.',
+      'El asesinato de Jorge Eliécer Gaitán y el Bogotazo radicalizaron la violencia política en campos y ciudades.',
+      'El estado de sitio, el cierre del Congreso y el surgimiento de autodefensas campesinas evidenciaron la crisis institucional.',
+      'El gobierno de Gustavo Rojas Pinilla asumió el poder con la promesa de pacificar el país.',
+      'El plebiscito de 1957 abrió paso al Frente Nacional y reconoció el derecho al voto de las mujeres.',
+    ],
+    quiz: { p: '¿Qué evento marcó la radicalización de la violencia política en 1948?', opts: ['La firma del Frente Nacional', 'El asesinato de Jorge Eliécer Gaitán', 'La Operación Marquetalia', 'El Paro Cívico Nacional'], c: 1, fb: 'Correcto. El Bogotazo, desatado por el asesinato de Gaitán, radicalizó la violencia en todo el país.' }
+  },
+  {
+    num: 'Etapa II', periodo: '1958 – 1982', title: 'Transición e incubación del conflicto',
+    color: '#534AB7', colorBg: '#EEEDFE',
+    chars: [
+      'El Frente Nacional estableció la alternancia entre liberales y conservadores, pero excluyó a otras fuerzas políticas.',
+      'En este contexto se consolidaron guerrillas como el ELN, las FARC, el EPL y el M-19.',
+      'La Operación Marquetalia, el Decreto 3398 de 1965 y el contexto de Guerra Fría marcaron la configuración de nuevas formas de confrontación armada.',
+      'El Paro Cívico Nacional de 1977 expresó el auge de la movilización social.',
+      'El Estatuto de Seguridad de 1978 intensificó la respuesta represiva del Estado.',
+    ],
+    quiz: { p: '¿Qué grupos guerrilleros se consolidaron durante el Frente Nacional?', opts: ['AUC, BACRIM y EPL', 'ELN, FARC, EPL y M-19', 'M-19, Sendero Luminoso y ETA', 'Solo las FARC'], c: 1, fb: 'Correcto. La exclusión política del Frente Nacional fue caldo de cultivo para la emergencia de estas guerrillas.' }
+  },
+  {
+    num: 'Etapa III', periodo: '1982 – 1996', title: 'Expansión, narcotráfico y guerra sucia',
+    color: '#0F6E56', colorBg: '#E1F5EE',
+    chars: [
+      'Procesos de paz con guerrillas de las FARC, M-19, EPL y ADO durante el gobierno de Belisario Betancur.',
+      'El narcotráfico se consolidó como actor de desestabilización política y financiamiento de estructuras armadas.',
+      'Surgió la Unión Patriótica como alternativa política, pero fue víctima de persecución y exterminio.',
+      'La toma y retoma del Palacio de Justicia, los asesinatos de líderes políticos y los atentados del narcotráfico marcaron la década de 1980.',
+      'La desmovilización del M-19 y la Constitución de 1991 representaron una apertura democrática, mientras avanzaba la expansión paramilitar.',
+    ],
+    quiz: { p: '¿Qué le sucedió a la Unión Patriótica en este período?', opts: ['Ganó las elecciones presidenciales', 'Fue víctima de persecución y exterminio', 'Se alió con el ELN', 'Se desmovilizó voluntariamente'], c: 1, fb: 'Correcto. La UP fue perseguida sistemáticamente: miles de sus miembros fueron asesinados, en lo que se reconoce como un genocidio político.' }
+  },
+  {
+    num: 'Etapa IV', periodo: '1996 – 2005', title: 'El umbral de la tragedia humanitaria',
+    color: '#854F0B', colorBg: '#FAEEDA',
+    chars: [
+      'Las FARC aumentaron su capacidad militar con ataques masivos contra bases y poblaciones.',
+      'Las AUC se unificaron en 1997 y expandieron su control territorial mediante masacres, desplazamientos y terror.',
+      'Las marchas cocaleras mostraron la relación entre economías ilegales, conflicto social y presencia estatal limitada.',
+      'Los diálogos del Caguán intentaron una salida negociada, pero terminaron en ruptura en 2002.',
+      'Hechos como Mapiripán, Machuca, Bojayá y el inicio del Plan Colombia reflejan la gravedad humanitaria del período.',
+    ],
+    quiz: { p: '¿Qué proceso de paz fracasó y se rompió en 2002?', opts: ['Diálogos de La Habana', 'Diálogos del Caguán', 'Proceso de Tlaxcala', 'Acuerdo de Santa Fe de Ralito'], c: 1, fb: 'Correcto. Los diálogos del Caguán entre el gobierno de Pastrana y las FARC terminaron en ruptura en febrero de 2002.' }
+  },
+  {
+    num: 'Etapa V', periodo: '2005 – 2016', title: 'Ofensiva militar y tránsito a la paz',
+    color: '#185FA5', colorBg: '#E6F1FB',
+    chars: [
+      'La Ley de Justicia y Paz buscó facilitar la desmovilización de estructuras paramilitares y estableció los principios de la justicia transicional en Colombia.',
+      'Tras la desmovilización colectiva de las AUC surgieron nuevas bandas criminales o estructuras armadas posdesmovilización.',
+      'El Estado intensificó la ofensiva militar contra las FARC mediante operaciones estratégicas.',
+      'Se reconocieron graves violaciones a los derechos humanos, como las ejecuciones extrajudiciales.',
+      'La Ley de Víctimas y Restitución de Tierras y los diálogos de La Habana abrieron el camino hacia el Acuerdo Final de Paz de 2016.',
+    ],
+    quiz: { p: '¿Qué crímenes fueron reconocidos como graves violaciones a los DD.HH. en este período?', opts: ['Solo el desplazamiento forzado', 'Las ejecuciones extrajudiciales (falsos positivos)', 'Los secuestros de la guerrilla', 'El narcotráfico'], c: 1, fb: 'Correcto. Las ejecuciones extrajudiciales, conocidas como "falsos positivos", fueron uno de los crímenes más graves reconocidos en este período.' }
+  },
+  {
+    num: 'Postacuerdo', periodo: '2016 – Actualidad', title: 'Construcción de paz incompleta',
+    color: '#3B6D11', colorBg: '#EAF3DE',
+    chars: [
+      'La firma del Acuerdo Final inició una etapa de implementación, reincorporación y construcción de paz.',
+      'La paz sigue siendo incompleta por la persistencia de conflictos regionales y economías ilegales.',
+      'Han surgido o se han fortalecido estructuras disidentes y otros grupos armados en territorios estratégicos.',
+      'Continúan los riesgos contra líderes sociales, comunidades rurales, pueblos étnicos y firmantes de paz.',
+    ],
+    quiz: { p: '¿Por qué la paz se considera "incompleta" tras el Acuerdo de 2016?', opts: ['Porque ningún grupo se desmovilizó', 'Por la persistencia de conflictos regionales y economías ilegales', 'Porque el Estado rechazó el acuerdo', 'Porque no hubo proceso de reincorporación'], c: 1, fb: 'Correcto. La persistencia de grupos disidentes, economías ilegales y los riesgos contra líderes sociales impiden hablar de una paz plena.' }
+  },
+];
+
+/* ══════════════════════════════════════
+   ESTADO
+══════════════════════════════════════ */
+let activaCausa = null;
+let causaAnswered = {};
+let etapaActual = 0;
+let etapaAnswered = {};
+let etapaScore = 0;
+
+/* ══════════════════════════════════════
+   TAB SWITCHING
+══════════════════════════════════════ */
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', (i===0&&id==='causas')||(i===1&&id==='etapas')));
+  document.getElementById('tab-causas').classList.toggle('active', id==='causas');
+  document.getElementById('tab-etapas').classList.toggle('active', id==='etapas');
+}
+
+/* ══════════════════════════════════════
+   CAUSAS — RENDER
+══════════════════════════════════════ */
+function renderCausas() {
+  const grid = document.getElementById('causas-grid');
+  grid.innerHTML = CAUSAS.map((c, i) => `
+    <div class="causa-card ${activaCausa===i?'active-card':''}" 
+         style="${activaCausa===i?'border-color:'+c.color+';background:'+c.colorBg:''}"
+         onclick="selectCausa(${i})">
+      <span class="causa-icon">${c.icon}</span>
+      <div class="causa-title">${c.label}</div>
+    </div>
+  `).join('');
+}
+
+function selectCausa(i) {
+  activaCausa = i;
+  renderCausas();
+  renderCausaDetail(i);
+}
+
+function renderCausaDetail(i) {
+  const c = CAUSAS[i];
+  const ans = causaAnswered[i];
+  const itemsHtml = c.items.map(it => `
+    <div class="causa-item">
+      <div class="causa-item-title">${it.t}</div>
+      <div class="causa-item-text">${it.d}</div>
+    </div>
+  `).join('');
+  const quizHtml = `
+    <div class="quiz-box">
+      <p>🤔 ${c.quiz.p}</p>
+      <div class="quiz-opts">
+        ${c.quiz.opts.map((o, j) => `
+          <button class="quiz-opt ${ans!==undefined?(j===c.quiz.c?'correct':(j===ans&&ans!==c.quiz.c?'wrong':'')):''}${ans!==undefined?' disabled':''}" 
+            ${ans!==undefined?'disabled':''} onclick="answerCausa(${i},${j})">${o}</button>
+        `).join('')}
+      </div>
+      ${ans!==undefined?`<div class="quiz-feedback">${ans===c.quiz.c?'✓ '+c.quiz.fb:'✗ '+c.quiz.fb}</div>`:''}
+    </div>`;
+  document.getElementById('causa-detail').innerHTML = `
+    <h3 style="color:${c.color}">${c.title}</h3>
+    ${itemsHtml}
+    ${quizHtml}
+    <div class="fuentes">Fuentes: Informe Final Comisión de la Verdad, CNMH, Informe ¡Basta Ya!</div>
+  `;
+}
+
+function answerCausa(causaIdx, optIdx) {
+  if (causaAnswered[causaIdx] !== undefined) return;
+  causaAnswered[causaIdx] = optIdx;
+  renderCausaDetail(causaIdx);
+}
+
+/* ══════════════════════════════════════
+   ETAPAS — RENDER
+══════════════════════════════════════ */
+function renderEtapasDots() {
+  const wrap = document.getElementById('etapas-dots');
+  wrap.innerHTML = ETAPAS.map((_, i) => `
+    <div class="dot ${i===etapaActual?'active':''}" onclick="goEtapa(${i})"></div>
+  `).join('');
+}
+
+function renderEtapa() {
+  const e = ETAPAS[etapaActual];
+  const ans = etapaAnswered[etapaActual];
+  renderEtapasDots();
+  document.getElementById('prev-btn').disabled = etapaActual === 0;
+  document.getElementById('next-btn').disabled = etapaActual === ETAPAS.length - 1;
+  document.getElementById('score-badge').textContent = `${etapaScore} / ${ETAPAS.length} correctas`;
+  const total = ETAPAS.length;
+  document.getElementById('progress-fill').style.width = (Object.keys(etapaAnswered).length / total * 100) + '%';
+
+  const respHtml = `
+    <div class="resp-grid">
+      ${e.quiz.opts.map((o, j) => `
+        <button class="resp-btn ${ans!==undefined?(j===e.quiz.c?'correct':(j===ans&&ans!==e.quiz.c?'wrong':'')):''}${ans!==undefined?' disabled':''}"
+          ${ans!==undefined?'disabled':''} onclick="answerEtapa(${etapaActual},${j})">${o}</button>
+      `).join('')}
+    </div>
+    <div class="etapa-feedback">${ans!==undefined?(ans===e.quiz.c?'✓ '+e.quiz.fb:'✗ '+e.quiz.fb):''}</div>
+  `;
+  document.getElementById('etapa-container').innerHTML = `
+    <div class="etapa-card">
+      <div class="etapa-header" style="background:${e.colorBg}">
+        <span class="etapa-numero" style="background:${e.color}22;color:${e.color}">${e.num}</span>
+        <div>
+          <div class="periodo">${e.periodo}</div>
+          <h2>${e.title}</h2>
+        </div>
+      </div>
+      <div class="etapa-body">
+        <ul class="char-list">
+          ${e.chars.map(c => `<li>${c}</li>`).join('')}
+        </ul>
+        <div class="etapa-quiz">
+          <div class="pregunta-label">Pregunta de comprensión</div>
+          <div class="pregunta-text">${e.quiz.p}</div>
+          ${respHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function answerEtapa(idx, optIdx) {
+  if (etapaAnswered[idx] !== undefined) return;
+  etapaAnswered[idx] = optIdx;
+  if (optIdx === ETAPAS[idx].quiz.c) etapaScore++;
+  renderEtapa();
+}
+
+function moveEtapa(dir) {
+  const next = etapaActual + dir;
+  if (next < 0 || next >= ETAPAS.length) return;
+  etapaActual = next;
+  renderEtapa();
+}
+
+function goEtapa(i) {
+  etapaActual = i;
+  renderEtapa();
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+renderCausas();
+renderEtapa();
+</script>

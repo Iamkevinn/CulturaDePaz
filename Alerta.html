@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner UNP con Emojis</title>
+<style>
+    /* Estilos para el Banner UNP - Versión con Emojis */
+    .unp-banner-container {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        max-width: 800px;
+        margin: 25px auto;
+        border-left: 10px solid #f26522; /* Borde naranja característico */
+        background-color: #f8f5fb;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+    }
+
+    /* Efectos de hover que ya te gustaron */
+    .unp-banner-container:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        background-color: #ede7f3; /* Cambia el color de fondo */
+    }
+
+    .unp-banner-link {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        padding: 25px 30px;
+    }
+
+    .unp-banner-icon {
+        flex-shrink: 0;
+        margin-right: 25px;
+    }
+    
+    /* --- MODIFICACIÓN CLAVE: ESTILO PARA EL EMOJI --- */
+    .unp-banner-icon .emoji-main {
+        font-size: 50px; /* Controlamos el tamaño del emoji con font-size */
+        line-height: 1; /* Evita que el emoji añada espacio vertical extra */
+        transition: transform 0.3s ease;
+    }
+    
+    .unp-banner-container:hover .unp-banner-icon .emoji-main {
+        transform: scale(1.15); /* Hacemos el efecto de hover un poco más notorio */
+    }
+
+    .unp-banner-text h3 {
+        margin: 0 0 8px 0;
+        font-size: 1.25em;
+        color: #8a3c8e; /* Morado oscuro */
+    }
+
+    .unp-banner-text p {
+        margin: 0;
+        font-size: 1em;
+        line-height: 1.5;
+        color: #333;
+    }
+    
+    .unp-banner-text strong {
+        color: #f26522; /* Naranja para resaltar */
+    }
+    
+    /* --- MODIFICACIÓN CLAVE: ICONO DE ENLACE EXTERNO CON EMOJI --- */
+    .unp-banner-external-icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        opacity: 0; /* Oculto por defecto */
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        font-size: 24px; /* Tamaño del emoji de flecha */
+    }
+
+    .unp-banner-container:hover .unp-banner-external-icon {
+        opacity: 1; /* Visible en hover */
+        transform: translate(2px, -2px); /* Pequeño movimiento para darle vida */
+    }
+
+</style>
+</head>
+<body>
+
+<!-- INICIO DEL BANNER PARA WORDPRESS -->
+<a href="https://paco.unp.gov.co/courses/prevencion-de-violencias-nivel-2/lessons/ley-2365-de-2024-prevencion-proteccion-y-atencion-del-acoso-sexual-colombia/" target="_blank" class="unp-banner-link">
+    <div class="unp-banner-container">
+        <!-- El contenido se anida dentro del enlace para que todo sea clicable -->
+        <div style="display: flex; align-items: center; padding: 25px 30px;">
+            <div class="unp-banner-icon">
+                <!-- SVG REEMPLAZADO POR EMOJI -->
+                <span class="emoji-main">📋</span>
+            </div>
+            <div class="unp-banner-text">
+                <h3>¿Conoces la ruta de atención de la UNP?</h3>
+                <p>Para saber cuál es el protocolo, haz clic aquí y ve al <strong>"Protocolo para la prevención, atención y medidas de protección de todas las formas de violencias basadas en género"</strong>.</p>
+            </div>
+        </div>
+
+        <!-- SVG DE ENLACE EXTERNO REEMPLAZADO POR EMOJI -->
+        <div class="unp-banner-external-icon">
+            <span>↗️</span>
+        </div>
+    </div>
+</a>
+<!-- FIN DEL BANNER -->
+
+</body>
+</html>

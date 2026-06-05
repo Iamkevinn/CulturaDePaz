@@ -1,0 +1,95 @@
+<style>
+  .vbg-viaje-container {
+    width: 100%;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    padding: 10px 0;
+  }
+
+  .vbg-viaje-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: #F3E5F5; /* Fondo lila amigable */
+    border: 3px solid #582C83;
+    border-radius: 20px; /* Bordes muy redondeados */
+    padding: 25px 30px;
+    text-decoration: none;
+    box-shadow: 0 8px 15px rgba(88, 44, 131, 0.15);
+    overflow: hidden; /* Mantiene la mano dentro de la caja */
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  /* La mano gigante esperando a la izquierda */
+  .vbg-mano-gigante {
+    position: absolute;
+    left: 0px; /* Escondida parcialmente a la izquierda */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3.5rem; /* ¡Muy grande! */
+    transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); /* Animación con rebote (bouncy) */
+    z-index: 2;
+  }
+
+  /* Los textos alineados a la derecha */
+  .vbg-viaje-textos {
+    margin-left: auto; /* Empuja el texto a la derecha */
+    text-align: right;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.5s ease;
+  }
+
+  .vbg-viaje-textos h3 {
+    color: #582C83;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+  }
+
+  .vbg-viaje-textos p {
+    color: #6D3368;
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* INTERACCIÓN HOVER: La magia ocurre aquí */
+  .vbg-viaje-card:hover {
+    background-color: #FBF8F8;
+    box-shadow: 0 12px 25px rgba(109, 51, 104, 0.25);
+    transform: scale(1.02);
+  }
+
+  /* La mano viaja a toda velocidad cruzando el bloque */
+  .vbg-viaje-card:hover .vbg-mano-gigante {
+    left: calc(100% - 400px); /* Se detiene justo antes del texto */
+  }
+
+  /* El texto "salta" un poco como si se asustara al llegar la mano */
+  .vbg-viaje-card:hover .vbg-viaje-textos {
+    transform: translateX(-10px);
+  }
+
+  /* Adaptación para celulares */
+  @media (max-width: 600px) {
+    .vbg-viaje-card:hover .vbg-mano-gigante {
+      left: 10px; /* En celular no viaja tanto porque no hay espacio */
+    }
+  }
+</style>
+
+<div class="vbg-viaje-container">
+  <a href="https://drive.google.com/drive/folders/16t9cQUhIh5zpz4-uCeENSpnrfgmJoiEB?usp=sharing" target="_blank" rel="noopener noreferrer" class="vbg-viaje-card">
+    
+    <!-- El emoji que viaja -->
+    <span class="vbg-mano-gigante">👉</span>
+
+    <div class="vbg-viaje-textos">
+      <h3>Carpeta de Actividades</h3>
+      <p>Entra aquí para ver el material</p>
+    </div>
+
+  </a>
+</div>

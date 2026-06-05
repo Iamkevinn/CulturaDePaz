@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Justicia Transicional y Acuerdo Final de Paz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300italic&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #14213D;
+  --secondary: #344E41;
+  --accent: #B11226;
+  --paper: #F5F3F0;
+  --dark: #050505;
+  --body-bg: #EAE6DF;
+  --light-border: #dcd8d0;
+  --gold: #C8962A;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--body-bg);
+  color: var(--dark);
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, .serif { font-family: 'Merriweather', serif; }
+
+/* ── HEADER ── */
+header {
+  background: linear-gradient(rgba(5,5,5,.88), rgba(20,33,61,.92)),
+              url("../sources/flagcolombia.jpg") no-repeat center/cover;
+  min-height: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 30px;
+  text-align: center;
+  border-bottom: 6px solid var(--primary);
+  position: relative;
+}
+
+.logo-wrap {
+  position: absolute;
+  top: 18px; left: 5%;
+  background: rgba(245,243,240,.96);
+  padding: 10px 20px;
+  border-radius: 3px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+}
+.logo-wrap img { height: 55px; max-width: 230px; object-fit: contain; }
+
+.header-eyebrow {
+  color: rgba(255,255,255,.55);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  margin-top: 40px;
+}
+
+.course-title {
+  color: var(--paper);
+  font-size: 2.1rem;
+  font-weight: 900;
+  max-width: 760px;
+  line-height: 1.25;
+  text-shadow: 2px 3px 8px rgba(0,0,0,.75);
+}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  background: var(--primary);
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
+}
+.progress-label {
+  color: rgba(255,255,255,.6);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.progress-track {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,.12);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--secondary);
+  border-radius: 99px;
+  transition: width .4s ease;
+}
+.progress-counter {
+  color: white;
+  font-size: .82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── CARD INDEX ── */
+.card-index {
+  display: flex;
+  gap: 5px;
+  padding: 8px 24px;
+  background: white;
+  border-bottom: 1px solid var(--light-border);
+  overflow-x: auto;
+  flex-shrink: 0;
+  scrollbar-width: thin;
+}
+.card-index::-webkit-scrollbar { height: 3px; }
+.card-index::-webkit-scrollbar-thumb { background: var(--light-border); border-radius: 99px; }
+
+.idx-dot {
+  flex-shrink: 0;
+  padding: 4px 11px;
+  border-radius: 99px;
+  font-size: .68rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .2s;
+  white-space: nowrap;
+  background: var(--body-bg);
+  color: #777;
+  font-family: 'Roboto', sans-serif;
+}
+.idx-dot:hover { border-color: var(--secondary); color: var(--secondary); }
+.idx-dot.active { background: var(--primary); color: white; border-color: var(--primary); }
+.idx-dot.visited { background: #e8f2eb; color: var(--secondary); border-color: var(--secondary); }
+
+/* ── VIEWPORT ── */
+.viewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.track {
+  display: flex;
+  height: 100%;
+  transition: transform .42s cubic-bezier(.4,0,.2,1);
+}
+.slide {
+  min-width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 0 30px;
+  scrollbar-width: thin;
+}
+.slide::-webkit-scrollbar { width: 4px; }
+.slide::-webkit-scrollbar-thumb { background: var(--light-border); border-radius: 99px; }
+
+/* ── NAV FOOTER ── */
+.nav-footer {
+  background: var(--paper);
+  border-top: 2px solid var(--light-border);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,.07);
+}
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 20px;
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-size: .85rem;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all .2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0;
+}
+.nav-btn:hover:not(:disabled) { background: var(--primary); color: white; }
+.nav-btn:disabled { opacity: .28; cursor: not-allowed; }
+.nav-btn.next { background: var(--primary); color: white; }
+.nav-btn.next:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.nav-btn.done { background: var(--secondary); border-color: var(--secondary); color: white; }
+.slide-label {
+  text-align: center;
+  font-size: .8rem;
+  color: #999;
+  font-style: italic;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── SLIDE CONTENT WRAPPER ── */
+.slide-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 24px 10px;
+}
+
+/* ── CARD BLOCK ── */
+.card-block {
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.09);
+  border-top: 1px solid #d8d2c8;
+  border-bottom: 1px solid #d8d2c8;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.card-tag {
+  display: inline-block;
+  background: var(--dark);
+  color: var(--paper);
+  padding: 6px 18px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 28px 32px 0;
+}
+.card-body { padding: 22px 32px 32px; }
+.card-body h2 {
+  color: var(--primary);
+  font-size: 1.7rem;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+.card-body h2::after {
+  content: "";
+  display: block;
+  width: 52px;
+  height: 4px;
+  background: var(--accent);
+  margin-top: 10px;
+  margin-bottom: 18px;
+}
+.card-body p {
+  font-size: 1.05rem;
+  margin-bottom: 15px;
+  color: #2a2a2a;
+  line-height: 1.75;
+}
+.card-body ul {
+  list-style: none;
+  margin: 12px 0 18px;
+}
+.card-body ul li {
+  padding: 8px 12px 8px 20px;
+  font-size: 1rem;
+  position: relative;
+  border-left: 3px solid var(--secondary);
+  background: white;
+  margin-bottom: 6px;
+  border-radius: 0 4px 4px 0;
+}
+.card-body ul li::before {
+  content: "▸";
+  color: var(--accent);
+  position: absolute;
+  left: 5px;
+}
+.key-idea {
+  background: var(--primary);
+  color: white;
+  padding: 18px 22px;
+  border-radius: 4px;
+  margin-top: 20px;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.key-idea strong { color: #a8c5b0; }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.stat-box {
+  background: white;
+  border-left: 5px solid var(--accent);
+  padding: 16px;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05);
+}
+.stat-box strong {
+  display: block;
+  font-size: 1.6rem;
+  color: var(--primary);
+  font-family: 'Merriweather', serif;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.stat-box span { font-size: .88rem; color: #555; }
+
+/* ── ACTIVITY MODULE ── */
+.activity {
+  background: white;
+  border: 2px solid var(--secondary);
+  border-radius: 6px;
+  padding: 26px;
+  margin-top: 24px;
+}
+.activity-tag {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 3px 10px;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.activity h3 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 6px;
+}
+.activity .instructions {
+  font-size: .92rem;
+  color: #555;
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+/* validate button */
+.val-btn {
+  background: var(--dark);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  font-size: .9rem;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-top: 16px;
+  transition: background .25s;
+}
+.val-btn:hover { background: var(--accent); }
+
+.feedback {
+  margin-top: 12px;
+  padding: 13px 16px;
+  border-radius: 4px;
+  font-size: .95rem;
+  font-weight: 500;
+  display: none;
+  line-height: 1.55;
+}
+.feedback.ok { display: block; background: #e6f4ea; color: #1a4a1e; border-left: 4px solid #2e7d32; }
+.feedback.err { display: block; background: #fce8e6; color: #921212; border-left: 4px solid #c62828; }
+
+/* ── ACTIVITY: DRAG & DROP WORD BANK ── */
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: #f4fbf7;
+  border: 1px dashed var(--secondary);
+  border-radius: 5px;
+  margin-bottom: 16px;
+  min-height: 52px;
+}
+.word-chip {
+  background: var(--secondary);
+  color: white;
+  padding: 5px 14px;
+  border-radius: 99px;
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: grab;
+  user-select: none;
+  transition: opacity .2s, transform .15s;
+  white-space: nowrap;
+}
+.word-chip:active { cursor: grabbing; transform: scale(.97); }
+.word-chip.used { opacity: .35; pointer-events: none; }
+
+.fill-sentence {
+  font-size: 1.05rem;
+  line-height: 2.4;
+  color: #222;
+  padding: 16px;
+  background: #faf9f7;
+  border-left: 4px solid var(--primary);
+  border-radius: 0 5px 5px 0;
+}
+.drop-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  height: 32px;
+  border-bottom: 3px solid var(--accent);
+  background: rgba(177,18,38,.06);
+  border-radius: 3px 3px 0 0;
+  vertical-align: middle;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--accent);
+  font-size: .9rem;
+  padding: 0 10px;
+  transition: background .2s;
+  position: relative;
+  margin: 0 3px;
+}
+.drop-slot:hover { background: rgba(177,18,38,.12); }
+.drop-slot.filled { background: rgba(52,78,65,.12); border-color: var(--secondary); color: var(--secondary); }
+.drop-slot.correct-slot { background: rgba(46,125,50,.18); border-color: #2e7d32; color: #1a4a1e; }
+.drop-slot.wrong-slot { background: rgba(198,40,40,.15); border-color: #c62828; color: #921212; }
+
+/* ── ACTIVITY: TRUE/FALSE ── */
+.tf-item {
+  background: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.tf-statement {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  line-height: 1.55;
+}
+.tf-btns {
+  display: flex;
+  gap: 8px;
+}
+.tf-btn {
+  padding: 6px 18px;
+  border: 2px solid #ccc;
+  background: white;
+  border-radius: 3px;
+  font-size: .88rem;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all .2s;
+  margin-top: 0;
+}
+.tf-btn:hover { border-color: var(--secondary); }
+.tf-btn.selected-v { background: var(--secondary); color: white; border-color: var(--secondary); }
+.tf-btn.selected-f { background: var(--accent); color: white; border-color: var(--accent); }
+.tf-result { font-size: .85rem; margin-top: 7px; font-style: italic; display: none; }
+.tf-result.show { display: block; }
+
+/* ── ACTIVITY: SORTABLE (drag to reorder) ── */
+.sortable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sort-item {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: grab;
+  transition: box-shadow .2s, border-color .2s;
+  font-size: .97rem;
+}
+.sort-item:active { cursor: grabbing; box-shadow: 0 8px 20px rgba(0,0,0,.15); }
+.sort-item.dragging { opacity: .4; }
+.sort-item.drag-over { border-color: var(--secondary); background: #f4fbf7; }
+.sort-handle {
+  color: #aaa;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+.sort-num {
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── ACTIVITY: NUMBER BANK ── */
+.num-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.num-chip {
+  background: var(--primary);
+  color: white;
+  padding: 5px 16px;
+  border-radius: 3px;
+  font-size: .9rem;
+  font-weight: 700;
+  font-family: 'Merriweather', serif;
+  cursor: pointer;
+  transition: opacity .2s, background .2s;
+  border: 2px solid transparent;
+}
+.num-chip:hover { background: var(--secondary); }
+.num-chip.selected-chip { background: var(--accent); }
+.num-chip.used-chip { opacity: .3; pointer-events: none; }
+
+.num-fill-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #faf9f7;
+  border-left: 4px solid var(--secondary);
+  border-radius: 0 5px 5px 0;
+  margin-bottom: 8px;
+}
+.num-slot {
+  min-width: 90px;
+  height: 34px;
+  border-bottom: 3px solid var(--accent);
+  background: rgba(177,18,38,.06);
+  border-radius: 3px 3px 0 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'Merriweather', serif;
+  font-size: .95rem;
+  cursor: pointer;
+  padding: 0 10px;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.num-slot:hover { background: rgba(177,18,38,.12); }
+.num-slot.filled-slot { background: rgba(52,78,65,.1); border-color: var(--secondary); color: var(--secondary); }
+.num-label { font-size: .97rem; color: #333; line-height: 1.45; }
+
+/* ── ACTIVITY: CLASSIFY ── */
+.classify-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: #f4fbf7;
+  border: 1px dashed var(--secondary);
+  border-radius: 5px;
+  margin-bottom: 16px;
+  min-height: 52px;
+}
+.classify-chip {
+  background: white;
+  border: 2px solid var(--secondary);
+  color: var(--secondary);
+  padding: 5px 14px;
+  border-radius: 99px;
+  font-size: .85rem;
+  font-weight: 700;
+  cursor: grab;
+  user-select: none;
+  transition: all .2s;
+}
+.classify-chip:active { cursor: grabbing; }
+.classify-chip.placed { opacity: .3; pointer-events: none; }
+
+.classify-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.classify-col {
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.classify-col-header {
+  background: var(--primary);
+  color: white;
+  padding: 10px 14px;
+  font-size: .88rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: .5px;
+}
+.classify-drop-zone {
+  min-height: 90px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-content: flex-start;
+  transition: background .2s;
+}
+.classify-drop-zone.drag-over-zone { background: #f4fbf7; }
+
+/* ── ACTIVITY: SEQUENCE ── */
+.seq-pool {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+.seq-item {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: grab;
+  font-size: .95rem;
+  transition: border-color .2s;
+}
+.seq-item:active { cursor: grabbing; }
+.seq-item.dragging { opacity: .4; }
+.seq-item.drag-over { border-color: var(--accent); background: #fdf5f6; }
+.seq-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--body-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  color: #888;
+  pointer-events: none;
+}
+
+/* ── ACTIVITY: CONNECT / MATCH ── */
+.match-rows { display: flex; flex-direction: column; gap: 10px; }
+.match-row-item {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+.match-left {
+  background: var(--primary);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: .92rem;
+  font-weight: 500;
+  text-align: right;
+  line-height: 1.4;
+}
+.match-arrow { color: var(--accent); font-size: 1.3rem; text-align: center; }
+.match-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  font-family: 'Roboto', sans-serif;
+  font-size: .9rem;
+  color: var(--dark);
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23B11226" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  transition: border-color .2s;
+}
+.match-select:focus { outline: none; border-color: var(--primary); }
+
+/* ── ACTIVITY: CAUSE-EFFECT ── */
+.cause-effect-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 2px solid var(--primary);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.ce-header {
+  padding: 10px;
+  font-weight: 700;
+  font-size: .82rem;
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.ce-cause-h { background: var(--primary); color: white; border-right: 2px solid #fff; }
+.ce-effect-h { background: var(--secondary); color: white; }
+.ce-row {
+  display: contents;
+}
+.ce-cause-cell, .ce-effect-cell {
+  padding: 12px 14px;
+  font-size: .92rem;
+  border-top: 1px solid #ddd;
+  line-height: 1.45;
+}
+.ce-cause-cell { background: #f8f9fc; border-right: 2px solid #ddd; font-weight: 500; }
+.ce-effect-cell { background: white; }
+.ce-effect-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 7px 30px 7px 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: .88rem;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  background: white;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23B11226" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 7px center;
+  background-size: 18px;
+  transition: border-color .2s;
+}
+.ce-effect-select:focus { outline: none; border-color: var(--secondary); }
+
+/* ── ACTIVITY: MINI CASE ── */
+.case-box {
+  background: #faf9f7;
+  border-left: 5px solid var(--gold);
+  padding: 16px 20px;
+  border-radius: 0 5px 5px 0;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  line-height: 1.65;
+  font-style: italic;
+}
+.case-options { display: flex; flex-direction: column; gap: 8px; }
+.case-opt {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  padding: 11px 16px;
+  font-size: .95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: border-color .2s, background .2s;
+  text-align: left;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 0;
+  line-height: 1.5;
+}
+.case-opt:hover { border-color: var(--secondary); background: #f4fbf7; }
+.case-opt.chosen { border-color: var(--primary); background: #eef3f9; }
+.case-letter {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── ACTIVITY: ERROR DETECTION ── */
+.error-text {
+  background: #fdf5f6;
+  padding: 20px;
+  border-left: 5px solid var(--accent);
+  font-family: 'Merriweather', serif;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  border-radius: 0 5px 5px 0;
+  margin-bottom: 14px;
+}
+.err-span {
+  border-bottom: 2px dashed #aaa;
+  cursor: pointer;
+  padding: 1px 3px;
+  transition: background .2s;
+  border-radius: 2px;
+}
+.err-span:hover { background: rgba(0,0,0,.05); }
+.err-span.selected { background: rgba(177,18,38,.18); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.err-span.correct-err { background: rgba(46,125,50,.18); border-color: #2e7d32; color: #1a4a1e; }
+.err-span.wrong-err { background: rgba(198,40,40,.12); border-color: #c62828; color: #921212; }
+
+/* ── ACTIVITY: SELF-CHECK ── */
+.self-check { display: flex; flex-direction: column; gap: 10px; }
+.sc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #faf9f7;
+  border: 1px solid #e5e0d8;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.sc-item:hover { background: #f0ebe3; }
+.sc-box {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--secondary);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
+  font-size: .8rem;
+  transition: background .2s;
+}
+.sc-item.checked .sc-box { background: var(--secondary); }
+.sc-text { font-size: .95rem; color: #333; line-height: 1.45; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,5,5,.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s;
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal-box {
+  background: var(--paper);
+  padding: 38px;
+  max-width: 480px;
+  width: 92%;
+  text-align: center;
+  border-top: 7px solid var(--primary);
+  border-radius: 5px;
+  transform: translateY(16px);
+  transition: transform .3s;
+}
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-title { font-size: 1.6rem; color: var(--primary); margin-bottom: 12px; }
+.modal-text { font-size: 1rem; line-height: 1.65; color: #333; }
+.modal-btn {
+  background: var(--dark);
+  color: white;
+  border: none;
+  padding: 11px 26px;
+  font-size: .95rem;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-top: 20px;
+  transition: background .25s;
+}
+.modal-btn:hover { background: var(--accent); }
+
+/* ── PAUSE SLIDE ── */
+.pause-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 350px);
+  padding: 40px 24px;
+}
+.pause-inner {
+  max-width: 640px;
+  width: 100%;
+  padding: 44px;
+  background: var(--paper);
+  border-left: 7px solid var(--accent);
+  border-radius: 4px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.09);
+  position: relative;
+}
+.pause-inner::after {
+  content: "⏸";
+  position: absolute;
+  top: 12px; right: 18px;
+  font-size: 3.5rem;
+  color: rgba(20,33,61,.07);
+  pointer-events: none;
+}
+.pause-tag {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 4px 12px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  margin-bottom: 14px;
+}
+.pause-inner h3 { color: var(--primary); font-size: 1.4rem; margin-bottom: 14px; }
+.pause-inner p { font-size: 1.05rem; line-height: 1.8; color: #333; }
+.pause-q {
+  margin-top: 18px;
+  padding: 16px;
+  background: rgba(255,255,255,.7);
+  border-left: 4px solid var(--secondary);
+  border-radius: 3px;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.pause-q strong { color: var(--secondary); }
+
+@media (max-width: 680px) {
+  .course-title { font-size: 1.4rem; }
+  .card-body h2 { font-size: 1.3rem; }
+  .card-body { padding: 18px 18px 24px; }
+  .card-tag { margin: 20px 18px 0; }
+  .match-row-item { grid-template-columns: 1fr; }
+  .match-arrow { display: none; }
+  .classify-cols { grid-template-columns: 1fr; }
+  .cause-effect-grid { grid-template-columns: 1fr; }
+  .ce-cause-h { border-right: none; border-bottom: 2px solid white; }
+  .ce-cause-cell { border-right: none; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <img src="../Styles/UNP I.svg" alt="Logo Institucional UNP"
+         onerror="this.onerror=null;this.src='https://via.placeholder.com/230x55/14213D/F5F3F0?text=LOGO+UNP';">
+  </div>
+  <p class="header-eyebrow">Cultura de Paz y Seguridad Humana</p>
+  <h1 class="course-title">Justicia Transicional y Acuerdo Final de Paz</h1>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <span class="progress-label">Progreso</span>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:9.09%"></div></div>
+  <span class="progress-counter" id="prog-counter">1 / 11</span>
+</div>
+
+<!-- INDEX -->
+<div class="card-index" id="card-index"></div>
+
+<!-- VIEWPORT -->
+<div class="viewport">
+<div class="track" id="track">
+
+<!-- ════════════════════════════════════════
+     SLIDE 1 · Justicia Transicional
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Justicia Transicional">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 1</span>
+    <div class="card-body">
+      <h2>Justicia transicional y construcción de paz en Colombia</h2>
+      <p>La justicia transicional es el conjunto de mecanismos <strong>judiciales y extrajudiciales</strong> que permiten a una sociedad enfrentar graves violaciones de derechos humanos e infracciones al DIH después de un conflicto armado.</p>
+      <p>Su relación con la paz está en que busca equilibrar dos necesidades: terminar la violencia y garantizar los derechos de las víctimas.</p>
+      <ul>
+        <li>Reconoce a las víctimas como centro del proceso.</li>
+        <li>Promueve verdad, justicia, reparación y no repetición.</li>
+        <li>Facilita la reincorporación y la rendición de cuentas de excombatientes.</li>
+        <li>Contribuye a reconstruir confianza institucional y tejido social.</li>
+        <li>Ayuda a transformar las causas que permitieron la violencia.</li>
+      </ul>
+      <div class="key-idea"><strong>Idea clave:</strong> La justicia transicional no significa impunidad; busca una paz sostenible mediante verdad, responsabilidad, reparación y garantías para que los hechos no se repitan.</div>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 1: Drag & Drop — completar los 4 pilares -->
+  <div class="activity">
+    <span class="activity-tag">🧩 Completar con banco de palabras</span>
+    <h3>Los cuatro pilares de la justicia transicional</h3>
+    <p class="instructions">Arrastra cada concepto al espacio donde completa correctamente la oración. Considera lo que acabas de leer.</p>
+    <div class="word-bank" id="wb1">
+      <span class="word-chip" draggable="true" data-word="verdad">Verdad</span>
+      <span class="word-chip" draggable="true" data-word="impunidad">Impunidad</span>
+      <span class="word-chip" draggable="true" data-word="reparación">Reparación</span>
+      <span class="word-chip" draggable="true" data-word="repetición">No repetición</span>
+      <span class="word-chip" draggable="true" data-word="justicia">Justicia</span>
+      <span class="word-chip" draggable="true" data-word="olvido">Olvido</span>
+    </div>
+    <div class="fill-sentence">
+      La justicia transicional busca garantizar la <span class="drop-slot" data-answer="verdad" data-id="ds1-1">_____</span> sobre lo ocurrido, la <span class="drop-slot" data-answer="justicia" data-id="ds1-2">_____</span> para los responsables, la <span class="drop-slot" data-answer="reparación" data-id="ds1-3">_____</span> a las víctimas y garantías de <span class="drop-slot" data-answer="repetición" data-id="ds1-4">no _____</span>.
+    </div>
+    <button class="val-btn" onclick="validateDropSlots('act1',['ds1-1','ds1-2','ds1-3','ds1-4'],'fb1')">Verificar</button>
+    <div class="feedback" id="fb1"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 2 · Ley 975 de 2005
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Ley 975 de 2005">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 2</span>
+    <div class="card-body">
+      <h2>Ley 975 de 2005: Ley de Justicia y Paz</h2>
+      <p>La Ley 975 de 2005 fue creada como un mecanismo de justicia transicional para facilitar la <strong>desmovilización y reincorporación</strong> de integrantes de grupos armados organizados al margen de la ley, especialmente estructuras paramilitares, garantizando al mismo tiempo los derechos de las víctimas.</p>
+      <p>Su propósito fue equilibrar la búsqueda de la paz con la obligación del Estado de garantizar verdad, justicia, reparación y garantías de no repetición.</p>
+      <ul>
+        <li>Creó un procedimiento penal <strong>especial</strong> para excombatientes postulados.</li>
+        <li>Estableció penas alternativas de <strong>5 a 8 años</strong>, condicionadas a la confesión, colaboración con la justicia y reparación a las víctimas.</li>
+        <li>Reconoció la participación de las víctimas en los procesos judiciales.</li>
+        <li>Promovió la entrega de bienes para la reparación.</li>
+        <li>Buscó esclarecer graves violaciones de DD. HH. e infracciones al DIH.</li>
+        <li>Fue revisada por la Corte Constitucional mediante la <strong>Sentencia C-370 de 2006</strong>, que fortaleció los derechos de las víctimas.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 2: Verdadero / Falso con justificación -->
+  <div class="activity">
+    <span class="activity-tag">✔ / ✘ Verdadero o Falso — con justificación</span>
+    <h3>¿Qué tanto entendiste de la Ley 975?</h3>
+    <p class="instructions">Lee cada afirmación y selecciona V o F. Luego verifica: ¿por qué es verdadero o falso?</p>
+    <div id="tf-set1">
+      <div class="tf-item" id="tfi-1">
+        <p class="tf-statement">La Ley 975 otorga penas ordinarias iguales a las del código penal común para los excombatientes postulados.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="selectTF(this,'tfi-1',false)">V</button>
+          <button class="tf-btn" onclick="selectTF(this,'tfi-1',true)">F</button>
+        </div>
+        <p class="tf-result" id="tfr-1"></p>
+      </div>
+      <div class="tf-item" id="tfi-2">
+        <p class="tf-statement">La Sentencia C-370 de 2006 de la Corte Constitucional fortaleció los derechos de las víctimas dentro del proceso.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="selectTF(this,'tfi-2',true)">V</button>
+          <button class="tf-btn" onclick="selectTF(this,'tfi-2',false)">F</button>
+        </div>
+        <p class="tf-result" id="tfr-2"></p>
+      </div>
+      <div class="tf-item" id="tfi-3">
+        <p class="tf-statement">Las penas alternativas de la Ley 975 no estaban condicionadas a ningún requisito específico para los postulados.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="selectTF(this,'tfi-3',false)">V</button>
+          <button class="tf-btn" onclick="selectTF(this,'tfi-3',true)">F</button>
+        </div>
+        <p class="tf-result" id="tfr-3"></p>
+      </div>
+    </div>
+    <button class="val-btn" onclick="validateTF(['tfi-1','tfi-2','tfi-3'],['tfr-1','tfr-2','tfr-3'],[false,true,false],['Falso: La Ley 975 creó penas <em>alternativas</em> de 5 a 8 años, mucho menores que las penas ordinarias, condicionadas al cumplimiento de requisitos.','Verdadero: La Corte revisó la ley y reforzó las garantías para las víctimas dentro del proceso de justicia transicional.','Falso: Las penas alternativas estaban condicionadas a la confesión completa, la colaboración con la justicia y la reparación a las víctimas.'],'fb2')">Verificar respuestas</button>
+    <div class="feedback" id="fb2"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 3 · Acuerdo Final 2016
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Acuerdo Final FARC-EP (2016)">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 3</span>
+    <div class="card-body">
+      <h2>Acuerdo Final con las FARC-EP (2016)</h2>
+      <p>El Acuerdo Final para la Terminación del Conflicto y la Construcción de una Paz Estable y Duradera fue firmado entre el Gobierno Nacional de Colombia y las FARC-EP el <strong>24 de noviembre de 2016</strong>.</p>
+      <p>Su finalidad fue poner fin a la confrontación armada con esta guerrilla y sentar las bases para una paz estable, duradera y territorial, mediante reformas institucionales, garantías políticas, reincorporación, atención a las víctimas y mecanismos de verificación.</p>
+      <p style="font-weight:700; margin-bottom:8px;">Los seis puntos del Acuerdo Final:</p>
+      <ul>
+        <li>Reforma Rural Integral.</li>
+        <li>Apertura Democrática y Participación Política.</li>
+        <li>Fin del Conflicto.</li>
+        <li>Solución al problema de drogas ilícitas.</li>
+        <li>Acuerdo sobre Víctimas: Sistema Integral.</li>
+        <li>Implementación y Verificación.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 3: Ordenar los 6 puntos (drag to sort) -->
+  <div class="activity">
+    <span class="activity-tag">↕ Reconstruir una secuencia</span>
+    <h3>Ordena los seis puntos del Acuerdo Final</h3>
+    <p class="instructions">Los puntos del Acuerdo aparecen mezclados. Arrástralos para reconstruir el orden correcto tal como aparecen en el documento. Recuerda cuál va primero y cuál cierra el acuerdo.</p>
+    <div class="sortable-list" id="sort-acordos">
+      <div class="sort-item" draggable="true" data-pos="4"><span class="sort-handle">⠿</span><span class="sort-num" id="sn-drug">?</span>Solución al problema de drogas ilícitas.</div>
+      <div class="sort-item" draggable="true" data-pos="1"><span class="sort-handle">⠿</span><span class="sort-num" id="sn-rural">?</span>Reforma Rural Integral.</div>
+      <div class="sort-item" draggable="true" data-pos="6"><span class="sort-handle">⠿</span><span class="sort-num" id="sn-impl">?</span>Implementación y Verificación.</div>
+      <div class="sort-item" draggable="true" data-pos="5"><span class="sort-handle">⠿</span><span class="sort-num" id="sn-vic">?</span>Acuerdo sobre Víctimas: Sistema Integral.</div>
+      <div class="sort-item" draggable="true" data-pos="2"><span class="sort-handle">⠿</span><span class="sort-num" id="sn-dem">?</span>Apertura Democrática y Participación Política.</div>
+      <div class="sort-item" draggable="true" data-pos="3"><span class="sort-handle">⠿</span><span class="sort-num" id="sn-fin">?</span>Fin del Conflicto.</div>
+    </div>
+    <button class="val-btn" onclick="validateSortable('sort-acordos','fb3')">Verificar orden</button>
+    <div class="feedback" id="fb3"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 4 · PDET
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Punto 1: PDET">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 4</span>
+    <div class="card-body">
+      <h2>Punto 1: Reforma Rural Integral y PDET</h2>
+      <p>Los <strong>Programas de Desarrollo con Enfoque Territorial (PDET)</strong> son el principal instrumento territorial de la Reforma Rural Integral. Buscan transformar las zonas rurales más afectadas por el conflicto armado, la pobreza, los cultivos ilícitos y la débil presencia institucional.</p>
+      <div class="stat-grid">
+        <div class="stat-box"><strong>16</strong><span>Subregiones PDET</span></div>
+        <div class="stat-box"><strong>170</strong><span>Municipios priorizados</span></div>
+        <div class="stat-box"><strong>19</strong><span>Departamentos con presencia</span></div>
+        <div class="stat-box"><strong>~11.000</strong><span>Veredas impactadas</span></div>
+        <div class="stat-box"><strong>6,6 M</strong><span>Personas beneficiadas</span></div>
+        <div class="stat-box"><strong>33.007</strong><span>Iniciativas comunitarias formuladas</span></div>
+      </div>
+      <ul>
+        <li>Representan cerca del <strong>36 %</strong> del territorio nacional y el <strong>24 %</strong> de la población rural.</li>
+        <li>Se construyeron 16 Planes de Acción para la Transformación Regional (PATR).</li>
+        <li>La implementación fue prorrogada hasta <strong>2037</strong> mediante la Ley 2565 de 2026.</li>
+        <li>En mayo de 2026 la ART aprobó 7.801 nuevos proyectos por más de <strong>$23,6 billones</strong>.</li>
+      </ul>
+      <div class="key-idea"><strong>Idea clave:</strong> Los PDET son una apuesta de paz territorial: tierra, vías, salud, educación, vivienda, agua potable, producción agropecuaria, alimentación, reconciliación y construcción de paz.</div>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 4: Banco de números — completar cifras -->
+  <div class="activity">
+    <span class="activity-tag">🔢 Banco de cifras</span>
+    <h3>Completa las cifras de los PDET</h3>
+    <p class="instructions">Selecciona un número del banco y haz clic en el espacio que le corresponde. Usa el texto anterior como referencia.</p>
+    <div class="num-bank" id="num-bank-pdet">
+      <span class="num-chip" data-val="170">170</span>
+      <span class="num-chip" data-val="36">36 %</span>
+      <span class="num-chip" data-val="33007">33.007</span>
+      <span class="num-chip" data-val="2037">2037</span>
+      <span class="num-chip" data-val="16">16</span>
+      <span class="num-chip" data-val="50">50 %</span>
+    </div>
+    <div>
+      <div class="num-fill-row">
+        <span class="num-slot" data-answer="16" data-bank="num-bank-pdet" id="ns1">_____</span>
+        <span class="num-label">subregiones PDET fueron definidas en el Acuerdo Final.</span>
+      </div>
+      <div class="num-fill-row">
+        <span class="num-slot" data-answer="170" data-bank="num-bank-pdet" id="ns2">_____</span>
+        <span class="num-label">municipios fueron priorizados por su afectación por el conflicto.</span>
+      </div>
+      <div class="num-fill-row">
+        <span class="num-slot" data-answer="33007" data-bank="num-bank-pdet" id="ns3">_____</span>
+        <span class="num-label">iniciativas formuladas por las propias comunidades para transformar sus territorios.</span>
+      </div>
+      <div class="num-fill-row">
+        <span class="num-slot" data-answer="2037" data-bank="num-bank-pdet" id="ns4">_____</span>
+        <span class="num-label">es el nuevo horizonte de implementación de los PDET según la Ley 2565 de 2026.</span>
+      </div>
+      <div class="num-fill-row">
+        <span class="num-slot" data-answer="36" data-bank="num-bank-pdet" id="ns5">_____</span>
+        <span class="num-label">del territorio nacional representan las zonas PDET.</span>
+      </div>
+    </div>
+    <button class="val-btn" onclick="validateNumSlots(['ns1','ns2','ns3','ns4','ns5'],'fb4')">Verificar cifras</button>
+    <div class="feedback" id="fb4"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 5 · Participación política
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Punto 2: Participación Política">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 5</span>
+    <div class="card-body">
+      <h2>Punto 2: Participación política y apertura democrática</h2>
+      <p>El Punto 2 busca que la paz también signifique más democracia, más participación y más garantías para quienes históricamente han sido excluidos de la política, especialmente víctimas, comunidades rurales, mujeres, organizaciones sociales, campesinas y étnicas.</p>
+      <ul>
+        <li><strong>Tres pilares:</strong> garantías para el ejercicio de la política; mecanismos democráticos de participación ciudadana; y medidas para mayor participación política nacional, regional y local.</li>
+        <li><strong>Ley 1909 de 2018:</strong> reglamentó el Estatuto de la Oposición y los derechos de partidos y movimientos políticos declarados en oposición o independientes.</li>
+        <li>Se crearon <strong>16 Circunscripciones Transitorias Especiales de Paz (CITREP)</strong> para la Cámara de Representantes.</li>
+        <li>Las CITREP aplican para dos periodos constitucionales: <strong>2022-2026</strong> y <strong>2026-2030</strong>.</li>
+        <li>Están en zonas rurales de <strong>168 municipios</strong> en <strong>19 departamentos</strong>.</li>
+        <li>En cada CITREP se elige <strong>1 representante</strong>, para un total de <strong>16 curules especiales de paz</strong>.</li>
+        <li>La votación se realiza en zonas rurales, excluyendo las cabeceras municipales.</li>
+        <li>Las listas deben estar integradas por <strong>dos candidatos, uno de cada género</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 5: Clasificar elementos -->
+  <div class="activity">
+    <span class="activity-tag">📂 Clasificar elementos</span>
+    <h3>¿A qué pilar pertenece cada medida?</h3>
+    <p class="instructions">Arrastra cada elemento al pilar del Punto 2 al que pertenece según lo leído.</p>
+    <div class="classify-pool" id="cl-pool">
+      <span class="classify-chip" draggable="true" data-cat="participacion">16 CITREP en la Cámara</span>
+      <span class="classify-chip" draggable="true" data-cat="garantias">Ley 1909 de 2018 — Estatuto de la Oposición</span>
+      <span class="classify-chip" draggable="true" data-cat="participacion">168 municipios rurales sin incluir cabeceras</span>
+      <span class="classify-chip" draggable="true" data-cat="garantias">Derechos de partidos independientes y en oposición</span>
+      <span class="classify-chip" draggable="true" data-cat="participacion">16 curules especiales de paz, 2022-2030</span>
+      <span class="classify-chip" draggable="true" data-cat="garantias">Protección del ejercicio político de excluidos</span>
+    </div>
+    <div class="classify-cols">
+      <div class="classify-col">
+        <div class="classify-col-header">Garantías para el ejercicio político</div>
+        <div class="classify-drop-zone" data-cat="garantias" id="cz-garantias"></div>
+      </div>
+      <div class="classify-col">
+        <div class="classify-col-header">Mayor participación política</div>
+        <div class="classify-drop-zone" data-cat="participacion" id="cz-participacion"></div>
+      </div>
+    </div>
+    <button class="val-btn" onclick="validateClassify('cl-pool',['cz-garantias','cz-participacion'],'fb5')">Verificar clasificación</button>
+    <div class="feedback" id="fb5"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAUSA REFLEXIVA 1
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="⏸ Pausa reflexiva">
+<div class="pause-slide">
+  <div class="pause-inner">
+    <span class="pause-tag">Micro-pausa reflexiva</span>
+    <h3>Antes de seguir, detente</h3>
+    <p>El Acuerdo Final buscó no solo silenciar los fusiles, sino transformar las condiciones que hicieron posible la guerra: exclusión política, abandono rural, economías ilegales, impunidad.</p>
+    <div class="pause-q">
+      <strong>Reflexiona:</strong> ¿Por qué no es suficiente el cese al fuego para garantizar que el conflicto no vuelva? ¿Qué otros cambios son necesarios?
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 6 · Fin del Conflicto
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Punto 3: Fin del Conflicto">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 6</span>
+    <div class="card-body">
+      <h2>Punto 3: Fin del conflicto</h2>
+      <p>El Punto 3 buscó terminar la confrontación armada entre el Estado colombiano y las FARC-EP mediante el cese al fuego bilateral y definitivo, la dejación de armas, la reincorporación de excombatientes y las garantías de seguridad para firmantes, comunidades y líderes sociales.</p>
+      <div class="stat-grid">
+        <div class="stat-box"><strong>13.609</strong><span>Excombatientes desmovilizados</span></div>
+        <div class="stat-box"><strong>94,9 %</strong><span>Continuaban activos en reincorporación (Comisión de la Verdad)</span></div>
+        <div class="stat-box"><strong>8.994</strong><span>Armas recolectadas (ONU)</span></div>
+        <div class="stat-box"><strong>750</strong><span>Caletas verificadas por la ONU</span></div>
+      </div>
+      <div class="key-idea"><strong>Idea clave:</strong> El fin del conflicto no significó solo dejar las armas, sino crear condiciones para la reincorporación a la vida civil y para que los territorios afectados avanzaran hacia la seguridad, la convivencia y la no repetición.</div>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 6: Reconstruir secuencia del proceso -->
+  <div class="activity">
+    <span class="activity-tag">↕ Reconstruir proceso</span>
+    <h3>Ordena las etapas del fin del conflicto</h3>
+    <p class="instructions">Las etapas del proceso de cese definitivo están desordenadas. Arrástralas para reconstruir la secuencia lógica: ¿qué debe ocurrir primero para que lo siguiente sea posible?</p>
+    <div class="sortable-list" id="sort-fin">
+      <div class="sort-item" draggable="true" data-pos="3"><span class="sort-handle">⠿</span><span class="sort-num">?</span>Reincorporación a la vida civil y creación de condiciones de seguridad.</div>
+      <div class="sort-item" draggable="true" data-pos="1"><span class="sort-handle">⠿</span><span class="sort-num">?</span>Cese al fuego bilateral y definitivo entre el Estado y las FARC-EP.</div>
+      <div class="sort-item" draggable="true" data-pos="4"><span class="sort-handle">⠿</span><span class="sort-num">?</span>Garantías de seguridad para firmantes, comunidades y líderes sociales.</div>
+      <div class="sort-item" draggable="true" data-pos="2"><span class="sort-handle">⠿</span><span class="sort-num">?</span>Dejación y recolección de armas verificada por la ONU.</div>
+    </div>
+    <button class="val-btn" onclick="validateSortable('sort-fin','fb6')">Verificar secuencia</button>
+    <div class="feedback" id="fb6"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 7 · Drogas ilícitas
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Punto 4: Drogas Ilícitas">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 7</span>
+    <div class="card-body">
+      <h2>Punto 4: Solución al problema de las drogas ilícitas</h2>
+      <p>Este punto reconoce que los cultivos de uso ilícito, el narcotráfico y las economías ilegales han alimentado el conflicto armado. Propone una respuesta integral basada en <strong>sustitución voluntaria, desarrollo alternativo, prevención del consumo</strong> y acción del Estado contra las redes criminales.</p>
+      <div class="stat-grid">
+        <div class="stat-box"><strong>99.097</strong><span>Familias vinculadas al PNIS en 14 departamentos</span></div>
+        <div class="stat-box"><strong>253.000</strong><span>Hectáreas de coca detectadas en 2023</span></div>
+        <div class="stat-box"><strong>+10 %</strong><span>Aumento de cultivos entre 2022 y 2023</span></div>
+        <div class="stat-box"><strong>48 %</strong><span>Cultivos en zonas de manejo especial</span></div>
+      </div>
+      <ul>
+        <li>16 de los 19 departamentos con coca mostraron tendencia al incremento en 2023.</li>
+        <li>Departamentos más afectados: <strong>Norte de Santander, Putumayo, Nariño y Cauca</strong>, cada uno con más de 30.000 hectáreas.</li>
+        <li>El 48 % de la coca se concentra en zonas de manejo especial: parques nacionales, territorios colectivos y reservas forestales.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 7: Detectar el error -->
+  <div class="activity">
+    <span class="activity-tag">🔍 Detectar el error</span>
+    <h3>Encuentra la afirmación incorrecta</h3>
+    <p class="instructions">Lee el siguiente párrafo y haz clic sobre la frase que contiene un dato o interpretación <strong>incorrecta</strong> según la información que acabas de leer.</p>
+    <div class="error-text" id="err-text-drogas">
+      El Punto 4 propone enfrentar la economía ilícita exclusivamente mediante operaciones militares de erradicación forzada, sin contemplar alternativas para las familias campesinas. El PNIS logró vincular <span class="err-span" data-correct="true" onclick="selectErrSpan(this,'fb7')">99.097 familias en 14 departamentos</span>. En 2023, los cultivos de coca <span class="err-span" data-correct="false" onclick="selectErrSpan(this,'fb7')">disminuyeron un 10 %</span> respecto al año anterior, con 253.000 hectáreas detectadas. El 48 % de los cultivos se ubica en zonas de manejo especial como parques nacionales y resguardos.
+    </div>
+    <div class="feedback" id="fb7"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 8 · Sistema Integral — Víctimas
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Punto 5: Sistema Integral — Víctimas">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 8</span>
+    <div class="card-body">
+      <h2>Punto 5: Acuerdo sobre Víctimas — Sistema Integral</h2>
+      <p>Este punto puso a las víctimas en el centro del Acuerdo Final. Creó el <strong>Sistema Integral de Verdad, Justicia, Reparación y No Repetición</strong>, compuesto por tres mecanismos principales.</p>
+      <ul>
+        <li><strong>Comisión de la Verdad:</strong> recogió cerca de 28.000 testimonios y realizó más de 14.000 entrevistas en 32 departamentos y 24 países.</li>
+        <li><strong>UBPD (Unidad de Búsqueda de Personas dadas por Desaparecidas):</strong> actualizó el universo a 136.010 personas desaparecidas en el contexto del conflicto armado.</li>
+        <li><strong>JEP (Jurisdicción Especial para la Paz):</strong> reportó 11 macrocasos abiertos y, a diciembre de 2025, 338 imputaciones contra 304 máximos responsables o partícipes determinantes.</li>
+      </ul>
+      <div class="key-idea"><strong>Idea clave:</strong> El Punto 5 reconoce que no hay paz estable y duradera sin verdad, justicia, reparación y garantías de no repetición. Su centro no son los actores armados, sino las víctimas y sus derechos.</div>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 8: Relacionar institución → función → cifra -->
+  <div class="activity">
+    <span class="activity-tag">🔗 Relacionar — institución y función</span>
+    <h3>Conecta cada institución con su función y dato clave</h3>
+    <p class="instructions">Selecciona en cada fila la función y cifra que corresponde a la institución del Sistema Integral.</p>
+    <div class="match-rows">
+      <div class="match-row-item">
+        <div class="match-left">Comisión de la Verdad</div>
+        <div class="match-arrow">→</div>
+        <select class="match-select" id="ms1">
+          <option value="">Selecciona su función...</option>
+          <option value="a">Juzgar a máximos responsables de crímenes graves en el conflicto.</option>
+          <option value="b">Esclarecimiento de la verdad: 28.000 testimonios y 14.000 entrevistas en 32 dpts. y 24 países.</option>
+          <option value="c">Buscar y localizar a 136.010 personas dadas por desaparecidas.</option>
+        </select>
+      </div>
+      <div class="match-row-item">
+        <div class="match-left">UBPD</div>
+        <div class="match-arrow">→</div>
+        <select class="match-select" id="ms2">
+          <option value="">Selecciona su función...</option>
+          <option value="a">Juzgar con 11 macrocasos y 338 imputaciones a diciembre de 2025.</option>
+          <option value="b">Esclarecimiento histórico y pedagógico del conflicto armado.</option>
+          <option value="c">Buscar y localizar a 136.010 personas desaparecidas en el conflicto.</option>
+        </select>
+      </div>
+      <div class="match-row-item">
+        <div class="match-left">JEP</div>
+        <div class="match-arrow">→</div>
+        <select class="match-select" id="ms3">
+          <option value="">Selecciona su función...</option>
+          <option value="a">Juzgar: 11 macrocasos, 338 imputaciones y 304 responsables a diciembre de 2025.</option>
+          <option value="b">Esclarecimiento de la verdad con enfoque comunitario.</option>
+          <option value="c">Buscar personas desaparecidas con apoyo de familias y comunidades.</option>
+        </select>
+      </div>
+    </div>
+    <button class="val-btn" onclick="validateMatch(['ms1','ms2','ms3'],['b','c','a'],'fb8')">Verificar conexiones</button>
+    <div class="feedback" id="fb8"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 9 · Implementación y Verificación
+     ════════════════════════════════════════ -->
+<div class="slide" data-title="Punto 6: Implementación y Verificación">
+<div class="slide-inner">
+  <div class="card-block">
+    <span class="card-tag"> 9</span>
+    <div class="card-body">
+      <h2>Punto 6: Implementación y verificación</h2>
+      <p>El Punto 6 define cómo hacer seguimiento al cumplimiento del Acuerdo Final. Incluye mecanismos institucionales, indicadores, acompañamiento internacional, participación ciudadana y verificación por parte de organismos como la ONU y el Instituto Kroc.</p>
+      <ul>
+        <li>El <strong>Plan Marco de Implementación (PMI)</strong> orienta las políticas públicas necesarias durante un horizonte de <strong>15 años</strong>.</li>
+        <li>El <strong>Instituto Kroc</strong> monitorea <strong>578 compromisos</strong> contenidos en el Acuerdo Final desde 2016.</li>
+        <li>En 2024, la CSIVI aprobó ajustes al PMI con <strong>81 indicadores nuevos</strong> y <strong>125 indicadores ajustados</strong>.</li>
+        <li>En la actualización participaron entidades del Gobierno, la Misión de Naciones Unidas, el Instituto Kroc, la Secretaría Técnica del Componente Internacional, la Instancia Especial de Mujeres y la Instancia Especial de Alto Nivel con Pueblos Étnicos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ACTIVIDAD 9: Causa → Consecuencia -->
+  <div class="activity">
+    <span class="activity-tag">⚡ Causa y consecuencia</span>
+    <h3>Conecta cada hecho con su consecuencia directa</h3>
+    <p class="instructions">Selecciona la consecuencia que se desprende lógicamente de cada hecho o decisión.</p>
+    <div class="cause-effect-grid">
+      <div class="ce-header ce-cause-h">Hecho / Decisión</div>
+      <div class="ce-header ce-effect-h">Consecuencia directa</div>
+
+      <div class="ce-cause-cell">El Instituto Kroc monitorea 578 compromisos del Acuerdo Final.</div>
+      <div class="ce-effect-cell">
+        <select class="ce-effect-select" id="ce1">
+          <option value="">¿Qué permite esto?...</option>
+          <option value="a">Permite identificar qué compromisos avanzan, cuáles se estancan y cuáles no han iniciado.</option>
+          <option value="b">Reemplaza al Gobierno en la implementación de los puntos del Acuerdo.</option>
+          <option value="c">Determina qué excombatientes reciben indulto.</option>
+        </select>
+      </div>
+
+      <div class="ce-cause-cell">La CSIVI aprobó 81 indicadores nuevos y 125 ajustados en el PMI.</div>
+      <div class="ce-effect-cell">
+        <select class="ce-effect-select" id="ce2">
+          <option value="">¿Qué consecuencia tiene?...</option>
+          <option value="a">El Acuerdo Final pierde su vigencia y debe renegociarse.</option>
+          <option value="b">El PMI se adapta a nuevas realidades para medir mejor los avances en la implementación.</option>
+          <option value="c">Se eliminan los compromisos con pueblos étnicos del Acuerdo.</option>
+        </select>
+      </div>
+
+      <div class="ce-cause-cell">La Misión de la ONU, la Instancia de Mujeres y la de Pueblos Étnicos participan en la actualización del PMI.</div>
+      <div class="ce-effect-cell">
+        <select class="ce-effect-select" id="ce3">
+          <option value="">¿Qué consecuencia tiene?...</option>
+          <option value="a">El PMI queda bajo control exclusivo de las FARC.</option>
+          <option value="b">Se garantiza un seguimiento más plural, con perspectiva internacional, de género y étnica.</option>
+          <option value="c">Se deroga la verificación ciudadana del Acuerdo Final.</option>
+        </select>
+      </div>
+    </div>
+    <button class="val-btn" onclick="validateCauseEffect(['ce1','ce2','ce3'],['a','b','b'],'fb9')">Verificar</button>
+    <div class="feedback" id="fb9"></div>
+  </div>
+</div>
+</div>
+
+
+</div><!-- /track -->
+</div><!-- /viewport -->
+
+<!-- NAV FOOTER -->
+<div class="nav-footer">
+  <button class="nav-btn prev-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Anterior</button>
+  <span class="slide-label" id="slide-label"></span>
+  <button class="nav-btn next" id="btn-next" onclick="navigate(1)">Siguiente →</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <h2 class="modal-title" id="modal-title">Resultado</h2>
+    <p class="modal-text" id="modal-text"></p>
+    <button class="modal-btn" onclick="closeModal()">Continuar</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// NAVEGACIÓN DE TARJETAS
+// ═══════════════════════════════════════════
+const track = document.getElementById('track');
+const slides = Array.from(track.querySelectorAll('.slide'));
+const total = slides.length;
+let cur = 0;
+const visited = new Set([0]);
+
+const indexEl = document.getElementById('card-index');
+slides.forEach((sl, i) => {
+  const d = document.createElement('button');
+  d.className = 'idx-dot' + (i === 0 ? ' active' : '');
+  d.textContent = sl.dataset.title;
+  d.onclick = () => goTo(i);
+  indexEl.appendChild(d);
+});
+
+function goTo(i) {
+  if (i < 0 || i >= total) return;
+  cur = i; visited.add(i);
+  track.style.transform = `translateX(-${cur * 100}%)`;
+  slides[cur].scrollTop = 0;
+  updateUI();
+}
+function navigate(dir) { goTo(cur + dir); }
+
+function updateUI() {
+  const pct = ((cur + 1) / total) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-counter').textContent = (cur + 1) + ' / ' + total;
+  document.getElementById('btn-prev').disabled = cur === 0;
+  const nb = document.getElementById('btn-next');
+  if (cur === total - 1) {
+    nb.textContent = '✓ Finalizar';
+    nb.className = 'nav-btn done';
+    nb.onclick = () => showModal(true, '¡Módulo completado!', 'Has recorrido los nueve puntos del módulo de Justicia Transicional y Acuerdo Final de Paz. Puedes volver a cualquier tarjeta usando el índice superior.');
+  } else {
+    nb.textContent = 'Siguiente →';
+    nb.className = 'nav-btn next';
+    nb.onclick = () => navigate(1);
+  }
+  document.getElementById('slide-label').textContent = slides[cur].dataset.title;
+  document.querySelectorAll('.idx-dot').forEach((d, i) => {
+    d.classList.remove('active','visited');
+    if (i === cur) d.classList.add('active');
+    else if (visited.has(i)) d.classList.add('visited');
+  });
+}
+updateUI();
+
+// ═══════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════
+function showModal(ok, title, text) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-title').style.color = ok ? 'var(--secondary)' : 'var(--accent)';
+  document.getElementById('modal-text').innerHTML = text;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+// ═══════════════════════════════════════════
+// FEEDBACK HELPER
+// ═══════════════════════════════════════════
+function setFeedback(id, ok, html) {
+  const el = document.getElementById(id);
+  el.className = 'feedback ' + (ok ? 'ok' : 'err');
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 1 — DRAG & DROP word bank
+// ═══════════════════════════════════════════
+let draggedWord = null;
+document.querySelectorAll('.word-chip').forEach(chip => {
+  chip.addEventListener('dragstart', e => { draggedWord = chip; e.dataTransfer.effectAllowed = 'move'; });
+  chip.addEventListener('dragend', () => { draggedWord = null; });
+});
+document.querySelectorAll('.drop-slot').forEach(slot => {
+  slot.addEventListener('dragover', e => { e.preventDefault(); });
+  slot.addEventListener('drop', e => {
+    e.preventDefault();
+    if (!draggedWord) return;
+    if (slot.dataset.filled) {
+      // Return previous word to bank
+      const prevWord = slot.dataset.filled;
+      const bank = document.getElementById('wb1');
+      bank.querySelectorAll('.word-chip').forEach(c => { if (c.dataset.word === prevWord) c.classList.remove('used'); });
+    }
+    slot.textContent = draggedWord.textContent;
+    slot.dataset.filled = draggedWord.dataset.word;
+    slot.classList.add('filled');
+    draggedWord.classList.add('used');
+  });
+  slot.addEventListener('click', () => {
+    if (slot.dataset.filled) {
+      const prevWord = slot.dataset.filled;
+      document.getElementById('wb1').querySelectorAll('.word-chip').forEach(c => { if (c.dataset.word === prevWord) c.classList.remove('used'); });
+      slot.textContent = '_____';
+      delete slot.dataset.filled;
+      slot.classList.remove('filled','correct-slot','wrong-slot');
+    }
+  });
+});
+
+function validateDropSlots(actId, slotIds, fbId) {
+  let allOk = true;
+  slotIds.forEach(sid => {
+    const slot = document.querySelector(`[data-id="${sid}"]`);
+    if (!slot) return;
+    const filled = slot.dataset.filled || '';
+    const answer = slot.dataset.answer;
+    slot.classList.remove('correct-slot','wrong-slot');
+    if (filled === answer) { slot.classList.add('correct-slot'); }
+    else { slot.classList.add('wrong-slot'); allOk = false; }
+  });
+  if (allOk) {
+    setFeedback(fbId, true, '¡Perfecto! Los cuatro pilares de la justicia transicional son <strong>Verdad, Justicia, Reparación y No Repetición</strong>. Estos no son opcionales ni intercambiables; forman un sistema integral.');
+  } else {
+    setFeedback(fbId, false, 'Algunos espacios son incorrectos (marcados en rojo). Recuerda: la justicia transicional busca verdad, justicia, reparación y no repetición — no olvido ni impunidad. Ajusta y vuelve a intentar.');
+  }
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 2 — TRUE / FALSE
+// ═══════════════════════════════════════════
+function selectTF(btn, itemId, isTrue) {
+  const item = document.getElementById(itemId);
+  item.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected-v','selected-f'));
+  btn.classList.add(isTrue ? 'selected-v' : 'selected-f');
+  btn.dataset.chosen = isTrue ? 'true' : 'false';
+}
+
+function validateTF(itemIds, resultIds, corrects, explanations, fbId) {
+  let allOk = true;
+  itemIds.forEach((id, i) => {
+    const item = document.getElementById(id);
+    const btns = item.querySelectorAll('.tf-btn');
+    let chosen = null;
+    btns.forEach(b => { if (b.classList.contains('selected-v')) chosen = true; if (b.classList.contains('selected-f')) chosen = false; });
+    const correct = corrects[i];
+    const resEl = document.getElementById(resultIds[i]);
+    resEl.classList.add('show');
+    if (chosen === null) {
+      resEl.style.color = '#888';
+      resEl.textContent = 'No respondida.';
+      allOk = false;
+    } else if (chosen === correct) {
+      resEl.style.color = '#1a4a1e';
+      resEl.innerHTML = '✓ Correcto. ' + explanations[i];
+    } else {
+      resEl.style.color = '#921212';
+      resEl.innerHTML = '✗ Incorrecto. ' + explanations[i];
+      allOk = false;
+    }
+  });
+  if (allOk) setFeedback(fbId, true, '¡Excelente! Interpretaste correctamente las tres afirmaciones sobre la Ley 975 de 2005.');
+  else setFeedback(fbId, false, 'Hay respuestas incorrectas. Lee las justificaciones en cada ítem para reforzar tu comprensión.');
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 3 y 6 — DRAG TO SORT
+// ═══════════════════════════════════════════
+let dragSrc = null;
+function initSortable(listId) {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  list.querySelectorAll('.sort-item').forEach(item => {
+    item.addEventListener('dragstart', e => { dragSrc = item; item.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+    item.addEventListener('dragend', () => { item.classList.remove('dragging'); dragSrc = null; updateSortNums(listId); });
+    item.addEventListener('dragover', e => { e.preventDefault(); if (dragSrc && dragSrc !== item) item.classList.add('drag-over'); });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      if (dragSrc && dragSrc !== item) {
+        const items = [...list.querySelectorAll('.sort-item')];
+        const srcIdx = items.indexOf(dragSrc);
+        const tgtIdx = items.indexOf(item);
+        if (srcIdx < tgtIdx) list.insertBefore(dragSrc, item.nextSibling);
+        else list.insertBefore(dragSrc, item);
+      }
+      updateSortNums(listId);
+    });
+  });
+  updateSortNums(listId);
+}
+function updateSortNums(listId) {
+  const list = document.getElementById(listId);
+  list.querySelectorAll('.sort-item').forEach((item, i) => {
+    const numEl = item.querySelector('.sort-num');
+    if (numEl) numEl.textContent = i + 1;
+  });
+}
+function validateSortable(listId, fbId) {
+  const list = document.getElementById(listId);
+  const items = [...list.querySelectorAll('.sort-item')];
+  let ok = true;
+  items.forEach((item, i) => { if (parseInt(item.dataset.pos) !== i + 1) ok = false; });
+  if (ok) setFeedback(fbId, true, '¡Orden correcto! Has reconstruido la secuencia exacta. Esta estructura refleja la lógica del proceso: de las causas a los mecanismos de paz.');
+  else setFeedback(fbId, false, 'El orden no es correcto. Piensa en la lógica interna: ¿qué debe existir antes para que lo siguiente sea posible? Ajusta y vuelve a verificar.');
+}
+initSortable('sort-acordos');
+initSortable('sort-fin');
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 4 — NUMBER BANK (click to assign)
+// ═══════════════════════════════════════════
+let selectedNumChip = null;
+document.querySelectorAll('.num-bank .num-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (chip.classList.contains('used-chip')) return;
+    document.querySelectorAll('.num-bank .num-chip').forEach(c => c.classList.remove('selected-chip'));
+    if (selectedNumChip === chip) { selectedNumChip = null; return; }
+    chip.classList.add('selected-chip');
+    selectedNumChip = chip;
+  });
+});
+document.querySelectorAll('.num-slot').forEach(slot => {
+  slot.addEventListener('click', () => {
+    if (slot.dataset.prev) {
+      const bankId = slot.dataset.bank;
+      const bank = document.getElementById(bankId);
+      bank.querySelectorAll('.num-chip').forEach(c => { if (c.dataset.val === slot.dataset.prev) c.classList.remove('used-chip','selected-chip'); });
+    }
+    if (selectedNumChip) {
+      slot.textContent = selectedNumChip.textContent;
+      slot.dataset.prev = selectedNumChip.dataset.val;
+      slot.dataset.filled = selectedNumChip.dataset.val;
+      slot.classList.add('filled-slot');
+      selectedNumChip.classList.add('used-chip');
+      selectedNumChip.classList.remove('selected-chip');
+      selectedNumChip = null;
+    } else {
+      slot.textContent = '_____';
+      delete slot.dataset.filled;
+      delete slot.dataset.prev;
+      slot.classList.remove('filled-slot');
+    }
+  });
+});
+
+function validateNumSlots(slotIds, fbId) {
+  let ok = true;
+  slotIds.forEach(id => {
+    const sl = document.getElementById(id);
+    if ((sl.dataset.filled || '') !== sl.dataset.answer) ok = false;
+  });
+  if (ok) setFeedback(fbId, true, '¡Perfecto! Conoces las cifras clave de los PDET: 16 subregiones, 170 municipios, 33.007 iniciativas comunitarias, horizonte 2037 y 36 % del territorio nacional.');
+  else setFeedback(fbId, false, 'Algunos valores son incorrectos. Repasa las estadísticas de los PDET en el texto anterior y vuelve a intentarlo.');
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 5 — CLASSIFY drag & drop
+// ═══════════════════════════════════════════
+let dragChip = null;
+document.querySelectorAll('.classify-chip').forEach(chip => {
+  chip.addEventListener('dragstart', e => { dragChip = chip; e.dataTransfer.effectAllowed = 'move'; });
+  chip.addEventListener('dragend', () => { dragChip = null; });
+});
+document.querySelectorAll('.classify-drop-zone').forEach(zone => {
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over-zone'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over-zone'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over-zone');
+    if (!dragChip) return;
+    dragChip.classList.add('placed');
+    const clone = dragChip.cloneNode(true);
+    clone.classList.remove('placed');
+    clone.style.cursor = 'default';
+    clone.draggable = false;
+    clone.dataset.cat = dragChip.dataset.cat;
+    clone.addEventListener('click', () => {
+      zone.removeChild(clone);
+      dragChip.classList.remove('placed');
+    });
+    zone.appendChild(clone);
+  });
+});
+
+function validateClassify(poolId, zoneIds, fbId) {
+  let ok = true;
+  zoneIds.forEach(zid => {
+    const zone = document.getElementById(zid);
+    const expectedCat = zone.dataset.cat;
+    zone.querySelectorAll('.classify-chip').forEach(c => { if (c.dataset.cat !== expectedCat) ok = false; });
+  });
+  const pool = document.getElementById(poolId);
+  const remaining = pool.querySelectorAll('.classify-chip:not(.placed)').length;
+  if (remaining > 0) ok = false;
+  if (ok) setFeedback(fbId, true, '¡Bien clasificado! Distingues entre las medidas de garantía política (Ley 1909, protección a la oposición) y las de participación directa (CITREP, curules especiales).');
+  else setFeedback(fbId, false, 'Hay elementos mal clasificados o que aún no has ubicado. Recuerda: las garantías protegen el ejercicio político; la participación amplía la representación directa.');
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 7 — ERROR DETECTION
+// ═══════════════════════════════════════════
+function selectErrSpan(el, fbId) {
+  document.querySelectorAll('.err-span').forEach(s => s.classList.remove('selected','correct-err','wrong-err'));
+  const isCorrect = el.dataset.correct === 'true';
+  if (isCorrect) {
+    el.classList.add('wrong-err');
+    setFeedback(fbId, false, 'Esa frase es correcta. El dato de 99.097 familias sí corresponde al PNIS. El error está en la oración inicial ("exclusivamente mediante operaciones militares") y en afirmar que los cultivos <em>disminuyeron</em> — en realidad aumentaron un 10 % en 2023. Haz clic en la parte incorrecta.');
+  } else {
+    el.classList.add('correct-err');
+    setFeedback(fbId, true, '¡Correcto! El error está en afirmar que los cultivos <em>disminuyeron</em> un 10 %. La información correcta es que <strong>aumentaron un 10 %</strong> entre 2022 y 2023, llegando a 253.000 hectáreas. Además, el Punto 4 no propone erradicación exclusivamente militar, sino sustitución voluntaria y desarrollo alternativo.');
+  }
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 8 — MATCH SELECTS
+// ═══════════════════════════════════════════
+function validateMatch(selectIds, corrects, fbId) {
+  let ok = true;
+  selectIds.forEach((sid, i) => { if (document.getElementById(sid).value !== corrects[i]) ok = false; });
+  if (ok) setFeedback(fbId, true, '¡Conexiones correctas! Conoces la función de cada mecanismo del Sistema Integral: la Comisión esclarece la verdad, la UBPD busca desaparecidos y la JEP juzga a los máximos responsables.');
+  else setFeedback(fbId, false, 'Alguna conexión es incorrecta. Recuerda: <strong>Comisión = verdad e historia</strong> · <strong>UBPD = búsqueda de desaparecidos</strong> · <strong>JEP = juzgamiento y responsabilidad</strong>.');
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 9 — CAUSE-EFFECT
+// ═══════════════════════════════════════════
+function validateCauseEffect(selectIds, corrects, fbId) {
+  let ok = true;
+  selectIds.forEach((sid, i) => { if (document.getElementById(sid).value !== corrects[i]) ok = false; });
+  if (ok) setFeedback(fbId, true, '¡Excelente análisis causal! Comprendes que el monitoreo permite identificar avances, que el ajuste del PMI lo actualiza —no lo invalida— y que la participación plural garantiza una implementación más incluyente.');
+  else setFeedback(fbId, false, 'Alguna relación causa-efecto es incorrecta. Piensa en qué consecuencia directa y lógica tiene cada decisión institucional, sin confundir funciones entre sí.');
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 10 — MINI CASES
+// ═══════════════════════════════════════════
+function selectCase(btn, caseId, result, fbId) {
+  btn.closest('.case-options').querySelectorAll('.case-opt').forEach(b => b.classList.remove('chosen'));
+  btn.classList.add('chosen');
+  if (result === 'correct') {
+    setFeedback(fbId, true, caseId === 'caso1'
+      ? '¡Correcto! La pena reducida condicionada a verdad y reparación es el núcleo de la justicia transicional: no es impunidad, es un incentivo para lograr lo que el proceso penal ordinario no siempre consigue.'
+      : '¡Correcto! Los PDET no son solo inversión social: atacan las raíces estructurales que permitieron el conflicto. Sin transformación rural, la paz no es sostenible.');
+  } else {
+    setFeedback(fbId, false, caseId === 'caso1'
+      ? 'Esa interpretación no refleja lo que estudiaste. La justicia transicional no equivale a impunidad: las condiciones de confesión, colaboración y reparación son requisitos sin los cuales no aplica el beneficio.'
+      : 'Esa interpretación reduce los PDET a algo que no son. Revisa la definición: son instrumentos de paz territorial que vinculan desarrollo, participación comunitaria y transformación de causas del conflicto.');
+  }
+}
+
+// ═══════════════════════════════════════════
+// ACTIVIDAD 11 — SELF CHECK
+// ═══════════════════════════════════════════
+function toggleSC(item) {
+  item.classList.toggle('checked');
+}
+function evaluateSelfCheck(containerId, fbId) {
+  const items = document.querySelectorAll(`#${containerId} .sc-item`);
+  const checked = [...items].filter(i => i.classList.contains('checked')).length;
+  const total = items.length;
+  if (checked === total) {
+    setFeedback(fbId, true, `¡Completaste el módulo con confianza! Marcaste ${checked} de ${total} aprendizajes. Tienes una comprensión sólida de la justicia transicional y el Acuerdo Final de Paz.`);
+  } else if (checked >= Math.ceil(total * 0.6)) {
+    setFeedback(fbId, false, `Marcaste ${checked} de ${total}. Vas bien, pero hay ${total - checked} aprendizajes que conviene reforzar. Regresa a las tarjetas que correspondan y repasa esos puntos.`);
+  } else {
+    setFeedback(fbId, false, `Marcaste ${checked} de ${total}. Te recomendamos volver a las tarjetas y releer los contenidos con más detalle antes de seguir. El índice superior te lleva directamente a cada tema.`);
+  }
+}
+</script>
+</body>
+</html>
