@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevos Paradigmas de Seguridad</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700&display=swap');
+
+        :root {
+            /* SEMÁNTICA DE COLORES PRINCIPAL */
+            --color-1: #1FA379; /* Verde oscuro -> Estructura */
+            --color-2: #3DB5AC; /* Turquesa -> Interacción */
+            --color-3: #4CAF50; /* Verde medio -> Respuestas correctas */
+            --color-4: #F4C542; /* Amarillo -> Feedback / Alertas suaves */
+            --color-5: #FAFAFA; /* Blanco humo -> Fondos limpios */
+            
+            /* REFLEXIÓN Y ANÁLISIS */
+            --color-reflexion: #4A6984; /* Azul petróleo suave */
+            --bg-reflexion: #EEF2F5; /* Azul grisáceo */
+
+            /* FONDOS Y TEXTOS BASE */
+            --bg-light: #F4F8F7;
+            --text-dark: #1A2522;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 80px; 
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* ================= CABECERA ================= */
+        header {
+            background-color: var(--color-5);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--color-1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .client-logo {
+            height: 90px; /* Logo bastante visible */
+            max-width: 280px;
+            object-fit: contain;
+        }
+
+        .course-title-container {
+            text-align: right;
+            max-width: 500px;
+        }
+
+        .course-main-title {
+            font-size: 1.3rem;
+            color: var(--color-1);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .course-subtitle {
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; text-align: center; }
+            .course-title-container { text-align: center; }
+        }
+
+        /* ================= BARRA DE PROGRESO ================= */
+        .progress-bar-wrapper {
+            background-color: rgba(31, 163, 121, 0.2);
+            height: 6px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 101;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--color-4);
+            width: 0%;
+            transition: width 0.2s ease-out;
+        }
+
+        /* ================= RUTA DE APRENDIZAJE ================= */
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        main::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 40px;
+            width: 4px;
+            background-color: rgba(31, 163, 121, 0.2);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            main::before { left: 30px; }
+        }
+
+        .timeline-section {
+            position: relative;
+            margin-bottom: 60px;
+            padding-left: 60px;
+        }
+        @media (max-width: 768px) {
+            .timeline-section { padding-left: 45px; }
+        }
+
+        .timeline-node {
+            position: absolute;
+            top: 20px; left: -12px;
+            width: 28px; height: 28px;
+            background-color: var(--color-5);
+            border: 5px solid var(--color-1);
+            border-radius: 50%;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-node { left: -7px; width: 24px; height: 24px; }
+        }
+
+        .timeline-section.completed .timeline-node {
+            background-color: var(--color-3);
+            border-color: var(--color-3);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        /* ================= TARJETAS Y CONTENIDO ================= */
+        .card-content {
+            background-color: var(--color-5);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(31, 45, 47, 0.06);
+            border-top: 5px solid var(--color-1);
+        }
+        @media (max-width: 768px) {
+            .card-content { padding: 25px; }
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: var(--color-1);
+            color: var(--color-5);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        h2 { color: var(--color-1); font-size: 1.8rem; margin-bottom: 20px; line-height: 1.3; }
+        p { font-size: 1.05rem; margin-bottom: 15px; }
+
+        /* ================= INSTRUCCIÓN PEDAGÓGICA CORREGIDA ================= */
+        .instruction {
+            background-color: rgba(244, 197, 66, 0.15);
+            border-left: 5px solid var(--color-4);
+            padding: 15px 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 25px 0;
+            border-radius: 0 4px 4px 0;
+            display: block; /* Mantiene la fluidez del texto */
+            line-height: 1.6;
+        }
+
+        /* ================= CAJA DE REFLEXIÓN ================= */
+        .reflection-box {
+            background-color: var(--bg-reflexion);
+            border-left: 5px solid var(--color-reflexion);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .reflection-box h4 {
+            color: var(--color-reflexion);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .reflection-box p { color: #2b3a4a; margin-bottom: 0; }
+
+        /* ================= INTERACCIONES ACTIVAS ================= */
+        
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background-color: var(--color-5);
+            border: 2px solid rgba(31, 163, 121, 0.3);
+            padding: 18px 20px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .option-btn:hover {
+            background-color: rgba(61, 181, 172, 0.05);
+            border-color: var(--color-2);
+            transform: translateX(5px);
+        }
+        .option-btn.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-color: var(--color-3);
+            color: #1a4a1c;
+            pointer-events: none;
+        }
+
+        /* Completar Frases (Drag & Drop) */
+        .fill-blanks-container {
+            background-color: rgba(61, 181, 172, 0.05);
+            padding: 25px;
+            border-radius: 8px;
+            border: 2px dashed var(--color-2);
+        }
+        .drop-zone {
+            display: inline-block;
+            min-width: 140px;
+            height: 34px;
+            border-bottom: 3px solid var(--color-2);
+            background-color: rgba(61, 181, 172, 0.1);
+            margin: 0 6px;
+            vertical-align: middle;
+            text-align: center;
+            cursor: pointer;
+            color: var(--color-2);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            line-height: 32px;
+            border-radius: 4px 4px 0 0;
+        }
+        .drop-zone:hover { background-color: rgba(61, 181, 172, 0.2); }
+        .drop-zone.filled {
+            background-color: var(--color-3);
+            color: var(--color-5);
+            border-bottom-color: var(--color-3);
+            cursor: default;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: center;
+            border-top: 1px solid rgba(61, 181, 172, 0.3);
+            padding-top: 20px;
+        }
+        .word-btn {
+            background-color: var(--color-5);
+            color: var(--color-2);
+            border: 2px solid var(--color-2);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .word-btn:hover, .word-btn.selected {
+            background-color: var(--color-2);
+            color: var(--color-5);
+            transform: scale(1.05);
+        }
+
+        /* Relacionar (Matching) */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        @media (min-width: 768px) { .match-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .match-col { display: flex; flex-direction: column; gap: 12px; }
+        .col-title {
+            font-size: 1rem; text-align: center; margin-bottom: 8px;
+            text-transform: uppercase; font-weight: 700;
+        }
+        .col-title.pilares { color: var(--color-1); }
+        .col-title.objetivos { color: var(--color-2); }
+        
+        .card-item {
+            padding: 15px; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s; font-weight: 500; text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px;
+        }
+        .card-item small { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; font-weight: 400; }
+        
+        .src-card { background-color: rgba(31, 163, 121, 0.05); border: 2px solid var(--color-1); }
+        .src-card:hover { background-color: rgba(31, 163, 121, 0.15); }
+        .src-card.selected { background-color: var(--color-1); color: var(--color-5); }
+        
+        .tgt-card { background-color: var(--color-5); border: 2px dashed var(--color-2); }
+        .tgt-card:hover { background-color: rgba(61, 181, 172, 0.1); border-color: var(--color-2); border-style: solid; }
+        
+        .card-item.solved {
+            background-color: rgba(76, 175, 80, 0.15);
+            border: 2px solid var(--color-3);
+            color: #1a4a1c; pointer-events: none; font-weight: 700;
+        }
+
+        /* ================= SCROLL INTELIGENTE ================= */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-2);
+            color: var(--color-5);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.4s ease;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .scroll-indicator.completed {
+            background-color: var(--color-3);
+        }
+
+        /* ================= MODAL ACADÉMICO ================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(26, 37, 34, 0.85); 
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; display: flex; }
+        
+        .modal-content {
+            background-color: var(--color-5);
+            width: 90%; max-width: 450px;
+            padding: 40px; border-radius: 12px;
+            text-align: center;
+            border-top: 8px solid var(--modal-color, var(--color-3));
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transform: translateY(20px); transition: transform 0.3s;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        
+        .modal-icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--modal-color); }
+        .modal-text { color: var(--text-dark); margin-bottom: 25px; font-size: 1.05rem; }
+        .modal-btn {
+            background-color: var(--modal-color, var(--color-3));
+            color: var(--color-5); border: none; padding: 12px 30px;
+            border-radius: 6px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: transform 0.2s;
+        }
+        .modal-btn:hover { transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DE PROGRESO DE SCROLL -->
+    <div class="progress-bar-wrapper">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <!-- CABECERA -->
+    <header>
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/280x90/FAFAFA/1FA379?text=Logo+UNP'">
+        <div class="course-title-container">
+            <div class="course-main-title">Nuevos Paradigmas de Seguridad: escenarios de Transformación hacía la Integralidad</div>
+            <div class="course-subtitle">Diapositiva: Modelo de Seguridad, Defensa y Convivencia Ciudadana</div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- SECCIÓN 1: INTRODUCCIÓN Y ENCONTRAR EL INTRUSO -->
+        <div class="timeline-section" id="sec-1">
+            <div class="timeline-node"></div>
+            <div class="card-content">
+                <span class="badge">Contenido Principal</span>
+                <h2 class="serif">Garantías para la Vida y la Paz: Hacia un Modelo de Seguridad Humana</h2>
+                
+                <p><strong>El Cambio de Ruta:</strong> Transición de una visión enfocada en la "derrota militar" hacia un modelo fundamentado en la Seguridad Humana.</p>
+
+                <div class="instruction">
+                    🎯 <strong>Actividad de Eliminación (Encontrar al intruso):</strong> 
+                    Según la definición técnica del modelo, el <strong>Objetivo Supremo</strong> tiene bases claras. Identifica cuál de las siguientes opciones <strong>NO</strong> pertenece al Objetivo Supremo oficial de esta política.
+                </div>
+
+                <div style="background-color: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+                    <button class="option-btn" onclick="checkIntruder(this, false)">
+                        Proteger la vida (humana y ambiental).
+                    </button>
+                    <button class="option-btn" onclick="checkIntruder(this, true)">
+                        Aumentar los operativos de confrontación y derrota militar.
+                    </button>
+                    <button class="option-btn" onclick="checkIntruder(this, false)">
+                        Reducir violencias y crear las condiciones necesarias para la Paz Total.
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: PRINCIPIOS TRANSVERSALES (COMPLETAR) -->
+        <div class="timeline-section" id="sec-2">
+            <div class="timeline-node"></div>
+            <div class="card-content">
+                <span class="badge" style="background-color: var(--color-2);">Estructura</span>
+                <h2 class="serif">Principios Transversales</h2>
+
+                <div class="instruction">
+                    🧩 <strong>Actividad - Reconstruir la Definición:</strong> 
+                    Selecciona una palabra clave del banco inferior y toca el espacio en blanco para completar exactamente los 5 principios transversales.
+                </div>
+
+                <div class="fill-blanks-container">
+                    <p><strong>1. Vida como Centro de Gravedad:</strong> Prioridad en reducir <span class="drop-zone" data-answer="homicidios" onclick="handleDrop(this)">...</span> y proteger DD.HH.</p>
+                    
+                    <p><strong>2. Seguridad Ambiental:</strong> La biodiversidad es un sujeto de derechos frente a la minería ilegal y <span class="drop-zone" data-answer="deforestacion" onclick="handleDrop(this)">...</span>.</p>
+                    
+                    <p><strong>3. Enfoque Territorial y Diferencial:</strong> Respuesta adaptada a las realidades de mujeres, niñez, pueblos <span class="drop-zone" data-answer="etnicos" onclick="handleDrop(this)">...</span> y líderes sociales.</p>
+                    
+                    <p><strong>4. Seguridad para la Paz:</strong> Fuerza Pública articulada con procesos de <span class="drop-zone" data-answer="dialogo" onclick="handleDrop(this)">...</span> y sometimiento para debilitar economías ilícitas.</p>
+                    
+                    <p><strong>5. Legitimidad:</strong> Cero tolerancia con la <span class="drop-zone" data-answer="corrupcion" onclick="handleDrop(this)">...</span> y violación de DD.HH.</p>
+
+                    <div class="word-bank" id="act2-bank">
+                        <button class="word-btn" onclick="selectWord(this)" data-val="corrupcion">Corrupción</button>
+                        <button class="word-btn" onclick="selectWord(this)" data-val="homicidios">Homicidios</button>
+                        <button class="word-btn" onclick="selectWord(this)" data-val="deforestacion">Deforestación</button>
+                        <button class="word-btn" onclick="selectWord(this)" data-val="dialogo">Diálogo</button>
+                        <button class="word-btn" onclick="selectWord(this)" data-val="etnicos">Étnicos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: PILARES ESTRATÉGICOS (RELACIONAR) -->
+        <div class="timeline-section" id="sec-3">
+            <div class="timeline-node"></div>
+            <div class="card-content">
+                <span class="badge">Pilares Estratégicos</span>
+                <h2 class="serif">Enfoques de Acción y Objetivos</h2>
+
+                <div class="instruction">
+                    🔗 <strong>Actividad - Relacionar Concepto a Respuesta Adecuada:</strong> 
+                    Conecta la columna izquierda (Pilar y Enfoque de Acción) con su respectivo Objetivo Principal en la columna derecha.
+                </div>
+
+                <div class="match-grid">
+                    <!-- Pilares y Enfoques -->
+                    <div class="match-col">
+                        <h3 class="col-title pilares">Pilar / Enfoque de Acción</h3>
+                        <div class="card-item src-card" data-id="p1" onclick="selectMatchSource(this)">
+                            1. Protección de la Vida
+                            <small>(Prevención y Convivencia)</small>
+                        </div>
+                        <div class="card-item src-card" data-id="p2" onclick="selectMatchSource(this)">
+                            2. Seguridad Ambiental
+                            <small>(Protección Biodiversidad)</small>
+                        </div>
+                        <div class="card-item src-card" data-id="p3" onclick="selectMatchSource(this)">
+                            3. Desmantelar el Multicrimen
+                            <small>(Afectación Financiera)</small>
+                        </div>
+                        <div class="card-item src-card" data-id="p4" onclick="selectMatchSource(this)">
+                            4. Transformación Institucional
+                            <small>(Modernización)</small>
+                        </div>
+                    </div>
+                    <!-- Objetivos -->
+                    <div class="match-col">
+                        <h3 class="col-title objetivos">Objetivo Principal</h3>
+                        <div class="card-item tgt-card" data-match="p4" onclick="selectMatchTarget(this)">Fortalecer formación en DD.HH. y confianza con la ciudadanía.</div>
+                        <div class="card-item tgt-card" data-match="p2" onclick="selectMatchTarget(this)">Frenar deforestación y extracción ilícita de minerales.</div>
+                        <div class="card-item tgt-card" data-match="p1" onclick="selectMatchTarget(this)">Reducir delitos de impacto y proteger a líderes sociales/DD.HH.</div>
+                        <div class="card-item tgt-card" data-match="p3" onclick="selectMatchTarget(this)">Golpear cadenas logísticas y lavado de activos de redes criminales.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: NOTAS DE ANÁLISIS -->
+        <div class="timeline-section" id="sec-4">
+            <div class="timeline-node"></div>
+            <div class="card-content">
+                <span class="badge" style="background-color: var(--color-reflexion);">Notas para el Orador</span>
+                <h2 class="serif">Enfoque y Conclusión del Modelo</h2>
+                
+                <div class="reflection-box">
+                    <h4>💡 Enfoque: El Cambio de Métrica</h4>
+                    <p>Enfatizar que esta política es una "hoja de ruta" de Estado, no un evento aislado. El cambio de métrica es fundamental: el éxito ya no se mide solo en operativos, sino en la protección efectiva del entorno y la vida.</p>
+                </div>
+
+                <div class="instruction">
+                    🧭 <strong>Completar la idea - Conclusión Institucional:</strong> 
+                    Según la directriz analizada en este documento, ¿Cuál es la conclusión exacta que busca esta política?
+                </div>
+
+                <button class="option-btn" onclick="checkConclusion(this, false)">
+                    Es una política que busca separar el control institucional de los procesos de diálogo social y desarrollo local.
+                </button>
+                <button class="option-btn" onclick="checkConclusion(this, true)">
+                    Es una política que busca la sinergia entre el control territorial (institucionalidad) y la paz territorial (diálogo y desarrollo).
+                </button>
+                <button class="option-btn" onclick="checkConclusion(this, false)">
+                    Es una política que busca la sinergia exclusiva entre la derrota militar y el incremento de operativos.
+                </button>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- INDICADOR DE SCROLL INTELIGENTE -->
+    <div id="scrollIndicator" class="scroll-indicator">
+        <span>↓</span> Sigue bajando
+    </div>
+
+    <!-- MODAL ACADÉMICO -->
+    <div id="ux-modal" class="modal-overlay">
+        <div class="modal-content" id="modal-box">
+            <div class="modal-icon" id="modal-icon">✅</div>
+            <div class="modal-title" id="modal-title">¡Excelente!</div>
+            <div class="modal-text" id="modal-text">Mensaje aquí.</div>
+            <button class="modal-btn" id="btn-modal-close" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        /* ================= CONTROL DE SCROLL ================= */
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            
+            document.getElementById('progress-bar').style.width = `${scrollPercent}%`;
+
+            document.querySelectorAll('.timeline-section').forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.7) {
+                    sec.classList.add('completed');
+                }
+            });
+
+            const indicator = document.getElementById('scrollIndicator');
+            if (scrollPercent >= 98) {
+                indicator.innerHTML = '✔ Lectura Completada';
+                indicator.classList.add('completed');
+            } else {
+                indicator.innerHTML = '<span>↓</span> Sigue bajando';
+                indicator.classList.remove('completed');
+            }
+        });
+
+        /* ================= SISTEMA DE MODAL ================= */
+        function showModal(isSuccess, title, text) {
+            const modal = document.getElementById('ux-modal');
+            const box = document.getElementById('modal-box');
+            
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            
+            if(isSuccess) {
+                document.getElementById('modal-icon').innerText = '✅';
+                box.style.setProperty('--modal-color', 'var(--color-3)'); 
+                document.getElementById('modal-title').style.color = 'var(--color-3)';
+            } else {
+                document.getElementById('modal-icon').innerText = '⚠️';
+                box.style.setProperty('--modal-color', 'var(--color-4)'); 
+                document.getElementById('modal-title').style.color = '#B58D19'; 
+            }
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('ux-modal').classList.remove('active');
+        }
+
+        /* ================= ACTIVIDAD 1: ENCONTRAR INTRUSO ================= */
+        function checkIntruder(btn, isCorrect) {
+            if (btn.parentNode.querySelector('.success')) return; 
+
+            if (isCorrect) {
+                btn.classList.add('success');
+                showModal(true, 'Opción Identificada', 'Correcto. La opción marcada es el intruso. El documento oficial señala explícitamente que hay una transición que se aleja de la "derrota militar".');
+            } else {
+                showModal(false, 'Opción Incorrecta', 'Esa afirmación SÍ forma parte literal del Objetivo Supremo oficial en el documento. Debes seleccionar la que NO pertenece.');
+            }
+        }
+
+        /* ================= ACTIVIDAD 2: COMPLETAR (DRAG & DROP CLICK) ================= */
+        let activeWord = null;
+        function selectWord(btn) {
+            document.querySelectorAll('.word-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            activeWord = { val: btn.getAttribute('data-val'), text: btn.innerText, el: btn };
+        }
+
+        function handleDrop(zone) {
+            if (zone.classList.contains('filled')) return;
+
+            if (!activeWord) {
+                showModal(false, 'Selección Requerida', 'Primero selecciona una palabra del banco (bordes turquesa).');
+                return;
+            }
+
+            if (zone.getAttribute('data-answer') === activeWord.val) {
+                zone.innerText = activeWord.text;
+                zone.classList.add('filled');
+                activeWord.el.style.display = 'none'; 
+                activeWord = null; 
+
+                const remaining = document.querySelectorAll('.drop-zone:not(.filled)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, 'Principios Completados', 'Has reconstruido fielmente los 5 Principios Transversales del texto oficial.'), 400);
+                }
+            } else {
+                showModal(false, 'Palabra Incorrecta', 'Esa palabra no corresponde a ese lugar dentro de la definición original del principio.');
+            }
+        }
+
+        /* ================= ACTIVIDAD 3: RELACIONAR PILARES ================= */
+        let activeMatchSrc = null;
+        function selectMatchSource(card) {
+            if (card.classList.contains('solved')) return;
+            document.querySelectorAll('.src-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            activeMatchSrc = card;
+        }
+
+        function selectMatchTarget(card) {
+            if (card.classList.contains('solved')) return;
+            
+            if (!activeMatchSrc) {
+                showModal(false, 'Paso Previo', 'Primero selecciona el Pilar y Enfoque de la columna izquierda.');
+                return;
+            }
+
+            if (card.getAttribute('data-match') === activeMatchSrc.getAttribute('data-id')) {
+                card.classList.add('solved');
+                activeMatchSrc.classList.add('solved');
+                activeMatchSrc.classList.remove('selected');
+                activeMatchSrc = null;
+
+                const remaining = document.querySelectorAll('.src-card:not(.solved)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, 'Relación Exacta', 'Has enlazado correctamente los 4 Pilares Estratégicos con sus Objetivos Principales.'), 400);
+                }
+            } else {
+                showModal(false, 'Relación Incorrecta', 'Ese objetivo principal no corresponde al pilar y enfoque seleccionado. Inténtalo de nuevo.');
+            }
+        }
+
+        /* ================= ACTIVIDAD 4: COMPLETAR CONCLUSIÓN ================= */
+        function checkConclusion(btn, isCorrect) {
+            if (btn.parentNode.querySelector('.success')) return; 
+
+            if (isCorrect) {
+                btn.classList.add('success');
+                showModal(true, 'Conclusión Validada', 'Excelente. Has identificado la conclusión literal del documento institucional que articula el control y la paz territorial.');
+            } else {
+                showModal(false, 'Conclusión Errónea', 'Esa afirmación no corresponde a la conclusión expuesta en el texto original. Revisa las notas de análisis.');
+            }
+        }
+        
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>

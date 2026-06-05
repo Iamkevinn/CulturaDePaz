@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementación Institucional: La UNP y la Ruta Colectiva</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            /* PALETA DE COLORES */
+            --primary: #1A365D; /* Índigo profundo -> Textos legibles y autoridad */
+            --secondary: #E26D5C; /* Coral cálido -> Interacción, decoración */
+            --accent: #ECA400; /* Mostaza -> Alertas suaves, atención */
+            --success: #2A9D8F; /* Turquesa oscuro -> Aciertos, avance */
+            --bg-page: #F4F7F6; /* Fondo general suave */
+            --surface: #FFFFFF; /* Tarjetas y contenido */
+            --text-main: #2D3748; /* Gris oscuro para lectura */
+            --text-light: #718096; /* Gris medio para subtítulos */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            padding-bottom: 90px;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .heading-font {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* ================= HEADER ================= */
+        header {
+            background-color: var(--surface);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(26, 54, 93, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .client-logo {
+            height: 85px;
+            max-width: 280px;
+            object-fit: contain;
+        }
+
+        .header-title-box {
+            text-align: right;
+            border-left: 4px solid var(--secondary);
+            padding-left: 20px;
+        }
+
+        .main-title {
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .sub-title {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; gap: 15px; padding: 15px; }
+            .header-title-box { text-align: center; border-left: none; padding-left: 0; border-top: 2px solid var(--bg-page); padding-top: 10px; }
+        }
+
+        /* ================= PROGRESS BAR ================= */
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background-color: #E2E8F0;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ================= MAIN LAYOUT ================= */
+        main {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .content-card {
+            background-color: var(--surface);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(26, 54, 93, 0.05);
+        }
+
+        /* Elemento Decorativo Lateral (Acepta variables personalizadas) */
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 6px; height: 100%;
+            background-color: var(--card-accent, var(--primary));
+            border-radius: 16px 0 0 16px;
+        }
+        
+        .card-badge {
+            display: inline-block;
+            background-color: rgba(26, 54, 93, 0.08);
+            color: var(--primary);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 6px 16px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        /* ================= RESALTADOR DE IDEAS CLAVE ================= */
+        .highlight {
+            background-color: rgba(236, 164, 0, 0.25); /* Tono mostaza muy suave */
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--primary); /* Asegura contraste sobre el amarillo */
+            box-shadow: inset 0 -4px 0 rgba(236, 164, 0, 0.4); /* Subrayado inferior sutil */
+        }
+
+        /* ================= INSTRUCCIONES UX ================= */
+        .instruction-box {
+            display: block; 
+            background-color: rgba(236, 164, 0, 0.1); 
+            border-left: 5px solid var(--accent);
+            padding: 18px 25px;
+            border-radius: 0 8px 8px 0;
+            margin: 30px 0;
+            font-weight: 600;
+            color: var(--primary); /* Contraste fuerte */
+            line-height: 1.6;
+        }
+
+        /* ================= ACTIVIDAD 1: CLASIFICACIÓN ================= */
+        .classify-container {
+            background-color: var(--bg-page);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .items-to-classify {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .classify-item {
+            background-color: var(--surface);
+            border: 2px solid var(--text-light);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .classify-item:hover { transform: translateY(-3px); border-color: var(--primary); }
+        .classify-item.selected { background-color: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+        
+        .drop-zones-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 600px) { .drop-zones-grid { grid-template-columns: 1fr; } }
+
+        .category-zone {
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: rgba(255,255,255,0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .category-zone:hover { background-color: rgba(26, 54, 93, 0.05); }
+        .category-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+        .placed-item {
+            background-color: var(--success);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            animation: popIn 0.3s ease-out forwards;
+        }
+
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* ================= ACTIVIDAD 2: COMPLETAR EL TEXTO ================= */
+        .text-completion-box {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: var(--primary); /* Aseguramos que la lectura sea azul oscuro, no roja */
+            font-weight: 500;
+            background-color: rgba(226, 109, 92, 0.05); /* Coral muy suave para decorar */
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(226, 109, 92, 0.2);
+        }
+
+        .blank-space {
+            display: inline-block;
+            min-width: 130px;
+            height: 38px;
+            border-bottom: 3px solid var(--secondary);
+            background-color: var(--surface);
+            margin: 0 5px;
+            vertical-align: middle;
+            text-align: center;
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 1rem;
+            line-height: 35px;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.2s;
+        }
+        .blank-space:hover { background-color: rgba(226, 109, 92, 0.1); }
+        .blank-space.filled {
+            background-color: var(--success);
+            color: white;
+            border-bottom-color: var(--success);
+            cursor: default;
+        }
+
+        .text-word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: center;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(26, 54, 93, 0.2);
+        }
+
+        .tb-word {
+            background-color: var(--surface);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .tb-word:hover, .tb-word.selected {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(26, 54, 93, 0.2);
+        }
+
+        /* ================= ACTIVIDAD 3: CASO DE ANÁLISIS ================= */
+        .option-card {
+            background-color: var(--surface);
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        .option-card:hover {
+            border-color: var(--secondary);
+            background-color: rgba(226, 109, 92, 0.03);
+            transform: translateX(5px);
+        }
+        .option-letter {
+            background-color: var(--primary);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .option-text {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .option-card.correct {
+            background-color: rgba(42, 157, 143, 0.1);
+            border-color: var(--success);
+            pointer-events: none;
+        }
+        .option-card.correct .option-letter { background-color: var(--success); }
+
+        /* ================= SCROLL INDICATOR ================= */
+        .floating-scroll {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 25px rgba(26, 54, 93, 0.3);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 900;
+            transition: background-color 0.4s;
+        }
+        .floating-scroll.done {
+            background-color: var(--success);
+        }
+
+        /* ================= MODAL ACADÉMICO ================= */
+        .modal-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 54, 93, 0.8);
+            backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-bg.show { opacity: 1; display: flex; }
+
+        .modal-card {
+            background-color: var(--surface);
+            width: 90%; max-width: 420px;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: scale(0.9); transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .modal-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px;
+            background-color: var(--modal-color, var(--primary));
+        }
+        .modal-bg.show .modal-card { transform: scale(1); }
+
+        .modal-icon { font-size: 3rem; margin-bottom: 15px; }
+        .modal-title {
+            font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800;
+            color: var(--modal-color, var(--primary)); margin-bottom: 10px;
+        }
+        .modal-body { color: var(--text-main); font-size: 1.05rem; margin-bottom: 30px; line-height: 1.5; }
+        .btn-close {
+            background-color: var(--modal-color, var(--primary));
+            color: white; border: none; padding: 14px 35px;
+            border-radius: 10px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: transform 0.2s; width: 100%;
+        }
+        .btn-close:hover { transform: translateY(-2px); }
+
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DE PROGRESO GLOBAL -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/280x85/FAFAFA/1A365D?text=Logo+UNP'">
+        <div class="header-title-box">
+            <div class="main-title">La UNP y la Ruta Colectiva</div>
+            <div class="sub-title">Implementación Institucional</div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- SECCIÓN 1: INTRODUCCIÓN Y CLASIFICACIÓN -->
+        <div class="content-card" style="--card-accent: var(--primary);">
+            <div class="card-badge">Lectura y Análisis</div>
+            <h2>PRESENTACIÓN: El Giro Institucional hacia la Seguridad Humana</h2>
+            
+            <p>La materialización de la Seguridad Humana en Colombia exige una <span class="highlight">transformación profunda</span> en la forma en que el Estado concibe la protección. En este escenario, la <strong>Unidad Nacional de Protección (UNP)</strong> reconfigura su misionalidad: transita de un <span class="highlight">modelo reactivo, centrado exclusivamente en la seguridad física individual</span> (el paradigma de la escolta y el vehículo blindado), hacia un <span class="highlight">enfoque integral, preventivo y de empoderamiento social</span>.</p>
+
+            <div class="instruction-box">
+                🧭 <strong>Actividad de Clasificación:</strong> Según el párrafo anterior, identifica a qué modelo corresponde cada concepto. Toca un elemento gris y luego toca el recuadro blanco al que pertenece.
+            </div>
+
+            <div class="classify-container">
+                <div class="items-to-classify" id="items-container">
+                    <button class="classify-item" data-category="old" onclick="selectClassifyItem(this)">Modelo reactivo</button>
+                    <button class="classify-item" data-category="new" onclick="selectClassifyItem(this)">Empoderamiento social</button>
+                    <button class="classify-item" data-category="old" onclick="selectClassifyItem(this)">Seguridad física individual</button>
+                    <button class="classify-item" data-category="new" onclick="selectClassifyItem(this)">Enfoque integral y preventivo</button>
+                    <button class="classify-item" data-category="old" onclick="selectClassifyItem(this)">Escolta y vehículo blindado</button>
+                </div>
+
+                <div class="drop-zones-grid">
+                    <div class="category-zone" onclick="placeItemInZone(this, 'old')">
+                        <div class="category-title">Paradigma Anterior</div>
+                        <!-- Items caen aquí -->
+                    </div>
+                    <div class="category-zone" onclick="placeItemInZone(this, 'new')">
+                        <div class="category-title">Seguridad Humana (Nuevo)</div>
+                        <!-- Items caen aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: TEJIDO ORGANIZATIVO (CORREGIDA LA ACCESIBILIDAD) -->
+        <div class="content-card" style="--card-accent: var(--secondary);">
+            <div class="card-badge" style="color: var(--primary); background-color: rgba(226, 109, 92, 0.15); border: 1px solid var(--secondary);">Reconceptualización</div>
+            <h2>La Defensa del Colectivo</h2>
+
+            <div class="instruction-box" style="border-color: var(--secondary); background-color: rgba(226, 109, 92, 0.05); color: var(--primary);">
+                🧩 <strong>Reconstruir el Concepto:</strong> Selecciona una palabra clave del banco inferior y toca el espacio en blanco correspondiente para completar textualmente el lineamiento de la UNP.
+            </div>
+
+            <div class="text-completion-box">
+                "Al reconocer que la violencia en el país afecta el <span class="blank-space" data-target="tejido" onclick="fillBlank(this)">...</span> <span class="blank-space" data-target="organizativo" onclick="fillBlank(this)">...</span>, la protección deja de ser un <span class="blank-space" data-target="blindaje" onclick="fillBlank(this)">...</span> aislado y se convierte en la defensa del <span class="blank-space" data-target="colectivo" onclick="fillBlank(this)">...</span>."
+            </div>
+
+            <div class="text-word-bank">
+                <button class="tb-word" data-word="colectivo" onclick="selectTextWord(this)">colectivo</button>
+                <button class="tb-word" data-word="tejido" onclick="selectTextWord(this)">tejido</button>
+                <button class="tb-word" data-word="blindaje" onclick="selectTextWord(this)">blindaje</button>
+                <button class="tb-word" data-word="organizativo" onclick="selectTextWord(this)">organizativo</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: ENFOQUES DIFERENCIALES (CASO / SELECCIÓN) -->
+        <div class="content-card" style="--card-accent: var(--primary);">
+            <div class="card-badge">Aplicación Territorial</div>
+            <h2>El Enfoque Diferencial Obligatorio</h2>
+            
+            <p>Esta nueva visión institucional incorpora <strong>obligatoriamente</strong> enfoques diferenciales —reconociendo, por ejemplo, los <span class="highlight">riesgos específicos que enfrentan las mujeres lideresas</span> y defensoras de derechos humanos, así como las <span class="highlight">dinámicas propias de los territorios étnicos</span>— para garantizar que la intervención del Estado no revictimice, sino que fortalezca las capacidades de autoprotección y la cohesión comunitaria.</p>
+
+            <div class="instruction-box" style="border-color: var(--accent);">
+                🎯 <strong>Análisis Crítico:</strong> Teniendo en cuenta la lectura de la directriz oficial, ¿Cuál es el objetivo final de incorporar estos enfoques diferenciales en la intervención del Estado?
+            </div>
+
+            <div class="option-card" onclick="checkAnswer(this, false)">
+                <div class="option-letter">A</div>
+                <div class="option-text">Garantizar que a todos los territorios, sin excepción, se les entregue el mismo esquema de seguridad estandarizado (vehículos blindados y hombres armados).</div>
+            </div>
+
+            <div class="option-card" onclick="checkAnswer(this, false)">
+                <div class="option-text" style="margin-top: 0; padding-left: 5px;">
+                    <div class="option-letter" style="float: left; margin-right: 15px;">B</div>
+                    Mantener el modelo aislado para evitar que el tejido organizativo y las comunidades deban asumir roles en su propia protección.
+                </div>
+            </div>
+
+            <div class="option-card" onclick="checkAnswer(this, true)">
+                <div class="option-letter">C</div>
+                <div class="option-text">Garantizar que la intervención del Estado no revictimice, sino que fortalezca las capacidades de autoprotección y la cohesión comunitaria.</div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- SCROLL FLOTANTE -->
+    <div id="scrollFloater" class="floating-scroll">
+        ↓ Continúa leyendo
+    </div>
+
+    <!-- MODAL PERSONALIZADO UX -->
+    <div id="uxModal" class="modal-bg">
+        <div class="modal-card" id="modalCard">
+            <div class="modal-icon" id="modalIcon">🎯</div>
+            <div class="modal-title" id="modalTitle">Título</div>
+            <div class="modal-body" id="modalBody">Texto explicativo del modal.</div>
+            <button class="btn-close" id="modalBtn" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        // ================= PROGRESS BAR & SCROLL =================
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+
+            const floater = document.getElementById('scrollFloater');
+            if(scrollPercent > 95) {
+                floater.innerHTML = '✔ Unidad Completada';
+                floater.classList.add('done');
+            } else {
+                floater.innerHTML = '↓ Continúa leyendo';
+                floater.classList.remove('done');
+            }
+        });
+
+        // ================= MODAL LOGIC =================
+        function showModal(isSuccess, title, message) {
+            const modal = document.getElementById('uxModal');
+            const card = document.getElementById('modalCard');
+            
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerText = message;
+            
+            if(isSuccess) {
+                document.getElementById('modalIcon').innerText = '✅';
+                card.style.setProperty('--modal-color', 'var(--success)');
+            } else {
+                document.getElementById('modalIcon').innerText = '💡';
+                card.style.setProperty('--modal-color', 'var(--accent)');
+                document.getElementById('modalTitle').style.color = '#B27B00'; // Mostaza oscuro
+            }
+            
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('uxModal').classList.remove('show');
+        }
+
+        // ================= ACTIVIDAD 1: CLASIFICACIÓN =================
+        let selectedItemToClassify = null;
+        let classifiedCount = 0;
+
+        function selectClassifyItem(btn) {
+            document.querySelectorAll('.classify-item').forEach(el => el.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedItemToClassify = btn;
+        }
+
+        function placeItemInZone(zone, zoneCategory) {
+            if (!selectedItemToClassify) {
+                showModal(false, 'Acción requerida', 'Primero selecciona uno de los conceptos de arriba tocándolo.');
+                return;
+            }
+
+            const itemCategory = selectedItemToClassify.getAttribute('data-category');
+
+            if (itemCategory === zoneCategory) {
+                // Correct match
+                const newItem = document.createElement('div');
+                newItem.className = 'placed-item';
+                newItem.innerText = selectedItemToClassify.innerText;
+                zone.appendChild(newItem);
+                
+                selectedItemToClassify.style.display = 'none';
+                selectedItemToClassify.classList.remove('selected');
+                selectedItemToClassify = null;
+                classifiedCount++;
+
+                if(classifiedCount === 5) {
+                    setTimeout(() => showModal(true, '¡Clasificación Perfecta!', 'Has diferenciado claramente las características del modelo de seguridad física vs. el nuevo enfoque de empoderamiento social de la UNP.'), 400);
+                }
+            } else {
+                showModal(false, 'Concepto Incorrecto', 'Ese elemento no corresponde a este paradigma. Revisa la lectura superior sobre el cambio de modelo.');
+            }
+        }
+
+        // ================= ACTIVIDAD 2: COMPLETAR ESPACIOS =================
+        let selectedTextWord = null;
+        
+        function selectTextWord(btn) {
+            document.querySelectorAll('.tb-word').forEach(el => el.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedTextWord = { word: btn.getAttribute('data-word'), text: btn.innerText, el: btn };
+        }
+
+        function fillBlank(blank) {
+            if (blank.classList.contains('filled')) return;
+
+            if (!selectedTextWord) {
+                showModal(false, 'Paso Previo', 'Selecciona una palabra de las opciones enmarcadas abajo.');
+                return;
+            }
+
+            if (blank.getAttribute('data-target') === selectedTextWord.word) {
+                blank.innerText = selectedTextWord.text;
+                blank.classList.add('filled');
+                selectedTextWord.el.style.display = 'none';
+                selectedTextWord = null;
+
+                const remaining = document.querySelectorAll('.blank-space:not(.filled)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, 'Definición Exacta', 'Has reconstruido fielmente el texto que fundamenta cómo la protección transita del individuo a la defensa de las organizaciones.'), 400);
+                }
+            } else {
+                showModal(false, 'Palabra Inadecuada', 'Esa palabra no mantiene la coherencia del texto original. Intenta con otra.');
+            }
+        }
+
+        // ================= ACTIVIDAD 3: CASO / OPCIÓN MÚLTIPLE =================
+        function checkAnswer(card, isCorrect) {
+            if(card.parentNode.querySelector('.correct')) return; // Evita multiples clicks si ya resolvió
+
+            if(isCorrect) {
+                card.classList.add('correct');
+                showModal(true, '¡Interpretación Correcta!', 'Exacto. El objetivo del enfoque diferencial es precisamente evitar la revictimización y fomentar la cohesión comunitaria y autoprotección.');
+            } else {
+                showModal(false, 'Interpretación Errónea', 'Esa opción contradice la esencia de la Seguridad Humana expuesta en el texto. El nuevo modelo no busca estandarizar ni aislar, sino adaptarse a los riesgos específicos.');
+            }
+        }
+
+        // Trigger inicial para acomodar la barra de progreso
+        window.dispatchEvent(new Event('scroll'));
+
+    </script>
+</body>
+</html>

@@ -5,19 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Módulo Interactivo: Seguridad Humana</title>
     <style>
-        :root {
-            /* SEMÁNTICA DE COLORES */
-            --color-estructura: #1FA379; /* Verde Oscuro */
-            --color-correcto: #4CAF50; /* Verde Medio */
-            --color-interaccion: #3DB5AC; /* Turquesa */
-            --color-feedback: #F4C542; /* Amarillo */
-            --color-reflexion: #4A6984; /* Azul Petróleo Suave */
-            --bg-reflexion: #EEF2F5; /* Fondo Reflexión */
-            
-            --color-blanco: #FFFFFF; 
-            --text-dark: #1A3B2E; 
-            --bg-light: #EBF2EF; 
-        }
+:root {
+
+    /* ESTRUCTURA Y NAVEGACIÓN */
+    --color-estructura: #3f6399;      /* Primary */
+
+    /* RESPUESTAS CORRECTAS */
+    --color-correcto: #3B5DE7;        /* Secondary */
+
+    /* ELEMENTOS INTERACTIVOS */
+    --color-interaccion: #0076BA;     /* Accent */
+
+    /* FEEDBACK Y DESTACADOS */
+    --color-feedback: #3B5DE7;        /* Secondary */
+
+    /* REFLEXIÓN / CONTENIDO TEÓRICO */
+    --color-reflexion: #517B81;       /* Primary */
+
+    /* FONDO DE BLOQUES DE REFLEXIÓN */
+    --bg-reflexion: #F7F7F6;          /* Light */
+
+    /* NEUTROS */
+    --color-blanco: #FFFFFF;
+    --text-dark: #131925;             /* Dark */
+    --bg-light: #F7F7F6;              /* Light */
+
+}
 
         * {
             box-sizing: border-box;
@@ -26,13 +39,36 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding-bottom: 120px;
-            overflow-x: hidden;
-        }
+        body{
+    position:relative;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(59,93,231,.18) 0%, transparent 30%),
+        radial-gradient(circle at 80% 60%, rgba(0,118,186,.15) 0%, transparent 35%),
+        linear-gradient(
+            135deg,
+            #131925 0%,
+            #1c2433 40%,
+            #243449 100%
+        );
+
+    color:var(--text-dark);
+}
+
+body::before{
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+
+    background-size:40px 40px;
+
+    pointer-events:none;
+    z-index:-1;
+}
 
         /* HEADER GLASSMORPHISM (Estilo Genially) */
         header {

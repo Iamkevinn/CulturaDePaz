@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguridad Humana en la UNP</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,300;0,600;0,800;1,400&family=Playfair+Display:wght@700;800&display=swap');
+
+        :root {
+            /* PALETA DE COLORES "BORGOÑA INSTITUCIONAL" */
+            --primary: #370617; /* Borgoña muy oscuro -> Textos y contrastes */
+            --secondary: #9D0208; /* Rojo rico -> Botones y elementos activos */
+            --accent: #F48C06; /* Naranja ámbar -> Detalles decorativos sutiles */
+            --success: #1E5631; /* Verde bosque -> Aciertos y validaciones */
+            --bg-body: #F8EDEB; /* Crema rosado muy suave -> Fondo de pantalla */
+            --bg-card: #FFFFFF; /* Blanco -> Fondo de tarjeta */
+            --text-main: #1A1A1A; /* Negro suave -> Lectura principal */
+            --text-light: #6C757D; /* Gris medio */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Nunito Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, .serif-heading { font-family: 'Playfair Display', serif; }
+
+        /* ================= HEADER ================= */
+        header {
+            background-color: var(--bg-card);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(55, 6, 23, 0.06);
+            border-bottom: 3px solid var(--secondary);
+            position: relative;
+            z-index: 100;
+        }
+
+        .client-logo { height: 80px; max-width: 250px; object-fit: contain; }
+
+        .header-title-box { text-align: right; border-left: 3px solid var(--accent); padding-left: 15px; }
+        .main-title { color: var(--primary); font-size: 1.3rem; font-weight: 800; }
+        .sub-title { color: var(--text-light); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; gap: 15px; padding: 15px; }
+            .header-title-box { text-align: center; border-left: none; padding-left: 0; border-top: 2px solid var(--bg-body); padding-top: 10px; }
+        }
+
+        /* ================= CONTENEDOR DEL SLIDER ================= */
+        .slider-wrapper {
+            position: relative;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 50px; /* Espacio para las flechas */
+            flex-grow: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) { .slider-wrapper { padding: 0 15px; margin: 20px auto; } }
+
+        /* ================= TARJETAS FLOTANTES ================= */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(55, 6, 23, 0.08);
+            border: 1px solid rgba(55, 6, 23, 0.05);
+            display: none; /* Ocultas por defecto */
+            animation: floatIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+            position: relative;
+        }
+        
+        .card.active { display: block; }
+
+        @keyframes floatIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .card-badge {
+            display: inline-block;
+            background-color: rgba(157, 2, 8, 0.08);
+            color: var(--secondary);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 20px; line-height: 1.2; }
+        .card p { font-size: 1.15rem; margin-bottom: 20px; }
+
+        /* ================= INSTRUCCIONES ================= */
+        .instruction-box {
+            background-color: rgba(244, 140, 6, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 25px 0;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+
+        /* ================= CONTROLES DEL SLIDER ================= */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(55, 6, 23, 0.2);
+            transition: all 0.3s;
+            z-index: 10;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .nav-btn:hover:not(:disabled) { background-color: var(--secondary); transform: translateY(-50%) scale(1.1); }
+        .nav-btn:disabled { background-color: #CBD5E1; cursor: not-allowed; box-shadow: none; }
+        
+        .nav-prev { left: 0; }
+        .nav-next { right: 0; }
+
+        @media (max-width: 768px) {
+            .nav-btn { top: auto; bottom: -70px; transform: none; }
+            .nav-prev { left: 20%; }
+            .nav-next { right: 20%; }
+            .slider-wrapper { padding-bottom: 80px; }
+        }
+
+        .dots-container {
+            text-align: center; margin-top: 20px; padding-bottom: 40px;
+        }
+        .dot {
+            display: inline-block; width: 12px; height: 12px;
+            background-color: #D1D5DB; border-radius: 50%;
+            margin: 0 5px; cursor: pointer; transition: all 0.3s;
+        }
+        .dot.active { background-color: var(--secondary); width: 24px; border-radius: 10px; }
+
+        /* ================= ACTIVIDAD 1: RELACIONAR (TARJETA 2) ================= */
+        .match-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        @media (min-width: 768px) { .match-grid { grid-template-columns: 1fr 1fr; } }
+
+        .match-col { display: flex; flex-direction: column; gap: 12px; }
+        
+        .match-btn {
+            background-color: var(--bg-card);
+            border: 2px solid #E2E8F0;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 1.05rem;
+            color: var(--text-main);
+            transition: all 0.2s;
+            height: 100%;
+        }
+        
+        /* Conceptos (Izquierda) */
+        .match-btn.concept { font-weight: 800; color: var(--primary); border-left: 5px solid var(--primary); }
+        .match-btn.concept:hover { background-color: rgba(55, 6, 23, 0.05); }
+        .match-btn.concept.selected { background-color: var(--primary); color: white; }
+        
+        /* Definiciones (Derecha) */
+        .match-btn.def { border-style: dashed; border-color: var(--secondary); }
+        .match-btn.def:hover { background-color: rgba(157, 2, 8, 0.05); }
+        
+        .match-btn.solved {
+            background-color: rgba(30, 86, 49, 0.1);
+            border: 2px solid var(--success);
+            color: var(--success);
+            pointer-events: none;
+            font-weight: 800;
+        }
+
+        /* ================= ACTIVIDAD 2: MATRIZ DESPLEGABLE (TARJETA 3) ================= */
+        .matrix-row {
+            background-color: #fff;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .matrix-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 10px;
+        }
+
+        .matrix-body { display: flex; flex-direction: column; gap: 10px; }
+        @media (min-width: 768px) { .matrix-body { flex-direction: row; align-items: stretch; } }
+
+        .matrix-example {
+            flex: 1; font-size: 1rem; color: var(--text-light);
+            background-color: var(--bg-body); padding: 12px; border-radius: 8px;
+        }
+
+        .matrix-select {
+            flex: 1; padding: 12px; border: 2px solid var(--secondary);
+            border-radius: 8px; font-family: 'Nunito Sans', sans-serif; font-size: 1rem;
+            color: var(--primary); font-weight: 600; cursor: pointer; outline: none;
+        }
+        .matrix-select:focus { border-color: var(--primary); }
+        .matrix-select.correct {
+            background-color: rgba(30, 86, 49, 0.1); border-color: var(--success);
+            color: var(--success); pointer-events: none;
+        }
+
+        /* ================= MODAL ACADÉMICO ================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 26, 26, 0.85); backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; display: flex; }
+
+        .modal-box {
+            background-color: var(--bg-card); width: 90%; max-width: 420px;
+            border-radius: 20px; padding: 40px; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            transform: scale(0.9); transition: transform 0.3s;
+            border-top: 8px solid var(--modal-color, var(--success));
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+
+        .modal-icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .modal-title { font-size: 1.6rem; font-weight: 800; color: var(--modal-color); margin-bottom: 10px; font-family: 'Playfair Display', serif;}
+        .modal-text { color: var(--text-main); font-size: 1.05rem; margin-bottom: 30px; }
+        
+        .modal-btn {
+            background-color: var(--modal-color); color: white; border: none;
+            padding: 12px 35px; border-radius: 8px; font-weight: 800; font-size: 1rem;
+            cursor: pointer; width: 100%; transition: transform 0.2s; font-family: 'Nunito Sans', sans-serif;
+        }
+        .modal-btn:hover { transform: translateY(-3px); }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/250x80/FAFAFA/370617?text=Logo+UNP'">
+        <div class="header-title-box">
+            <div class="main-title">Seguridad Humana realizada en la UNP</div>
+            <div class="sub-title">Materialización y Corresponsabilidad</div>
+        </div>
+    </header>
+
+    <!-- SLIDER CONTAINER -->
+    <div class="slider-wrapper">
+        
+        <!-- FLECHAS DE NAVEGACIÓN -->
+        <button class="nav-btn nav-prev" onclick="changeCard(-1)" id="btnPrev" disabled>❮</button>
+        <button class="nav-btn nav-next" onclick="changeCard(1)" id="btnNext">❯</button>
+
+        <!-- TARJETA 1: INTRODUCCIÓN -->
+        <div class="card active" id="card-0">
+            <span class="card-badge">Diapositiva 1</span>
+            <h2 class="serif-heading">La materialización de la Seguridad Humana en la UNP</h2>
+            
+            <p style="font-size: 1.3rem; color: var(--primary); font-weight: 800; border-bottom: 2px solid var(--accent); padding-bottom: 15px; margin-bottom: 30px;">
+                La Corresponsabilidad del Estado (Articulación Interinstitucional)
+            </p>
+
+            <p>Bajo el principio de que la UNP no puede garantizar la Seguridad Humana por sí sola, se activa la concurrencia de otras entidades.</p>
+
+            <div class="instruction-box" style="margin-top: 40px; background-color: rgba(55, 6, 23, 0.05); border-color: var(--primary);">
+                👉 Tip: Usa las flechas laterales o los puntos inferiores para navegar a la siguiente tarjeta y descubrir los principios rectores de esta articulación.
+            </div>
+        </div>
+
+        <!-- TARJETA 2: PRINCIPIOS (RELACIONAR) -->
+        <div class="card" id="card-1">
+            <span class="card-badge">Estructura</span>
+            <h2 class="serif-heading">Principios de Articulación</h2>
+            
+            <p>Para lograr una protección integral real, el Estado fundamenta su accionar en tres bases. Descubre su significado.</p>
+
+            <div class="instruction-box">
+                🔗 <strong>Actividad:</strong> Selecciona un concepto en la columna izquierda y luego toca su definición correcta en la columna derecha para unirlos.
+            </div>
+
+            <div class="match-grid">
+                <!-- Conceptos -->
+                <div class="match-col">
+                    <button class="match-btn concept" data-id="c1" onclick="selectConcept(this)">Principio de Concurrencia</button>
+                    <button class="match-btn concept" data-id="c2" onclick="selectConcept(this)">Armonización Institucional</button>
+                    <button class="match-btn concept" data-id="c3" onclick="selectConcept(this)">Corresponsabilidad</button>
+                </div>
+                
+                <!-- Definiciones -->
+                <div class="match-col">
+                    <button class="match-btn def" data-match="c2" onclick="selectDef(this)">
+                        Facilita la coherencia entre las políticas de desarrollo, justicia y derechos humanos, evitando respuestas descontextualizadas y asegurando que las medidas colectivas —como el apoyo a guardias indígenas o proyectos productivos— respondan integralmente a los factores de riesgo.
+                    </button>
+                    <button class="match-btn def" data-match="c3" onclick="selectDef(this)">
+                        Establece una alianza real entre el Estado, la sociedad civil y las comunidades, donde estas últimas actúan como agentes activos en la definición de sus propias garantías, empoderándose frente a las amenazas.
+                    </button>
+                    <button class="match-btn def" data-match="c1" onclick="selectDef(this)">
+                        Permite que diversas entidades del Estado, según sus competencias técnicas, aporten capacidades específicas para atender las necesidades del territorio, reconociendo que la protección no es una tarea exclusiva del sector Defensa.
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TARJETA 3: MATRIZ DIMENSIONES -->
+        <div class="card" id="card-2">
+            <span class="card-badge" style="background-color: var(--secondary); color: white;">Diapositiva 2</span>
+            <h2 class="serif-heading">Dimensiones de Seguridad Humana</h2>
+            
+            <p>Matriz de Acción de la Rama Ejecutiva: Asigna el sector administrativo correspondiente a cada dimensión y ejemplo de protección integral.</p>
+
+            <div class="instruction-box" style="border-color: var(--secondary); background-color: rgba(157, 2, 8, 0.05);">
+                🛠️ <strong>Actividad de Clasificación:</strong> Lee el ejemplo de protección en gris y despliega el menú para seleccionar el <strong>Sector / Ministerio</strong> que lidera esa acción.
+            </div>
+
+            <!-- Fila 1 -->
+            <div class="matrix-row">
+                <div class="matrix-header">💰 Seguridad Económica</div>
+                <div class="matrix-body">
+                    <div class="matrix-example"><strong>Ejemplo:</strong> Proyectos productivos rurales y emprendimientos asociativos sostenibles.</div>
+                    <select class="matrix-select" data-answer="r1" onchange="checkMatrix(this)">
+                        <option value="">Selecciona el Sector / Ministerio...</option>
+                        <option value="r2">Agropecuario, Pesquero y de Desarrollo Rural</option>
+                        <option value="r1">Trabajo; Comercio, Industria y Turismo</option>
+                        <option value="r3">Salud y Protección Social</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fila 2 -->
+            <div class="matrix-row">
+                <div class="matrix-header">🌾 Seguridad Alimentaria</div>
+                <div class="matrix-body">
+                    <div class="matrix-example"><strong>Ejemplo:</strong> Fortalecimiento de cadenas de suministro locales y soberanía alimentaria en territorios.</div>
+                    <select class="matrix-select" data-answer="r2" onchange="checkMatrix(this)">
+                        <option value="">Selecciona el Sector / Ministerio...</option>
+                        <option value="r2">Agropecuario, Pesquero y de Desarrollo Rural</option>
+                        <option value="r4">Ambiente y Desarrollo Sostenible</option>
+                        <option value="r1">Trabajo; Comercio, Industria y Turismo</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fila 3 -->
+            <div class="matrix-row">
+                <div class="matrix-header">⚕️ Seguridad en Salud</div>
+                <div class="matrix-body">
+                    <div class="matrix-example"><strong>Ejemplo:</strong> Jornadas de atención integral en salud preventiva para comunidades rurales dispersas.</div>
+                    <select class="matrix-select" data-answer="r3" onchange="checkMatrix(this)">
+                        <option value="">Selecciona el Sector / Ministerio...</option>
+                        <option value="r5">Interior; Justicia y del Derecho</option>
+                        <option value="r3">Salud y Protección Social</option>
+                        <option value="r6">Inclusión Social y Reconciliación; Igualdad y Equidad</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fila 4 -->
+            <div class="matrix-row">
+                <div class="matrix-header">🌳 Seguridad Ambiental</div>
+                <div class="matrix-body">
+                    <div class="matrix-example"><strong>Ejemplo:</strong> Protección de cuencas hídricas y ecosistemas estratégicos mediante acuerdos con comunidades.</div>
+                    <select class="matrix-select" data-answer="r4" onchange="checkMatrix(this)">
+                        <option value="">Selecciona el Sector / Ministerio...</option>
+                        <option value="r4">Ambiente y Desarrollo Sostenible</option>
+                        <option value="r7">Interior; Presidencia de la República</option>
+                        <option value="r2">Agropecuario, Pesquero y de Desarrollo Rural</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fila 5 -->
+            <div class="matrix-row">
+                <div class="matrix-header">👤 Seguridad Personal</div>
+                <div class="matrix-body">
+                    <div class="matrix-example"><strong>Ejemplo:</strong> Fortalecimiento de esquemas de protección colectiva para líderes y comunidades en riesgo.</div>
+                    <select class="matrix-select" data-answer="r5" onchange="checkMatrix(this)">
+                        <option value="">Selecciona el Sector / Ministerio...</option>
+                        <option value="r1">Trabajo; Comercio, Industria y Turismo</option>
+                        <option value="r6">Inclusión Social y Reconciliación; Igualdad y Equidad</option>
+                        <option value="r5">Interior; Justicia y del Derecho</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fila 6 -->
+            <div class="matrix-row">
+                <div class="matrix-header">🛡️ Seguridad Comunitaria</div>
+                <div class="matrix-body">
+                    <div class="matrix-example"><strong>Ejemplo:</strong> Fortalecimiento de la participación y tejido social en comunidades étnicas y rurales.</div>
+                    <select class="matrix-select" data-answer="r6" onchange="checkMatrix(this)">
+                        <option value="">Selecciona el Sector / Ministerio...</option>
+                        <option value="r6">Inclusión Social y Reconciliación; Igualdad y Equidad</option>
+                        <option value="r3">Salud y Protección Social</option>
+                        <option value="r7">Interior; Presidencia de la República</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fila 7 -->
+            <div class="matrix-row">
+                <div class="matrix-header">🗳️ Seguridad Política</div>
+                <div class="matrix-body">
+                    <div class="matrix-example"><strong>Ejemplo:</strong> Garantías para la protesta social, diálogo institucional y participación democrática sin estigmatización.</div>
+                    <select class="matrix-select" data-answer="r7" onchange="checkMatrix(this)">
+                        <option value="">Selecciona el Sector / Ministerio...</option>
+                        <option value="r4">Ambiente y Desarrollo Sostenible</option>
+                        <option value="r7">Interior; Presidencia de la República</option>
+                        <option value="r5">Interior; Justicia y del Derecho</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PUNTOS DE PAGINACIÓN -->
+    <div class="dots-container">
+        <span class="dot active" onclick="goToCard(0)"></span>
+        <span class="dot" onclick="goToCard(1)"></span>
+        <span class="dot" onclick="goToCard(2)"></span>
+    </div>
+
+    <!-- MODAL UX -->
+    <div id="uxModal" class="modal-overlay">
+        <div class="modal-box" id="modalCard">
+            <div class="modal-icon" id="modalIcon">✅</div>
+            <div class="modal-title" id="modalTitle">Título</div>
+            <div class="modal-text" id="modalText">Mensaje</div>
+            <button class="modal-btn" onclick="closeModal()">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        // ================= LÓGICA DEL SLIDER / TARJETAS =================
+        let currentCard = 0;
+        const totalCards = 3;
+
+        function updateSlider() {
+            // Ocultar todas
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+            
+            // Mostrar actual
+            document.getElementById(`card-${currentCard}`).classList.add('active');
+            document.querySelectorAll('.dot')[currentCard].classList.add('active');
+
+            // Estados de botones
+            document.getElementById('btnPrev').disabled = currentCard === 0;
+            document.getElementById('btnNext').disabled = currentCard === totalCards - 1;
+
+            // Scroll suave hacia arriba al cambiar tarjeta
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeCard(dir) {
+            currentCard += dir;
+            if(currentCard < 0) currentCard = 0;
+            if(currentCard >= totalCards) currentCard = totalCards - 1;
+            updateSlider();
+        }
+
+        function goToCard(index) {
+            currentCard = index;
+            updateSlider();
+        }
+
+        // ================= MODAL LOGIC =================
+        function showModal(isSuccess, title, message) {
+            const modal = document.getElementById('uxModal');
+            const card = document.getElementById('modalCard');
+            
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = message;
+            
+            if(isSuccess) {
+                document.getElementById('modalIcon').innerText = '✅';
+                card.style.setProperty('--modal-color', 'var(--success)');
+            } else {
+                document.getElementById('modalIcon').innerText = '⚠️';
+                card.style.setProperty('--modal-color', 'var(--accent)');
+            }
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('uxModal').classList.remove('active');
+        }
+
+        // ================= ACTIVIDAD 1: RELACIONAR =================
+        let activeConcept = null;
+
+        function selectConcept(btn) {
+            if (btn.classList.contains('solved')) return;
+            document.querySelectorAll('.concept').forEach(el => el.classList.remove('selected'));
+            btn.classList.add('selected');
+            activeConcept = btn;
+        }
+
+        function selectDef(btn) {
+            if (btn.classList.contains('solved')) return;
+            
+            if (!activeConcept) {
+                showModal(false, 'Acción Requerida', 'Primero selecciona un concepto en la columna izquierda.');
+                return;
+            }
+
+            if (btn.getAttribute('data-match') === activeConcept.getAttribute('data-id')) {
+                btn.classList.add('solved');
+                activeConcept.classList.add('solved');
+                activeConcept.classList.remove('selected');
+                activeConcept = null;
+
+                const remaining = document.querySelectorAll('.concept:not(.solved)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, 'Principios Asimilados', 'Has conectado correctamente los conceptos que rigen la corresponsabilidad y articulación del Estado en la Seguridad Humana.'), 400);
+                }
+            } else {
+                showModal(false, 'Relación Incorrecta', 'Esa definición no corresponde al concepto seleccionado. Vuelve a leer e inténtalo de nuevo.');
+            }
+        }
+
+        // ================= ACTIVIDAD 2: MATRIZ DIMENSIONES =================
+        function checkMatrix(selectEl) {
+            const targetAnswer = selectEl.getAttribute('data-answer');
+            const selectedVal = selectEl.value;
+
+            if (selectedVal === "") return;
+
+            if (selectedVal === targetAnswer) {
+                selectEl.classList.add('correct');
+                
+                const allSelects = document.querySelectorAll('.matrix-select');
+                const correctSelects = document.querySelectorAll('.matrix-select.correct');
+                
+                if (allSelects.length === correctSelects.length) {
+                    setTimeout(() => showModal(true, 'Matriz Completada', '¡Excelente! Has articulado perfectamente las 7 dimensiones de la Seguridad Humana con las obligaciones y ministerios correspondientes de la Rama Ejecutiva.'), 500);
+                }
+            } else {
+                showModal(false, 'Sector Incorrecto', 'El ministerio seleccionado no lidera esa dimensión de seguridad. Reevalúa la conexión entre el ejemplo y la entidad.');
+                selectEl.value = ""; 
+            }
+        }
+    </script>
+</body>
+</html>

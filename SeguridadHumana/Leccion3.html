@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelos de Seguridad en LATAM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700&display=swap');
+
+        :root {
+            /* ESTRUCTURA Y NAVEGACIÓN */
+            --color-1: #2F5D62;
+            /* INTERACCIONES */
+            --color-2: #3C8DAD;
+            /* FEEDBACK POSITIVO */
+            --color-3: #F4B942;
+            /* ALERTAS Y RIESGOS */
+            --color-4: #D95D39;
+            /* SUPERFICIES */
+            --color-5: #FFFFFF;
+            /* ALERTAS IMPORTANTES */
+            --red-badge: #C94C4C;
+            /* FONDO GENERAL */
+            --bg-light: #F4F8F7;
+            /* TEXTO */
+            --text-dark: #1F2D2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Evita el scroll global, se hace dentro de las tarjetas */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* HEADER & LOGOS */
+        header {
+            background-color: var(--color-5);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--color-1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .header-logos {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .client-logo {
+            height: 65px;
+            max-width: 200px;
+            object-fit: contain;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            color: var(--color-1);
+            font-weight: 700;
+            text-align: right;
+            max-width: 400px;
+        }
+
+        /* BARRA DE PROGRESO SUPERIOR */
+        .progress-bar-wrapper {
+            background-color: var(--color-1);
+            padding: 10px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 99;
+        }
+
+        .progress-label {
+            color: var(--color-5);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 6px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--color-3);
+            width: 33.33%;
+            transition: width 0.4s ease;
+        }
+
+        .progress-counter {
+            color: var(--color-5);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* SISTEMA DE TARJETAS (SLIDER) */
+        main {
+            flex: 1;
+            position: relative;
+            overflow: hidden; /* Oculta las tarjetas que no están activas */
+            background-color: var(--bg-light);
+        }
+
+        .slider-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .slide-card {
+            min-width: 100%;
+            height: 100%;
+            padding: 30px 20px 80px 20px; /* Padding inferior para el scroll indicator */
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Estilo del Scrollbar dentro de las tarjetas */
+        .slide-card::-webkit-scrollbar { width: 8px; }
+        .slide-card::-webkit-scrollbar-track { background: transparent; }
+        .slide-card::-webkit-scrollbar-thumb { background-color: var(--color-2); border-radius: 10px; }
+
+        .card-content {
+            background-color: var(--color-5);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(31, 45, 47, 0.08);
+            border-top: 6px solid var(--color-1);
+            height: max-content; /* Permite que crezca según el contenido */
+            position: relative;
+        }
+
+        /* TIPOGRAFÍA DENTRO DE LA TARJETA */
+        .badge {
+            display: inline-block;
+            background-color: var(--color-1);
+            color: var(--color-5);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: var(--color-1);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        /* BLOQUES DE INFORMACIÓN */
+        .info-box {
+            background-color: rgba(60, 141, 173, 0.08);
+            border-left: 4px solid var(--color-2);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .alert-box {
+            background-color: rgba(217, 93, 57, 0.08);
+            border-left: 4px solid var(--color-4);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .danger-box {
+            background-color: rgba(201, 76, 76, 0.08);
+            border-left: 4px solid var(--red-badge);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* RESALTADO ALEATORIO DE LECTURA ACTIVA */
+        .auto-highlight {
+            background-color: rgba(244, 185, 66, 0.3); /* Color 3 opaco */
+            padding: 2px 4px;
+            font-weight: 500;
+            border-radius: 2px;
+            border-bottom: 2px solid var(--color-3);
+        }
+
+        /* INSTRUCCIONES DE ACTIVIDAD */
+        .instruction {
+            display: inline-block;
+            background-color: var(--color-4);
+            color: var(--color-5);
+            padding: 6px 15px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 4px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* ACTIVIDAD 1: COMPLETAR (Dropzones & Banco) */
+        .interactive-area {
+            border: 2px dashed var(--color-2);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 15px;
+            background-color: rgba(60, 141, 173, 0.03);
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 200px;
+            height: 32px;
+            border-bottom: 2px solid var(--color-2);
+            background-color: rgba(60, 141, 173, 0.1);
+            margin: 0 5px;
+            vertical-align: middle;
+            text-align: center;
+            cursor: pointer;
+            color: var(--color-2);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            line-height: 32px;
+        }
+        .drop-zone:hover { background-color: rgba(60, 141, 173, 0.2); }
+        .drop-zone.filled {
+            background-color: var(--color-3);
+            color: var(--text-dark);
+            border-bottom-color: var(--text-dark);
+            cursor: default;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
+            border-top: 1px solid var(--color-2);
+            padding-top: 20px;
+        }
+
+        .word-btn {
+            background-color: var(--color-5);
+            color: var(--color-1);
+            border: 2px solid var(--color-1);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .word-btn:hover, .word-btn.selected {
+            background-color: var(--color-1);
+            color: var(--color-5);
+        }
+
+        /* ACTIVIDAD 2: RELACIONAR / MATCHING */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        @media (max-width: 768px) { .match-grid { grid-template-columns: 1fr; } }
+
+        .card-item {
+            background-color: var(--color-5);
+            border: 2px solid var(--color-2);
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .card-item:hover { background-color: rgba(60, 141, 173, 0.1); }
+        .card-item.selected {
+            background-color: var(--color-2);
+            color: var(--color-5);
+        }
+        .card-item.solved {
+            background-color: var(--color-3);
+            color: var(--text-dark);
+            border-color: var(--color-3);
+            pointer-events: none;
+            font-weight: 700;
+        }
+
+        /* ACTIVIDAD 3: CASO Y DECISIÓN */
+        .decision-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background-color: var(--color-5);
+            border: 2px solid var(--color-1);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        .decision-btn:hover {
+            background-color: rgba(47, 93, 98, 0.05);
+            border-color: var(--color-2);
+        }
+
+        /* BOTONES DE NAVEGACIÓN INFERIOR */
+        footer {
+            position: fixed;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none; /* Permite hacer clic en la tarjeta a través del espacio vacío */
+            z-index: 100;
+            background: transparent;
+            border: none;
+        }
+
+        .nav-btn {
+            pointer-events: auto; /* Reactiva el clic solo en los botones */
+            background-color: var(--color-1);
+            color: var(--color-5);
+            border: none;
+            padding: 14px 30px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 50px; /* Forma de píldora flotante */
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-transform: uppercase;
+            box-shadow: 0 6px 15px rgba(47, 93, 98, 0.3); /* Sombra para resaltar que flotan */
+            letter-spacing: 1px;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background-color: var(--color-5);
+            color: var(--color-1);
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* MODAL DE FEEDBACK (Reemplaza a los alerts) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(31, 45, 47, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background-color: var(--color-5);
+            width: 90%;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 8px solid var(--modal-color, var(--color-1));
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .modal-icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--color-1); }
+        .modal-text { color: var(--text-dark); margin-bottom: 25px; font-size: 1.05rem; }
+        .modal-btn {
+            background-color: var(--color-1);
+            color: var(--color-5);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .modal-btn:hover { opacity: 0.9; }
+
+        /* SCROLL INTELIGENTE FLOTANTE DENTRO DE LA TARJETA */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 85px; /* Por encima del footer */
+            right: 30px;
+            background-color: var(--color-4);
+            color: var(--color-5);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            pointer-events: none;
+            transition: opacity 0.3s;
+            opacity: 1;
+            z-index: 90;
+        }
+        .scroll-indicator.hidden-indicator { opacity: 0; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- CABECERA -->
+    <header>
+        <div class="header-logos">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/200x65/FFFFFF/2F5D62?text=Logo+UNP'">
+        </div>
+        <div class="course-title">Modelos de Seguridad en América Latina</div>
+    </header>
+
+    <!-- BARRA DE PROGRESO -->
+    <div class="progress-bar-wrapper">
+        <span class="progress-label">Progreso</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+        <span class="progress-counter" id="progress-text">Paso 1 de 3</span>
+    </div>
+
+    <!-- SISTEMA DE TARJETAS (VIEWPORT) -->
+    <main>
+        <div class="slider-track" id="slider-track">
+
+            <!-- TARJETA 1 -->
+            <section class="slide-card" onscroll="checkScroll(this)">
+                <div class="card-content">
+                    <span class="badge">Contexto y Respuestas</span>
+                    <h2 class="serif">Características de los Modelos de Seguridad Militarizados</h2>
+                    
+                    <div class="info-box highlight-target">
+                        <strong style="color: var(--color-1);">El Fenómeno "Solución Coyuntural":</strong> Ante crisis institucionales, falta de instituciones policiales eficaces o incremento de tasas criminales, los gobiernos de la región recurren al despliegue militar como respuesta "ad hoc" para mantener el orden.
+                    </div>
+
+                    <div class="instruction">Completar Conceptos con Pistas</div>
+                    <p style="margin-bottom: 20px;">El despliegue militar en LATAM se enfoca en tres ejes principales. Selecciona el concepto del banco inferior y asígnalo a su definición.</p>
+
+                    <div class="interactive-area">
+                        <p style="margin-bottom: 15px;">
+                            <strong>1.</strong> La <span class="drop-zone" data-answer="anti" onclick="handleDrop(this, 'act1')">...</span> se ha expandido del rol militar (defensa nacional) al policial (cumplimiento de la ley e inteligencia).
+                        </p>
+                        <p style="margin-bottom: 15px;">
+                            <strong>2.</strong> El uso de fuerzas armadas para el <span class="drop-zone" data-answer="conflicto" onclick="handleDrop(this, 'act1')">...</span> se da frente a huelgas o protestas ciudadanas, con altos costos en vidas humanas.
+                        </p>
+                        <p style="margin-bottom: 15px;">
+                            <strong>3.</strong> La <span class="drop-zone" data-answer="ocupacion" onclick="handleDrop(this, 'act1')">...</span> es el despliegue militar en áreas urbanas (favelas en Brasil) o zonas de conflicto bajo legislaciones excepcionales.
+                        </p>
+
+                        <div class="word-bank" id="act1-bank">
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="ocupacion">"Ocupación" Territorial</button>
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="conflicto">Control de Conflictividad Social</button>
+                            <button class="word-btn" onclick="selectWord(this, 'act1')" data-val="anti">Lucha Antinarcóticos</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TARJETA 2 -->
+            <section class="slide-card" onscroll="checkScroll(this)">
+                <div class="card-content">
+                    <span class="badge">Análisis de Casos</span>
+                    <h2 class="serif">Modelos de Intervención Militarizada en LATAM</h2>
+
+                    <div class="alert-box highlight-target">
+                        <strong>Resumen Ejecutivo:</strong> La militarización no es un accidente, sino una respuesta institucional ante la debilidad o corrupción de las fuerzas policiales tradicionales. La tendencia regional es pasar de la "defensa de la soberanía" a la "gestión del orden interno", un cambio que desvirtúa la misión histórica de los ejércitos.
+                    </div>
+
+                    <div class="instruction">Relacionar Concepto → Ejemplo</div>
+                    <p style="margin-bottom: 20px;">Cada país ha adoptado un modelo específico. Selecciona el país en la columna izquierda y emparéjalo con su descripción en la columna derecha.</p>
+
+                    <div class="match-grid" id="act2-grid">
+                        <!-- Paises -->
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div class="card-item src-card" data-id="mx" onclick="selectMatchSource(this)">🇲🇽 México</div>
+                            <div class="card-item src-card" data-id="ve" onclick="selectMatchSource(this)">🇻🇪 Venezuela</div>
+                            <div class="card-item src-card" data-id="br" onclick="selectMatchSource(this)">🇧🇷 Brasil</div>
+                            <div class="card-item src-card" data-id="ar" onclick="selectMatchSource(this)">🇦🇷 Argentina</div>
+                        </div>
+                        <!-- Descripciones -->
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div class="card-item tgt-card" data-match="br" onclick="selectMatchTarget(this)">Intervención recurrente en seguridad interna, con normativas que autorizan funciones policiales.</div>
+                            <div class="card-item tgt-card" data-match="mx" onclick="selectMatchTarget(this)">Designación de militares en cargos civiles (Procuraduría, Policías) y mandatos directos de seguridad pública.</div>
+                            <div class="card-item tgt-card" data-match="ar" onclick="selectMatchTarget(this)">Presión política recurrente de sectores empresariales para involucrar a los militares, pese a un marco legal restrictivo post-dictadura.</div>
+                            <div class="card-item tgt-card" data-match="ve" onclick="selectMatchTarget(this)">Modelo "maximalista y totalizante" donde lo militar abarca el desarrollo social, económico y ambiental bajo una "defensa integral".</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TARJETA 3 -->
+            <section class="slide-card" onscroll="checkScroll(this)">
+                <div class="card-content">
+                    <span class="badge" style="background-color: var(--red-badge);">Alerta de Derechos Humanos</span>
+                    <h2 class="serif">Impacto Regional de la Retórica Antiterrorista</h2>
+
+                    <div class="danger-box highlight-target">
+                        <strong>El Caso Mapuche (Chile):</strong> Disputa por territorios entre el pueblo indígena Mapuche, empresas y el Estado en el sur de Chile. La respuesta estatal fue la aplicación de legislación antiterrorista (heredada de la dictadura de Pinochet) para judicializar un conflicto social donde participaban indígenas señalados de terroristas por la defensa y arraigo territorial.
+                    </div>
+
+                    <p><strong>Resultados y Críticas:</strong></p>
+                    <ul style="margin-left: 25px; margin-bottom: 25px; color: var(--text-dark);">
+                        <li style="margin-bottom: 8px;">Tratamiento de delitos contra la propiedad privada como "actos de terrorismo" (pese a no registrar víctimas letales).</li>
+                        <li>Violaciones al debido proceso, estigmatización y brutalidad policial contra el Pueblo indígena Mapuche.</li>
+                    </ul>
+
+                    <div class="instruction">Caso Corto con Decisión</div>
+                    <p style="margin-bottom: 20px;">¿Cuál es la lección principal que deja este caso sobre la aplicación de categorías de "terrorismo" a dinámicas de conflictividad social interna?</p>
+
+                    <div>
+                        <button class="decision-btn" onclick="evaluateDecision(false)">
+                            Permite pacificar y asegurar el territorio para el desarrollo económico del país sin alterar la constitución política.
+                        </button>
+                        <button class="decision-btn" onclick="evaluateDecision(true)">
+                            Vulnera los DDHH, totaliza y legitima las formas de violencia estructural del Estado bajo la excusa del orden.
+                        </button>
+                        <button class="decision-btn" onclick="evaluateDecision(false)">
+                            Es una herramienta neutral que solo afecta a quienes cometen crímenes, sin generar estigmatización poblacional.
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        
+        <!-- Flecha de Accesibilidad Inteligente -->
+        <div id="scrollIndicator" class="scroll-indicator">
+            ↓ Desliza hacia abajo
+        </div>
+    </main>
+
+    <!-- CONTROLES INFERIORES -->
+    <footer>
+        <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Retroceder</button>
+        <button class="nav-btn" id="btn-next" onclick="navigate(1)">Avanzar →</button>
+    </footer>
+
+    <!-- MODAL PERSONALIZADO (Cero alertas del navegador) -->
+    <div id="ux-modal" class="modal-overlay">
+        <div class="modal-content" id="modal-box">
+            <div class="modal-icon" id="modal-icon">✅</div>
+            <div class="modal-title" id="modal-title">¡Correcto!</div>
+            <div class="modal-text" id="modal-text">Mensaje aquí.</div>
+            <button class="modal-btn" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        /* ================= LECTURA ACTIVA: HIGHLIGHT ALEATORIO ================= */
+        function highlightFragments() {
+            const blocks = document.querySelectorAll('.highlight-target');
+            let candidates = [];
+            
+            blocks.forEach(block => {
+                const fragments = block.innerHTML.match(/[^,;:.!?]+[,;:.!?]?/g);
+                if (!fragments) return;
+                
+                fragments.forEach(fragment => {
+                    const clean = fragment.trim();
+                    // Evitar fragments con HTML
+                    if (clean.length > 25 && clean.length < 120 && !clean.includes('<')) {
+                        candidates.push({ block, fragment });
+                    }
+                });
+            });
+            
+            candidates.sort(() => Math.random() - 0.5);
+            const selected = candidates.slice(0, 3); 
+            
+            selected.forEach(item => {
+                item.block.innerHTML = item.block.innerHTML.replace(
+                    item.fragment,
+                    `<span class="auto-highlight">${item.fragment}</span>`
+                );
+            });
+        }
+        document.addEventListener("DOMContentLoaded", highlightFragments);
+
+        /* ================= MODAL SYSTEM ================= */
+        function showModal(isSuccess, title, text) {
+            const modal = document.getElementById('ux-modal');
+            const box = document.getElementById('modal-box');
+            
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            
+            if(isSuccess) {
+                document.getElementById('modal-icon').innerText = '✅';
+                box.style.borderTopColor = 'var(--color-3)'; // Amarillo/Dorado
+                document.getElementById('modal-title').style.color = 'var(--color-1)';
+            } else {
+                document.getElementById('modal-icon').innerText = '⚠️';
+                box.style.borderTopColor = 'var(--color-4)'; // Naranja/Rojo
+                document.getElementById('modal-title').style.color = 'var(--color-4)';
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('ux-modal').style.display = 'none';
+        }
+
+        /* ================= SLIDER & NAVEGACIÓN ================= */
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const track = document.getElementById('slider-track');
+        const slides = document.querySelectorAll('.slide-card');
+
+        function updateNavigation() {
+            // Mover el track
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Actualizar botones
+            document.getElementById('btn-prev').disabled = currentSlide === 0;
+            const btnNext = document.getElementById('btn-next');
+            
+            if(currentSlide === totalSlides - 1) {
+                btnNext.innerText = 'Finalizar ✓';
+            } else {
+                btnNext.innerText = 'Avanzar →';
+            }
+
+            // Actualizar barra de progreso
+            const percent = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-text').innerText = `Paso ${currentSlide + 1} de ${totalSlides}`;
+
+            // Check scroll for the new active slide
+            setTimeout(() => checkScroll(slides[currentSlide]), 300);
+        }
+
+        function navigate(dir) {
+            if(dir === 1 && currentSlide === totalSlides - 1) {
+                showModal(true, '¡Módulo Finalizado!', 'Has completado la revisión de los Modelos de Seguridad Militarizados en LATAM y el caso de Chile.');
+                return;
+            }
+            
+            currentSlide += dir;
+            if(currentSlide < 0) currentSlide = 0;
+            if(currentSlide > totalSlides - 1) currentSlide = totalSlides - 1;
+            
+            updateNavigation();
+        }
+
+        /* ================= SCROLL INTELIGENTE (Dentro de la tarjeta) ================= */
+        function checkScroll(element) {
+            const indicator = document.getElementById('scrollIndicator');
+            // Si el contenido es más alto que el contenedor y no ha llegado abajo
+            if (element.scrollHeight > element.clientHeight && (element.scrollTop + element.clientHeight) < element.scrollHeight - 20) {
+                indicator.classList.remove('hidden-indicator');
+            } else {
+                indicator.classList.add('hidden-indicator');
+            }
+        }
+
+        /* ================= ACTIVIDAD 1: COMPLETAR ESPACIOS ================= */
+        let act1Word = null;
+
+        function selectWord(btn, actId) {
+            document.querySelectorAll(`#${actId}-bank .word-btn`).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            act1Word = { val: btn.getAttribute('data-val'), text: btn.innerText, el: btn };
+        }
+
+        function handleDrop(zone, actId) {
+            if (!act1Word) {
+                showModal(false, 'Atención', 'Selecciona primero un término del banco de palabras en la parte inferior.');
+                return;
+            }
+
+            if (zone.getAttribute('data-answer') === act1Word.val) {
+                zone.innerText = act1Word.text;
+                zone.classList.add('filled');
+                act1Word.el.style.display = 'none'; 
+                act1Word = null; 
+
+                const remaining = slides[currentSlide].querySelectorAll('.drop-zone:not(.filled)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, '¡Actividad Completada!', 'Has identificado correctamente los tres ejes principales de la intervención militar.'), 400);
+                }
+            } else {
+                showModal(false, 'Incorrecto', 'Ese término no encaja en la definición. Revisa el texto y vuelve a intentarlo.');
+            }
+        }
+
+        /* ================= ACTIVIDAD 2: RELACIONAR (MATCHING) ================= */
+        let activeMatchSrc = null;
+
+        function selectMatchSource(card) {
+            if (card.classList.contains('solved')) return;
+            document.querySelectorAll('.src-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            activeMatchSrc = card;
+        }
+
+        function selectMatchTarget(card) {
+            if (card.classList.contains('solved')) return;
+            
+            if (!activeMatchSrc) {
+                showModal(false, 'Paso faltante', 'Selecciona primero un País en la columna de la izquierda.');
+                return;
+            }
+
+            if (card.getAttribute('data-match') === activeMatchSrc.getAttribute('data-id')) {
+                card.classList.add('solved');
+                activeMatchSrc.classList.add('solved');
+                activeMatchSrc.classList.remove('selected');
+                activeMatchSrc = null;
+
+                const remaining = document.querySelectorAll('.src-card:not(.solved)');
+                if (remaining.length === 0) {
+                    setTimeout(() => showModal(true, '¡Asociaciones Correctas!', 'Has relacionado correctamente el modelo de intervención militarizada con cada país de LATAM.'), 400);
+                }
+            } else {
+                showModal(false, 'Relación Incorrecta', 'La descripción no corresponde al país seleccionado. Revisa el resumen ejecutivo.');
+            }
+        }
+
+        /* ================= ACTIVIDAD 3: CASO CON DECISIÓN ================= */
+        function evaluateDecision(isCorrect) {
+            if(isCorrect) {
+                showModal(true, '¡Análisis Correcto!', 'Exacto. La lección del caso Mapuche ejemplifica el grave riesgo de utilizar legislaciones excepcionales (como la de terrorismo) para conflictos sociales, ya que legitima la violencia estatal y estigmatiza poblaciones.');
+                
+                // Deshabilitar botones
+                document.querySelectorAll('.decision-btn').forEach(b => {
+                    b.style.pointerEvents = 'none';
+                    b.style.opacity = '0.6';
+                    if(b.innerText.includes('Vulnera los DDHH')) {
+                        b.style.opacity = '1';
+                        b.style.backgroundColor = 'var(--color-3)';
+                        b.style.color = 'var(--text-dark)';
+                        b.style.fontWeight = 'bold';
+                    }
+                });
+            } else {
+                showModal(false, 'Reevalúa la situación', 'Esa no es la lección correcta. Recuerda que catalogar protestas sociales o defensas territoriales como "terrorismo" ha resultado en brutalidad policial y estigmatización.');
+            }
+        }
+    </script>
+</body>
+</html>
