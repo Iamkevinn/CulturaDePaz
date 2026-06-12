@@ -565,7 +565,7 @@
                 </div>
             </section>
 
-            <!-- ================= TARJETA 2 ================= -->
+<!-- ================= TARJETA 2 ================= -->
             <section class="slide-card" onscroll="checkScroll(this)">
                 <div class="card-content">
                     <span class="badge">Análisis Regional</span>
@@ -600,17 +600,26 @@
                     <div class="activity-separator"></div>
 
                     <!-- ACTIVIDAD -->
-                    <div class="instruction">💡 Actividad: Relacionar Concepto → Ejemplo</div>
-                    <p>Tras revisar los casos anteriores, consolida tu conocimiento emparejando el país de la izquierda con su característica de intervención en la derecha.</p>
+                    <div class="instruction">💡 Actividad: Relacionar Concepto</div>
+                    
+                    <!-- MEJORA 1: Instrucción sin "izquierda/derecha" para que tenga sentido en móvil -->
+                    <p>Tras revisar los casos anteriores, consolida tu conocimiento emparejando el país del primer grupo con su característica de intervención en el segundo grupo.</p>
 
                     <div class="match-grid" id="act2-grid">
                         <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <!-- MEJORA 2: Título de la primera columna -->
+                            <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary, #333); text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 5px;">País</div>
+                            
                             <div class="card-item src-card" data-id="mx" onclick="selectMatchSource(this)">México</div>
                             <div class="card-item src-card" data-id="ve" onclick="selectMatchSource(this)">Venezuela</div>
                             <div class="card-item src-card" data-id="br" onclick="selectMatchSource(this)">Brasil</div>
                             <div class="card-item src-card" data-id="ar" onclick="selectMatchSource(this)">Argentina</div>
                         </div>
+                        
                         <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <!-- MEJORA 2: Título de la segunda columna -->
+                            <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary, #333); text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 5px;">Modelo / Característica de Intervención</div>
+                            
                             <div class="card-item tgt-card" data-match="br" onclick="selectMatchTarget(this)">Intervención recurrente en seguridad interna, autorizando funciones policiales.</div>
                             <div class="card-item tgt-card" data-match="mx" onclick="selectMatchTarget(this)">Designación de militares en cargos civiles y mandatos de seguridad pública.</div>
                             <div class="card-item tgt-card" data-match="ar" onclick="selectMatchTarget(this)">Presión empresarial para involucrar militares, pese al marco legal restrictivo.</div>

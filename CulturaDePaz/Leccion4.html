@@ -547,7 +547,7 @@
                 </div>
             </div>
 
-            <!-- =========================================================
+           <!-- =========================================================
                  TARJETA 2: RELACIONAR PROPÓSITOS Y DETECTAR ERROR
                  ========================================================= -->
             <div class="slide-card">
@@ -557,16 +557,25 @@
                     <div class="active-module">
                         <span class="instruction-tag">Conectar Causa y Consecuencia</span>
                         <h3>Los cuatro pilares de la memoria</h3>
-                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Selecciona el verbo de la izquierda y conéctalo con su objetivo correspondiente a la derecha.</p>
+                        
+                        <!-- MEJORA 1: Instrucción adaptada a cualquier tamaño de pantalla -->
+                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Selecciona cada verbo del primer grupo y conéctalo con el propósito que le corresponde en el segundo grupo.</p>
                         
                         <div class="match-grid" id="act2-grid">
                             <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <!-- MEJORA 2: Título de la primera columna (viajará con estos botones en celulares) -->
+                                <div style="font-weight: bold; font-size: 0.95rem; color: var(--secondary); text-align: center; border-bottom: 2px solid var(--secondary); padding-bottom: 5px; margin-bottom: 5px;">Acción (Verbo)</div>
+                                
                                 <div class="match-box src-box" data-id="1" onclick="selectSource(this, 'act2')">Recordar</div>
                                 <div class="match-box src-box" data-id="2" onclick="selectSource(this, 'act2')">Comprender</div>
                                 <div class="match-box src-box" data-id="3" onclick="selectSource(this, 'act2')">Transformar</div>
                                 <div class="match-box src-box" data-id="4" onclick="selectSource(this, 'act2')">Construir</div>
                             </div>
+                            
                             <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <!-- MEJORA 2: Título de la segunda columna -->
+                                <div style="font-weight: bold; font-size: 0.95rem; color: var(--secondary); text-align: center; border-bottom: 2px solid var(--secondary); padding-bottom: 5px; margin-bottom: 5px;">Propósito / Objetivo</div>
+                                
                                 <div class="match-box tgt-box" data-match="4" onclick="selectTarget(this, 'act2')">Garantías sociales e institucionales de no repetición.</div>
                                 <div class="match-box tgt-box" data-match="1" onclick="selectTarget(this, 'act2')">Para dimensionar el daño y sus causas originarias.</div>
                                 <div class="match-box tgt-box" data-match="3" onclick="selectTarget(this, 'act2')">Para fortalecer la convivencia y la reparación simbólica.</div>
@@ -598,7 +607,7 @@
                     <div class="active-module">
                         <span class="instruction-tag">Completar la Matriz</span>
                         <h3>Directorio Nacional de Iniciativas</h3>
-                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Lee la ubicación y el porqué de cada proyecto. Despliega el menú en la columna derecha y selecciona la <strong>Iniciativa</strong> que le corresponde a esa región.</p>
+                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Lee la ubicación y el porqué de cada proyecto. <i>Despliega el menú</i> y selecciona la <strong>Iniciativa</strong> que le corresponde a esa región.</p>
 
                         <div id="matrix-container">
                             

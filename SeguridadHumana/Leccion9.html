@@ -166,6 +166,18 @@
         @media (min-width: 768px) { .match-grid { grid-template-columns: 1fr 1fr; } }
 
         .match-col { display: flex; flex-direction: column; gap: 12px; }
+
+        /* Títulos de las columnas para mayor accesibilidad */
+.col-title {
+    font-size: 1rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 5px;
+    font-family: 'Nunito Sans', sans-serif;
+}
         
         .match-btn {
             background-color: var(--bg-card);
@@ -314,12 +326,13 @@
             <p>Para lograr una protección integral real, el Estado fundamenta su accionar en tres bases. Descubre su significado.</p>
 
             <div class="instruction-box">
-                🔗 <strong>Actividad:</strong> Selecciona un concepto en la columna izquierda y luego toca su definición correcta en la columna derecha para unirlos.
+                🔗 <strong>Actividad:</strong> Selecciona un ítem de la lista de <strong>Conceptos</strong> y luego toca su correspondencia en la lista de <strong>Definiciones</strong> para unirlos.
             </div>
 
             <div class="match-grid">
                 <!-- Conceptos -->
                 <div class="match-col">
+                    <h3 class="col-title">Conceptos</h3>
                     <button class="match-btn concept" data-id="c1" onclick="selectConcept(this)">Principio de Concurrencia</button>
                     <button class="match-btn concept" data-id="c2" onclick="selectConcept(this)">Armonización Institucional</button>
                     <button class="match-btn concept" data-id="c3" onclick="selectConcept(this)">Corresponsabilidad</button>
@@ -327,6 +340,7 @@
                 
                 <!-- Definiciones -->
                 <div class="match-col">
+                    <h3 class="col-title">Definiciones</h3>
                     <button class="match-btn def" data-match="c2" onclick="selectDef(this)">
                         Facilita la coherencia entre las políticas de desarrollo, justicia y derechos humanos, evitando respuestas descontextualizadas y asegurando que las medidas colectivas —como el apoyo a guardias indígenas o proyectos productivos— respondan integralmente a los factores de riesgo.
                     </button>
@@ -540,7 +554,7 @@
             if (btn.classList.contains('solved')) return;
             
             if (!activeConcept) {
-                showModal(false, 'Acción Requerida', 'Primero selecciona un concepto en la columna izquierda.');
+                 showModal(false, 'Acción Requerida', 'Primero selecciona un ítem de la lista de Conceptos.');
                 return;
             }
 
