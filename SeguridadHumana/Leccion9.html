@@ -168,16 +168,16 @@
         .match-col { display: flex; flex-direction: column; gap: 12px; }
 
         /* Títulos de las columnas para mayor accesibilidad */
-.col-title {
-    font-size: 1rem;
-    color: var(--text-light);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 5px;
-    font-family: 'Nunito Sans', sans-serif;
-}
+        .col-title {
+            font-size: 1rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 5px;
+            font-family: 'Nunito Sans', sans-serif;
+        }
         
         .match-btn {
             background-color: var(--bg-card);
@@ -251,6 +251,43 @@
         .matrix-select.correct {
             background-color: rgba(30, 86, 49, 0.1); border-color: var(--success);
             color: var(--success); pointer-events: none;
+        }
+
+        /* ================= ESTILOS DE LA BIBLIOGRAFÍA (TARJETA 4) ================= */
+        .bibliography-list {
+            margin-top: 20px;
+            padding-left: 20px;
+            font-family: 'Nunito Sans', sans-serif;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        
+        .bibliography-list li {
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+
+        .bibliography-list li strong {
+            color: var(--primary);
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        .bib-link {
+            display: inline-block;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+
+        .bib-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
         }
 
         /* ================= MODAL ACADÉMICO ================= */
@@ -465,6 +502,52 @@
 
         </div>
 
+        <!-- TARJETA 4: BIBLIOGRAFÍA -->
+        <div class="card" id="card-3">
+            <span class="card-badge" style="background-color: var(--text-main); color: white;">📖 Fuentes y Referencias</span>
+            <h2 class="serif-heading">Bibliografía del Módulo</h2>
+            
+            <p>Toda la información y los conceptos normativos desarrollados en este <b>módulo</b> se han fundamentado en los siguientes documentos:</p>
+
+            <ol class="bibliography-list">
+                <li>
+                    <strong>Política de Seguridad Democrática (OEA):</strong><br>
+                    Ministerio de Defensa Nacional de Colombia. (2003). Política de Defensa y Seguridad Democrática. Organización de los Estados Americanos.<br>
+                    <a href="https://www.oas.org/csh/spanish/documentos/colombia.pdf" target="_blank" class="bib-link">Leer documento completo ↗</a>
+                </li>
+                <li>
+                    <strong>Informe de Seguridad Hemisférica (WOLA):</strong><br>
+                    Andean Information Network & WOLA. (2005). El nuevo concepto de seguridad hemisférica de la OEA: Una amenaza en potencia. Washington Office on Latin America.<br>
+                    <a href="https://www.wola.org/sites/default/files/downloadable/Regional%20Security/past/El%20nuevo%20concepto%20de%20seguridad_lowres.pdf" target="_blank" class="bib-link">Leer documento completo ↗</a>
+                </li>
+                <li>
+                    <strong>Artículo Revista Jangwa Pana (Unimagdalena):</strong><br>
+                    Rodríguez, A. J. (2016). Seguridad humana y construcción de paz en Colombia. Revista Jangwa Pana, 15(1), 105-121.<br>
+                    <a href="https://revistas.unimagdalena.edu.co/index.php/jangwapana/article/view/1752/1238" target="_blank" class="bib-link">Leer artículo completo ↗</a>
+                </li>
+                <li>
+                    <strong>Política de Seguridad, Defensa y Convivencia Ciudadana (2022-2026):</strong><br>
+                    Presidencia de la República de Colombia. (2023, 21 de marzo). Decreto 385 de 2023: Por el cual se adopta la Política de Seguridad, Defensa y Convivencia Ciudadana "Garantías para la Vida y la Paz". Función Pública.<br>
+                    <a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=240636" target="_blank" class="bib-link">Leer normativa ↗</a>
+                </li>
+                <li>
+                    <strong>La Seguridad Humana (Universidad Nacional):</strong><br>
+                    Gómez, R. (Ed.). (2014). La seguridad humana: Conceptos, críticas y aplicaciones. Universidad Nacional de Colombia.<br>
+                    <a href="https://derecho.bogota.unal.edu.co/media/libros/La_seguridad_humana_pdf.pdf" target="_blank" class="bib-link">Consultar libro ↗</a>
+                </li>
+                <li>
+                    <strong>Ley 2272 de 2022:</strong><br>
+                    Congreso de la República de Colombia. (2022, 4 de noviembre). Ley 2272 de 2022: Por medio de la cual se modifica, adiciona y prorroga la Ley 418 de 1997, prorrogada, modificada y adicionada por las leyes 548 de 1999, 782 de 2002, 1106 de 2006, 1421 de 2010, 1738 de 2014 y 1941 de 2018, se define la política de paz de Estado, se crea el servicio social para la paz, y se dictan otras disposiciones. Función Pública.<br>
+                    <a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=197883" target="_blank" class="bib-link">Leer normativa ↗</a>
+                </li>
+                <li>
+                    <strong>Decreto 665 de 2024:</strong><br>
+                    Presidencia de la República de Colombia. (2024, 24 de mayo). Decreto 665 de 2024: Por medio del cual se adopta la política pública y criminal y el plan de acción permanente para el desmantelamiento de las conductas y organizaciones que trata el Decreto Ley 154 de 2017. Función Pública.<br>
+                    <a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=240636" target="_blank" class="bib-link">Leer normativa ↗</a>
+                </li>
+            </ol>
+        </div>
+
     </div>
 
     <!-- PUNTOS DE PAGINACIÓN -->
@@ -472,6 +555,7 @@
         <span class="dot active" onclick="goToCard(0)"></span>
         <span class="dot" onclick="goToCard(1)"></span>
         <span class="dot" onclick="goToCard(2)"></span>
+        <span class="dot" onclick="goToCard(3)"></span>
     </div>
 
     <!-- MODAL UX -->
@@ -487,7 +571,7 @@
     <script>
         // ================= LÓGICA DEL SLIDER / TARJETAS =================
         let currentCard = 0;
-        const totalCards = 3;
+        const totalCards = 4; // Cambiado a 4 por la nueva tarjeta de bibliografía
 
         function updateSlider() {
             // Ocultar todas
