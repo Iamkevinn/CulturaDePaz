@@ -457,17 +457,13 @@
 
         .modal-left {
             flex: 1.1;
-            /* Le damos un poquito más de ancho a la imagen en PC */
             background-color: #1a120c;
-            /* Fondo oscuro elegante */
             background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-            /* Textura de madera para mantener el estilo */
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 40px;
-            /* Un margen para que la foto no toque los bordes */
             box-sizing: border-box;
         }
 
@@ -475,18 +471,13 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            /* ¡LA CLAVE! Fuerza a que se vea el 100% de la imagen sin recortar nada */
             filter: sepia(0.15) contrast(1.1);
-            /* Reduje un poco el sepia para que no se pierda tanta nitidez */
-
-            /* Efecto visual de fotografía física de archivo */
             border: 4px solid var(--paper-bg);
             border-radius: 2px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
             transition: transform 0.4s ease;
         }
 
-        /* Efecto lupa: Al acercar el mouse, la foto se hace ligeramente más grande para ver detalles */
         .modal-header-img:hover {
             transform: scale(1.05);
         }
@@ -522,12 +513,11 @@
             font-weight: bold;
             cursor: pointer;
             border-radius: 20px;
-            /* Diseño Píldora */
             display: inline-flex;
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
-            margin-bottom: 20px;
+            margin-bottom: 5px; /* Reducido para acercarlo al texto de recomendación */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
@@ -540,6 +530,14 @@
             background: var(--highlight-red);
             color: white;
             border-color: var(--highlight-red);
+        }
+
+        .audio-recommendation {
+            font-size: 0.85rem;
+            color: #664d36;
+            font-style: italic;
+            margin-top: 0;
+            margin-bottom: 20px;
         }
 
         .modal-text-content {
@@ -671,10 +669,15 @@
                     style="margin-top:0; margin-bottom:10px; font-family:'Cinzel', serif; color:var(--highlight-red);">
                     Título</h2>
 
-                <!-- BOTÓN DE AUDIO (NUEVO) -->
-                <button id="btn-audio" class="btn-audio" onclick="toggleAudio()">
-                    <span id="audio-icon">🔊</span> <span id="audio-text">Escuchar Relato</span>
-                </button>
+                <!-- BOTÓN DE AUDIO Y RECOMENDACIÓN -->
+                <div>
+                    <button id="btn-audio" class="btn-audio" onclick="toggleAudio()">
+                        <span id="audio-icon">🔊</span> <span id="audio-text">Escuchar Relato</span>
+                    </button>
+                    <p class="audio-recommendation">
+                        * Si quiere escuchar el relato, se recomienda desde Chrome o Edge para obtener una voz más natural.
+                    </p>
+                </div>
 
                 <div id="modal-desc" class="modal-text-content"
                     style="border-top: 1px solid var(--paper-dark); padding-top: 15px;"></div>
@@ -705,6 +708,15 @@
     </div>
 
     <script>
+        // --- MOTOR DE VOZ INTELIGENTE (Busca voces neuronales de alta calidad) ---
+        let availableVoices = [];
+        
+        // Cargar las voces tan pronto el navegador las tenga listas
+        window.speechSynthesis.onvoiceschanged = () => {
+            availableVoices = window.speechSynthesis.getVoices();
+        };
+        // -------------------------------------------------------------------------
+
         // BASE DE DATOS EXACTA E INALTERADA
         const erasData = [
             {
@@ -938,7 +950,7 @@
             document.getElementById('modal-overlay').classList.remove('active');
         }
 
-        // LÓGICA DE AUDIO (TEXT-TO-SPEECH NATIVO)
+        // LÓGICA DE AUDIO (TEXT-TO-SPEECH NATIVO) - ACTUALIZADA CON VOCES PREMIUM
         function toggleAudio() {
             if (!('speechSynthesis' in window)) {
                 alert("Tu navegador no soporta la lectura de texto por voz.");
@@ -968,8 +980,20 @@
                 const textToRead = ev.title + ". " + cleanText;
 
                 const utterance = new SpeechSynthesisUtterance(textToRead);
-                utterance.lang = 'es-CO'; // Acento Español Colombia (o el más cercano local)
+                utterance.lang = 'es-CO'; // Acento Español Colombia
                 utterance.rate = 0.95; // Velocidad un poco pausada para e-learning
+                utterance.pitch = 1.0;
+
+                // Lógica para encontrar la voz más natural posible (traída del código 1)
+                let premiumVoice = availableVoices.find(voice => voice.name.includes('Natural') && voice.lang.includes('es')) ||
+                                   availableVoices.find(voice => voice.name.includes('Online') && voice.lang.includes('es')) ||
+                                   availableVoices.find(voice => voice.name.includes('Google español')) ||
+                                   availableVoices.find(voice => voice.lang === 'es-CO') ||
+                                   availableVoices.find(voice => voice.lang.startsWith('es'));
+
+                if (premiumVoice) {
+                    utterance.voice = premiumVoice;
+                }
 
                 // Evento cuando termina de leer naturalmente
                 utterance.onend = function () {
@@ -1024,6 +1048,14 @@
                 document.getElementById(`circle-${currentActiveEventId}`).style.backgroundColor = 'var(--node-done)';
                 document.getElementById(`circle-${currentActiveEventId}`).style.borderColor = 'var(--gold-accent)';
                 document.getElementById(`stamp-mini-${currentActiveEventId}`).style.display = 'block';
+
+                // Detener audio al responder correctamente para mejorar la experiencia
+                if ('speechSynthesis' in window && speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                    document.getElementById('btn-audio').classList.remove('playing');
+                    document.getElementById('audio-icon').innerText = '🔊';
+                    document.getElementById('audio-text').innerText = 'Escuchar Relato';
+                }
 
             } else {
                 feedback.innerText = "Análisis incorrecto. Revisa el texto y elige nuevamente.";

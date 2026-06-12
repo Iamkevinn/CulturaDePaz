@@ -110,9 +110,32 @@
             margin-bottom: 15px;
         }
 
+        /* ESTILOS NUEVOS: Botón de lectura de voz */
+        .btn-speak {
+            background-color: transparent;
+            border: 1px solid var(--gold-accent);
+            color: var(--ink-color);
+            padding: 6px 12px;
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.3s;
+        }
+        .btn-speak:hover {
+            background-color: rgba(184, 134, 11, 0.15);
+        }
+        .btn-speak.playing {
+            background-color: rgba(184, 134, 11, 0.3);
+            border-color: var(--highlight-red);
+        }
+
         .event-text { margin-bottom: 20px; line-height: 1.6; text-align: justify;}
 
-        /* Estilos del Reto Activo */
         .challenge-box {
             background: rgba(245, 235, 220, 0.8);
             border: 1px solid var(--gold-accent);
@@ -166,7 +189,6 @@
             background-color: #6a1a1a;
         }
 
-        /* Retroalimentación Profesional */
         .feedback-msg {
             display: none;
             margin-top: 15px;
@@ -231,7 +253,54 @@
     </div>
 
     <script>
-        // Base de datos de contenido con el nuevo sistema "Cloze" (Rellenar espacios)
+        // --- MOTOR DE VOZ INTELIGENTE (Busca voces neuronales de alta calidad) ---
+        let availableVoices = [];
+        
+        // Cargar las voces tan pronto el navegador las tenga listas
+        window.speechSynthesis.onvoiceschanged = () => {
+            availableVoices = window.speechSynthesis.getVoices();
+        };
+
+        function readTextNaturally(text, buttonElement) {
+            // Si ya está hablando, detenerlo
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                buttonElement.innerHTML = '🔊 Escuchar relato';
+                buttonElement.classList.remove('playing');
+                return;
+            }
+
+            // Preparar el texto
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-CO'; // Prioridad Español Colombia
+            utterance.rate = 0.95; // Ligeramente más lento para sonar más humano
+            utterance.pitch = 1.0;
+
+            // Lógica para encontrar la voz más natural posible
+            // Busca palabras clave como "Natural", "Online" o "Google" que suelen ser impulsadas por IA
+            let premiumVoice = availableVoices.find(voice => voice.name.includes('Natural') && voice.lang.includes('es')) ||
+                               availableVoices.find(voice => voice.name.includes('Online') && voice.lang.includes('es')) ||
+                               availableVoices.find(voice => voice.name.includes('Google español')) ||
+                               availableVoices.find(voice => voice.lang === 'es-CO') ||
+                               availableVoices.find(voice => voice.lang.startsWith('es'));
+
+            if (premiumVoice) {
+                utterance.voice = premiumVoice;
+            }
+
+            // Eventos visuales del botón
+            utterance.onend = () => {
+                buttonElement.innerHTML = '🔊 Escuchar relato';
+                buttonElement.classList.remove('playing');
+            };
+
+            buttonElement.innerHTML = '⏹ Detener audio';
+            buttonElement.classList.add('playing');
+            
+            window.speechSynthesis.speak(utterance);
+        }
+        // -------------------------------------------------------------------------
+
         const historicalData = [
             {
                 era: "I. De las guerras civiles a la construcción del Estado (Siglo XIX)",
@@ -239,7 +308,7 @@
                 events: [
                     {
                         title: "1. Guerra de Independencia (1810-1819)",
-                        text: "Desde 1810, distintas provincias de la Nueva Granada formaronjuntas de gobierno que cuestionaron la autoridad de la Corona española. ",
+                        text: "Desde 1810, distintas provincias de la Nueva Granada formaron juntas de gobierno que cuestionaron la autoridad de la Corona española.",
                         challenge: "Este proceso abrió profundas disputas sobre la {soberania}, el {territorio} y el tipo de {republica} que debía construirse.",
                         options: {
                             soberania: ["monarquía", "soberanía", "economía local"],
@@ -274,7 +343,6 @@
                     },
                     {
                         title: "4. Periodo federal y guerras civiles (1858-1886)",
-        
                         text: "En la segunda mitad del siglo XIX, Colombia experimentó formas federales de organización política. La Constitución de Rionegro de 1863 dio origen a los Estados Unidos de Colombia y fortaleció la autonomía de los estados soberanos.",
                         challenge: "Sin embargo, este periodo también estuvo atravesado por guerras civiles (1859-1862, 1875-1876, 1885) disputas entre liberales y conservadores, conflictos entre {regiones} y tensiones entre proyectos de {Estado}.",                        
                         options: {
@@ -336,8 +404,8 @@
                         extra: ""
                     },
                     {
-                        title: "3. Masacre de las Bananeras (1928) Conflicto laboral, protesta social y represión.",
-                        text: "En 1928, trabajadores de la zona bananera del Magdalena realizaron una huelgapara exigir mejores condiciones laborales frente a la United Fruit Company.",
+                        title: "3. Masacre de las Bananeras (1928)",
+                        text: "En 1928, trabajadores de la zona bananera del Magdalena realizaron una huelga para exigir mejores condiciones laborales frente a la United Fruit Company.",
                         challenge: "Este hecho evidenció trágicamente las tensiones entre los intereses {economicos}, las legítimas demandas {laborales} y respuesta estatal frente  a la protesta.",
                         options: {
                             economicos: ["culturales", "economicos", "religiosos"],
@@ -347,7 +415,7 @@
                         extra: "La protesta fue reprimida por la fuerza pública, dejando una profunda huella en la memoria del país."
                     },
                     {
-                        title: "4. República Liberal (1930-1946), Reformas, modernización estatal y nuevas tensiones políticas.",
+                        title: "4. República Liberal (1930-1946)",
                         text: "La República Liberal inició en 1930 con el fin del predominio conservador. Durante este periodo se impulsaron reformas educativas, laborales, sociales y agrarias, especialmente en el gobierno de Alfonso López Pumarejo.",
                         challenge: "Aunque estas reformas buscaron modernizar el Estado y ampliar derechos, también generaron {resistencias} de sectores conservadores, propietarios rurales y élites {tradicionales}.",
                         options: {
@@ -365,14 +433,14 @@
                 events: [
                     {
                         title: "El Bogotazo y las causas estructurales",
-                        text: "El asesinato de Jorge Eliécer Gaitán profundizó la confrontación. Posteriormente, el gobierno militar de Gustavo Rojas Pinilla (pactado entre las élites) buscó pacificar el país, pero las medidas fueron superficiales.",
+                        text: "El asesinato de Jorge Eliécer Gaitán profundizó la confrontación. Posteriormente, el gobierno militar de Gustavo Rojas Pinilla buscó pacificar el país, pero las medidas fueron superficiales.",
                         challenge: "Luego, el gobierno de Gustavo Rojas Pinilla (pactado entre las elites) buscó contener la violencia mediante medidas de pacificación, pero las causas {estructurales} persistieron. Este periodo dejó desplazamientos, persecuciones, rupturas comunitarias y desconfianza política, elementos clave para comprender el surgimiento posterior de nuevas expresiones {armadas} y sociales.",
                         options: {
                             estructurales: ["temporales", "estructurales", "menores"],
                             armadas: ["pacíficas", "armadas", "artísticas"]
                         },
                         correct: { estructurales: "estructurales", armadas: "armadas" },
-                        extra: "<strong>Conclusión Final:</strong> La historia demuestra que si las causas profundas (sociales, políticas, agrarias) no se resuelven mediante el diálogo y el Estado de Derecho, la violencia se transforma y perdura."
+                        extra: "<strong>Conclusión Final:</strong> La historia demuestra que si las causas profundas no se resuelven mediante el diálogo y el Estado de Derecho, la violencia se transforma y perdura."
                     }
                 ]
             }
@@ -406,6 +474,17 @@
                 title.className = 'event-title';
                 title.innerText = ev.title;
 
+                // --- BOTÓN DE LECTURA DE VOZ ---
+                const speakBtn = document.createElement('button');
+                speakBtn.className = 'btn-speak';
+                speakBtn.innerHTML = '🔊 Escuchar relato';
+                // Solo leerá el título y el texto (no el reto para no hacer trampa)
+                speakBtn.onclick = function() {
+                    const textoALeer = ev.title + ". " + ev.text.replace(/<[^>]*>?/gm, ''); // Limpia etiquetas HTML
+                    readTextNaturally(textoALeer, this);
+                };
+                // -------------------------------
+
                 const text = document.createElement('div');
                 text.className = 'event-text';
                 text.innerHTML = ev.text;
@@ -427,7 +506,6 @@
                     let selectHtml = `<select id="sel-${eraIndex}-${evIndex}-${key}" class="historical-select">`;
                     selectHtml += `<option value="" disabled selected>[Seleccionar...]</option>`;
                     
-                    // Desordenar opciones para que no siempre sea igual
                     let shuffledOptions = optionsArray.sort(() => 0.5 - Math.random());
                     shuffledOptions.forEach(opt => {
                         selectHtml += `<option value="${opt}">${opt}</option>`;
@@ -442,11 +520,10 @@
                 challengeTextContainer.innerHTML = challengeHtml;
                 challengeBox.appendChild(challengeTextContainer);
 
-                // Mensaje de feedback profesional (integrado, sin alerts)
+                // Mensaje de feedback
                 const feedbackMsg = document.createElement('div');
                 feedbackMsg.className = 'feedback-msg feedback-error';
                 feedbackMsg.id = `feedback-${eraIndex}-${evIndex}`;
-                feedbackMsg.innerText = "La reconstrucción no es precisa. Revise los hechos documentados y vuelva a intentarlo.";
 
                 // Botón de verificación
                 const verifyBtn = document.createElement('button');
@@ -470,7 +547,11 @@
                     }
 
                     if (allCorrect) {
-                        // Ocultar reto y mostrar sello
+                        // Detener audio si estaba sonando y se respondió correcto
+                        if(window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+                        speakBtn.innerHTML = '🔊 Escuchar relato';
+                        speakBtn.classList.remove('playing');
+
                         challengeBox.style.display = 'none';
                         document.getElementById(`stamp-${eraIndex}-${evIndex}`).style.display = 'block';
                         
@@ -478,21 +559,15 @@
                             document.getElementById(`extra-${eraIndex}-${evIndex}`).style.display = 'block';
                         }
                     } else {
-                        // Mostrar error elegante
                         feedbackMsg.innerText = "El análisis histórico es incorrecto. Revise el texto del expediente e intente de nuevo.";
                         feedbackMsg.style.display = 'block';
-                        
-                        // Ocultar el mensaje después de 4 segundos
-                        setTimeout(() => {
-                            feedbackMsg.style.display = 'none';
-                        }, 4000);
+                        setTimeout(() => { feedbackMsg.style.display = 'none'; }, 4000);
                     }
                 };
 
                 challengeBox.appendChild(feedbackMsg);
                 challengeBox.appendChild(verifyBtn);
 
-                // Elementos de éxito (ocultos por defecto)
                 const stamp = document.createElement('div');
                 stamp.className = 'stamp-success';
                 stamp.id = `stamp-${eraIndex}-${evIndex}`;
@@ -504,6 +579,7 @@
                 extraInfo.innerHTML = ev.extra;
 
                 eventCard.appendChild(title);
+                eventCard.appendChild(speakBtn); // Agregamos el botón de voz
                 eventCard.appendChild(text);
                 eventCard.appendChild(challengeBox);
                 eventCard.appendChild(stamp);
@@ -526,6 +602,11 @@
             timelineDiv.appendChild(eraBtn);
             timelineDiv.appendChild(eraContent);
         });
+
+        // Asegurarnos de cortar el audio si el usuario cierra la pestaña o recarga
+        window.onbeforeunload = function () {
+            window.speechSynthesis.cancel();
+        };
     </script>
 </body>
 </html>
